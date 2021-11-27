@@ -4,16 +4,16 @@ __author__ = "Paul Schifferer <dm@sweetrpg.com>"
 """
 
 from functools import wraps
-from flask import redirect, session, render_template, request
 from sweetrpg_assets_web.application import constants
 import jinja2
-from flask import Blueprint, request, render_template, session, jsonify, current_app
+from flask import Blueprint, request, session, jsonify, current_app, make_response, render_template
 from werkzeug.exceptions import HTTPException
 import json
 import os
 from sweetrpg_assets_web.application import constants
 import analytics
 import datetime
+from sweetrpg_web_core import constants as core_constants
 
 
 blueprint = Blueprint("web", __name__)
@@ -93,12 +93,51 @@ def error_handler(ex):
     return response
 
 
+def render_page(page:str, context:dict={}):
+    """Call `render_template` for the specified page, and merge the
+    provided context into an initialized, common context.
+
+    :param str page:
+    :param dict context:
+    :returns:
+    """
+    show_cookie_message = True
+    if request.cookies.get("cookies-accepted"):
+        show_cookie_message = False
+    context.update({
+       "showCookieMessage": show_cookie_message,
+    })
+
+    userinfo = session.get(core_constants.PROFILE_KEY)
+    if userinfo:
+        context.update({
+            "user_info": userinfo,
+            "segment_write_key": os.environ.get(constants.SEGMENT_WRITE_KEY, "")
+        })
+
+    current_app.logger.debug(f"context: {context}")
+    return render_template(page, **context)
+
+
 @blueprint.route("/")
 def main_page():
     context = {"user_info": session.get(constants.SWEETRPG_AUTH_KEY)}
 
     print(f"context: {context}")
     return render_page("index.html", context)
+
+
+@blueprint.route("/<kind>/<id>", methods=['GET'])
+def get_asset(kind:str, id:str):
+    resp = make_response()
+
+    return resp
+
+
+@blueprint.route("/<kind>/<id>", methods=['POST'])
+def store_asset(kind:str, id:str):
+
+    return {}, 201
 
 
 from sweetrpg_web_core.blueprints import health

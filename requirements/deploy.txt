@@ -9,7 +9,9 @@ analytics-python==1.4.0
 backoff==1.10.0
     # via analytics-python
 blinker==1.4
-    # via -r requirements/app.in
+    # via
+    #   -r requirements/app.in
+    #   sentry-sdk
 cachelib==0.4.1
     # via flask-session
 certifi==2021.10.8
@@ -29,6 +31,7 @@ flask==2.0.2
     #   flask-cors
     #   flask-dotenv
     #   flask-session
+    #   sentry-sdk
     #   sweetrpg-web-core
 flask-caching==1.10.1
     # via -r requirements/app.in
@@ -40,13 +43,15 @@ flask-session==0.4.0
     # via -r requirements/app.in
 greenlet==1.1.2
     # via -r requirements/app.in
+hiredis==2.0.0
+    # via -r requirements/app.in
 idna==3.3
     # via requests
 itsdangerous==2.0.1
     # via flask
 jinja2==3.0.3
     # via flask
-limits==1.5.1
+limits==2.0.0
     # via python-logstash-async
 markupsafe==2.0.1
     # via jinja2
@@ -73,7 +78,7 @@ requests==2.26.0
     #   -r requirements/app.in
     #   analytics-python
     #   python-logstash-async
-sentry-sdk==1.4.3
+sentry-sdk[flask]==1.5.0
     # via -r requirements/app.in
 six==1.16.0
     # via
