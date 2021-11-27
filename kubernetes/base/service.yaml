@@ -1,0 +1,17 @@
+---
+kind: Service
+apiVersion: v1
+
+metadata:
+    name: assets-web
+
+spec:
+    selector:
+        app: assets
+        component: web
+        platform: sweetrpg
+    type: LoadBalancer
+    ports:
+        - name: http
+          port: 8081
+          targetPort: http
