@@ -7,8 +7,9 @@ metadata:
 
 spec:
     selector:
+        app: sweetrpg-assets-web-v1
         platform: sweetrpg
-        app: assets
+        package: assets
         component: web
         version: v1
     type: LoadBalancer

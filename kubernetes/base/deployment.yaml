@@ -22,8 +22,9 @@ spec:
     template:
         metadata:
             labels:
+                app: sweetrpg-assets-web-v1
                 platform: sweetrpg
-                app: assets
+                package: assets
                 component: web
                 version: v1
         spec:
