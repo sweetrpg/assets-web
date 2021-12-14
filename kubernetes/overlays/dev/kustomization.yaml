@@ -13,8 +13,10 @@ patchesStrategicMerge:
 
 commonLabels:
     platform: sweetrpg
-    app: assets
+    app: sweetrpg-assets-web-v1
+    package: assets
     component: web
+    version: v1
 
 generatorOptions:
     disableNameSuffixHash: true

@@ -14,8 +14,9 @@ spec:
         type: RollingUpdate
     selector:
         matchLabels:
+            app: sweetrpg-assets-web-v1
             platform: sweetrpg
-            app: assets
+            package: assets
             component: web
             version: v1
     template:
@@ -30,7 +31,7 @@ spec:
             imagePullSecrets:
                 - name: sweetrpg-registry
             containers:
-                - name: web-app
+                - name: app
                   image: registry.sweetrpg.com/sweetrpg-assets-web:latest
                   imagePullPolicy: Always
                   envFrom:
