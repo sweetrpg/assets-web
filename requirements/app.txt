@@ -90,7 +90,7 @@ six==1.16.0
     #   flask-cors
     #   limits
     #   python-dateutil
-sweetrpg-web-core==0.0.90
+sweetrpg-web-core==0.0.95
     # via -r requirements/app.in
 urllib3==1.26.7
     # via
