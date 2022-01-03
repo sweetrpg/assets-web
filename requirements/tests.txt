@@ -144,7 +144,7 @@ toml==0.10.2
     #   tox
 tomli==1.2.2
     # via coverage
-tox==3.24.4
+tox==3.24.5
     # via -r requirements/tests.in
 urllib3==1.26.7
     # via
