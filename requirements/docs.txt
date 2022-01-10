@@ -146,7 +146,7 @@ sphinxcontrib-serializinghtml==1.1.5
     # via sphinx
 sweetrpg-web-core==0.0.90
     # via -r requirements/app.in
-urllib3==1.26.7
+urllib3==1.26.8
     # via
     #   -r requirements/app.in
     #   requests
