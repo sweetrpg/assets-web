@@ -92,7 +92,7 @@ six==1.16.0
     #   python-dateutil
 sweetrpg-web-core==0.0.90
     # via -r requirements/app.in
-urllib3==1.26.7
+urllib3==1.26.8
     # via
     #   -r requirements/app.in
     #   requests
