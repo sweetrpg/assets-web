@@ -10,13 +10,15 @@ analytics-python==1.4.0
     # via -r requirements/app.in
 asgiref==3.4.1
     # via -r requirements/tests.in
+async-timeout==4.0.2
+    # via redis
 attrs==21.2.0
     # via pytest
 babel==2.9.1
     # via sphinx
 backoff==1.10.0
     # via analytics-python
-backports.entry-points-selectable==1.1.1
+backports-entry-points-selectable==1.1.1
     # via virtualenv
 black==21.12b0
     # via -r requirements/dev.in
@@ -157,7 +159,7 @@ pytz==2021.3
     # via babel
 pyyaml==6.0
     # via -r requirements/app.in
-redis==4.1.0
+redis==4.2.0
     # via -r requirements/app.in
 requests==2.27.1
     # via
@@ -218,7 +220,9 @@ tomli==1.2.2
 tox==3.24.5
     # via -r requirements/tests.in
 typing-extensions==4.0.0
-    # via black
+    # via
+    #   black
+    #   redis
 urllib3==1.26.8
     # via
     #   -r requirements/app.in
