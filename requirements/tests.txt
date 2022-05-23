@@ -6,13 +6,13 @@
 #
 analytics-python==1.4.0
     # via -r requirements/app.in
-asgiref==3.4.1
+asgiref==3.5.2
     # via -r requirements/tests.in
 attrs==21.2.0
     # via pytest
 backoff==1.10.0
     # via analytics-python
-backports.entry-points-selectable==1.1.1
+backports-entry-points-selectable==1.1.1
     # via virtualenv
 blinker==1.4
     # via
