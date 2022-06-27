@@ -8,11 +8,13 @@ analytics-python==1.4.0
     # via -r requirements/app.in
 asgiref==3.4.1
     # via -r requirements/tests.in
+async-timeout==4.0.2
+    # via redis
 attrs==21.2.0
     # via pytest
 backoff==1.10.0
     # via analytics-python
-backports.entry-points-selectable==1.1.1
+backports-entry-points-selectable==1.1.1
     # via virtualenv
 blinker==1.4
     # via
@@ -119,7 +121,7 @@ python-logstash-async==2.3.0
     # via -r requirements/app.in
 pyyaml==6.0
     # via -r requirements/app.in
-redis==4.1.0
+redis==4.3.4
     # via -r requirements/app.in
 requests==2.27.1
     # via
