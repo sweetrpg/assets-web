@@ -219,7 +219,7 @@ tomli==1.2.2
     #   black
     #   coverage
     #   pep517
-tox==3.24.5
+tox==3.25.1
     # via -r requirements/tests.in
 typing-extensions==4.0.0
     # via black
