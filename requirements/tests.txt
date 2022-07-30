@@ -103,7 +103,7 @@ pylogbeat==2.0.0
     # via python-logstash-async
 pyparsing==3.0.6
     # via packaging
-pytest==6.2.5
+pytest==7.1.2
     # via
     #   -r requirements/tests.in
     #   pytest-cov
@@ -143,9 +143,11 @@ six==1.16.0
 sweetrpg-web-core==0.0.131
     # via -r requirements/app.in
 toml==0.10.2
+    # via tox
+tomli==1.2.2
     # via
+    #   coverage
     #   pytest
-    #   tox
 tomli==1.2.2
     # via coverage
 tox==3.25.1
