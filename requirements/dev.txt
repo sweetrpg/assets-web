@@ -16,7 +16,7 @@ babel==2.9.1
     # via sphinx
 backoff==1.10.0
     # via analytics-python
-backports.entry-points-selectable==1.1.1
+backports-entry-points-selectable==1.1.1
     # via virtualenv
 black==21.12b0
     # via -r requirements/dev.in
@@ -135,7 +135,7 @@ pylogbeat==2.0.0
     # via python-logstash-async
 pyparsing==3.0.6
     # via packaging
-pytest==6.2.5
+pytest==7.1.2
     # via
     #   -r requirements/tests.in
     #   pytest-cov
@@ -186,7 +186,7 @@ sphinx==4.3.2
     #   sphinx-issues
     #   sphinx-tabs
     #   sphinxcontrib-log-cabinet
-sphinx-issues==2.0.0
+sphinx-issues==3.0.1
     # via -r requirements/docs.in
 sphinx-tabs==3.2.0
     # via -r requirements/docs.in
@@ -207,14 +207,13 @@ sphinxcontrib-serializinghtml==1.1.5
 sweetrpg-web-core==0.0.104
     # via -r requirements/app.in
 toml==0.10.2
-    # via
-    #   pytest
-    #   tox
+    # via tox
 tomli==1.2.2
     # via
     #   black
     #   coverage
     #   pep517
+    #   pytest
 tox==3.24.5
     # via -r requirements/tests.in
 typing-extensions==4.0.0
