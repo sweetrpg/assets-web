@@ -126,7 +126,7 @@ sphinx==4.3.2
     #   sphinx-issues
     #   sphinx-tabs
     #   sphinxcontrib-log-cabinet
-sphinx-issues==2.0.0
+sphinx-issues==3.0.1
     # via -r requirements/docs.in
 sphinx-tabs==3.2.0
     # via -r requirements/docs.in
@@ -146,7 +146,7 @@ sphinxcontrib-serializinghtml==1.1.5
     # via sphinx
 sweetrpg-web-core==0.0.104
     # via -r requirements/app.in
-urllib3==1.26.8
+urllib3==1.26.11
     # via
     #   -r requirements/app.in
     #   requests
