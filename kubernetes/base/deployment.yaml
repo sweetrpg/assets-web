@@ -33,7 +33,7 @@ spec:
                 - name: sweetrpg-registry
             containers:
                 - name: app
-                  image: registry.sweetrpg.com/sweetrpg-assets-web:latest
+                  image: ghcr.io/sweetrpg/assets-web:latest
                   imagePullPolicy: Always
                   envFrom:
                       - configMapRef:
