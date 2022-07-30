@@ -16,7 +16,7 @@ babel==2.9.1
     # via sphinx
 backoff==1.10.0
     # via analytics-python
-backports.entry-points-selectable==1.1.1
+backports-entry-points-selectable==1.1.1
     # via virtualenv
 black==21.12b0
     # via -r requirements/dev.in
@@ -25,6 +25,8 @@ blinker==1.4
     #   -r requirements/app.in
     #   -r requirements/tests.in
     #   sentry-sdk
+build==0.8.0
+    # via pip-tools
 cachelib==0.4.1
     # via flask-session
 certifi==2021.10.8
@@ -102,6 +104,7 @@ mypy-extensions==0.4.3
     # via black
 packaging==21.3
     # via
+    #   build
     #   pallets-sphinx-themes
     #   pytest
     #   redis
@@ -112,8 +115,8 @@ pallets-sphinx-themes==2.0.2
 pathspec==0.9.0
     # via black
 pep517==0.12.0
-    # via pip-tools
-pip-tools==6.4.0
+    # via build
+pip-tools==6.8.0
     # via -r requirements/dev.in
 platformdirs==2.4.0
     # via
@@ -186,7 +189,7 @@ sphinx==4.3.2
     #   sphinx-issues
     #   sphinx-tabs
     #   sphinxcontrib-log-cabinet
-sphinx-issues==2.0.0
+sphinx-issues==3.0.1
     # via -r requirements/docs.in
 sphinx-tabs==3.2.0
     # via -r requirements/docs.in
@@ -213,6 +216,7 @@ toml==0.10.2
 tomli==1.2.2
     # via
     #   black
+    #   build
     #   coverage
     #   pep517
 tox==3.24.5
