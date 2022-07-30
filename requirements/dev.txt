@@ -8,25 +8,31 @@ alabaster==0.7.12
     # via sphinx
 analytics-python==1.4.0
     # via -r requirements/app.in
-asgiref==3.4.1
+asgiref==3.5.2
     # via -r requirements/tests.in
+async-timeout==4.0.2
+    # via redis
 attrs==21.2.0
     # via pytest
 babel==2.9.1
     # via sphinx
 backoff==1.10.0
     # via analytics-python
-backports.entry-points-selectable==1.1.1
+backports-entry-points-selectable==1.1.1
     # via virtualenv
-black==21.12b0
+black==22.6.0
     # via -r requirements/dev.in
 blinker==1.4
     # via
     #   -r requirements/app.in
     #   -r requirements/tests.in
     #   sentry-sdk
+build==0.8.0
+    # via pip-tools
 cachelib==0.4.1
-    # via flask-session
+    # via
+    #   flask-caching
+    #   flask-session
 certifi==2021.10.8
     # via
     #   requests
@@ -57,7 +63,7 @@ filelock==3.4.0
     # via
     #   tox
     #   virtualenv
-flask==2.0.2
+flask==2.1.3
     # via
     #   -r requirements/app.in
     #   flask-caching
@@ -66,7 +72,7 @@ flask==2.0.2
     #   flask-session
     #   sentry-sdk
     #   sweetrpg-web-core
-flask-caching==1.10.1
+flask-caching==1.11.1
     # via -r requirements/app.in
 flask-cors==3.0.10
     # via -r requirements/app.in
@@ -102,6 +108,7 @@ mypy-extensions==0.4.3
     # via black
 packaging==21.3
     # via
+    #   build
     #   pallets-sphinx-themes
     #   pytest
     #   redis
@@ -112,8 +119,8 @@ pallets-sphinx-themes==2.0.2
 pathspec==0.9.0
     # via black
 pep517==0.12.0
-    # via pip-tools
-pip-tools==6.4.0
+    # via build
+pip-tools==6.8.0
     # via -r requirements/dev.in
 platformdirs==2.4.0
     # via
@@ -135,7 +142,7 @@ pylogbeat==2.0.0
     # via python-logstash-async
 pyparsing==3.0.6
     # via packaging
-pytest==6.2.5
+pytest==7.1.2
     # via
     #   -r requirements/tests.in
     #   pytest-cov
@@ -157,7 +164,7 @@ pytz==2021.3
     # via babel
 pyyaml==6.0
     # via -r requirements/app.in
-redis==4.1.0
+redis==4.3.4
     # via -r requirements/app.in
 requests==2.27.1
     # via
@@ -179,7 +186,7 @@ six==1.16.0
     #   virtualenv
 snowballstemmer==2.2.0
     # via sphinx
-sphinx==4.3.2
+sphinx==4.5.0
     # via
     #   -r requirements/docs.in
     #   pallets-sphinx-themes
@@ -204,22 +211,19 @@ sphinxcontrib-qthelp==1.0.3
     # via sphinx
 sphinxcontrib-serializinghtml==1.1.5
     # via sphinx
-sweetrpg-web-core==0.0.104
+sweetrpg-web-core==0.0.131
     # via -r requirements/app.in
 toml==0.10.2
-    # via
-    #   pytest
-    #   tox
+    # via tox
 tomli==1.2.2
     # via
     #   black
+    #   build
     #   coverage
-    #   pep517
-tox==3.24.5
+    #   pytest
+tox==3.25.1
     # via -r requirements/tests.in
-typing-extensions==4.0.0
-    # via black
-urllib3==1.26.8
+urllib3==1.26.11
     # via
     #   -r requirements/app.in
     #   requests
