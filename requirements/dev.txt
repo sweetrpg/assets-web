@@ -223,7 +223,7 @@ tox==3.24.5
     # via -r requirements/tests.in
 typing-extensions==4.0.0
     # via black
-urllib3==1.26.8
+urllib3==1.26.11
     # via
     #   -r requirements/app.in
     #   requests
