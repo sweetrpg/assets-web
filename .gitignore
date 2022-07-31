@@ -54,3 +54,4 @@ venv/
 htmlcov
 .flaskenv
 .DS_Store
+kubernetes/secrets/dev/tokens.txt
