@@ -20,7 +20,7 @@ backoff==1.10.0
     # via analytics-python
 backports-entry-points-selectable==1.1.1
     # via virtualenv
-black==21.12b0
+black==22.6.0
     # via -r requirements/dev.in
 blinker==1.4
     # via
@@ -232,9 +232,10 @@ tomli==1.2.2
     #   black
     #   build
     #   coverage
-    #   pep517
+    #   pytest
 tox==3.25.1
     # via -r requirements/tests.in
+    #   pep517
 typer[all]==0.4.2
     # via rstcheck
 types-docutils==0.18.3
