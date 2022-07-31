@@ -221,7 +221,6 @@ tomli==1.2.2
     #   build
     #   coverage
     #   pep517
-    #   pytest
 tox==3.25.1
     # via -r requirements/tests.in
 typing-extensions==4.0.0
