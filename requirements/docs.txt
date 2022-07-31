@@ -29,12 +29,17 @@ certifi==2021.10.8
 charset-normalizer==2.0.8
     # via requests
 click==8.0.3
-    # via flask
+    # via
+    #   flask
+    #   typer
+colorama==0.4.5
+    # via typer
 deprecated==1.2.13
     # via redis
 docutils==0.16
     # via
     #   rstcheck
+    #   rstcheck-core
     #   sphinx
     #   sphinx-tabs
 flask==2.1.3
@@ -81,6 +86,10 @@ packaging==21.3
     #   sphinx
 pallets-sphinx-themes==2.0.2
     # via -r requirements/docs.in
+pydantic==1.9.1
+    # via
+    #   rstcheck
+    #   rstcheck-core
 pygments==2.10.0
     # via
     #   sphinx
@@ -111,10 +120,14 @@ requests==2.28.1
     #   analytics-python
     #   python-logstash-async
     #   sphinx
-rstcheck==3.3.1
+rstcheck==6.0.0.post1
     # via -r requirements/docs.in
+rstcheck-core==1.0.2
+    # via rstcheck
 sentry-sdk[flask]==1.5.0
     # via -r requirements/app.in
+shellingham==1.4.0
+    # via typer
 six==1.16.0
     # via
     #   analytics-python
@@ -150,6 +163,14 @@ sphinxcontrib-serializinghtml==1.1.5
     # via sphinx
 sweetrpg-web-core==0.0.131
     # via -r requirements/app.in
+typer[all]==0.4.2
+    # via rstcheck
+types-docutils==0.18.3
+    # via
+    #   rstcheck
+    #   rstcheck-core
+typing-extensions==4.3.0
+    # via pydantic
 urllib3==1.26.11
     # via
     #   -r requirements/app.in
