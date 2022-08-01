@@ -16,7 +16,7 @@ backoff==1.10.0
     # via analytics-python
 backports-entry-points-selectable==1.1.1
     # via virtualenv
-blinker==1.4
+blinker==1.5
     # via
     #   -r requirements/app.in
     #   -r requirements/tests.in
@@ -148,8 +148,6 @@ tomli==1.2.2
     # via
     #   coverage
     #   pytest
-tomli==1.2.2
-    # via coverage
 tox==3.25.1
     # via -r requirements/tests.in
 urllib3==1.26.11
