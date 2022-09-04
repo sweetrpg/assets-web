@@ -8,6 +8,7 @@ resources:
     - ../../base
     - configmaps.yaml
     - destination-rules.yaml
+    - secrets.yaml
 patchesStrategicMerge:
     - replicas.yaml
 
