@@ -20,7 +20,7 @@ backoff==1.10.0
     # via analytics-python
 backports-entry-points-selectable==1.1.1
     # via virtualenv
-black==22.6.0
+black==22.8.0
     # via -r requirements/dev.in
 blinker==1.5
     # via
@@ -160,7 +160,7 @@ python-dateutil==2.8.2
     # via
     #   -r requirements/app.in
     #   analytics-python
-python-dotenv==0.20.0
+python-dotenv==0.21.0
     # via
     #   -r requirements/app.in
     #   -r requirements/tests.in
