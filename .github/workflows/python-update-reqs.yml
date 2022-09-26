@@ -3,7 +3,9 @@ name: Update Requirements
 on:
     repository_dispatch:
         types: []
-
+    schedule:
+        - cron: '0 1 * * 2'
+        
 jobs:
     update-reqs:
         runs-on: ubuntu-latest
