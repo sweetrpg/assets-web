@@ -20,7 +20,7 @@ backoff==1.10.0
     # via analytics-python
 backports-entry-points-selectable==1.1.1
     # via virtualenv
-black==22.8.0
+black==22.10.0
     # via -r requirements/dev.in
 blinker==1.5
     # via
