@@ -15,5 +15,5 @@ hiredis
 requests
 sentry-sdk[flask]==1.5.0
 urllib3==1.26.12
-greenlet==1.1.3
+greenlet==2.0.1
 python-logstash-async
