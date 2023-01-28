@@ -15,10 +15,10 @@ patchesStrategicMerge:
     - replicas.yaml
 
 commonLabels:
-    app: main-assets
+    app: assets
     version: v1
     platform: sweetrpg
-    package: main
+    package: support
     component: assets
 
 generatorOptions:
