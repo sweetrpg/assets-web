@@ -11,7 +11,7 @@ setup(
         "Flask-CORS",
         "Flask-DotEnv",
         "Flask-Session",
-        "Flask==2.1.3",
+        "Flask<3.0",
         "gunicorn",
         "kanka",
         "python-dateutil",
