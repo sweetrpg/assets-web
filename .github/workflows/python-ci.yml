@@ -26,19 +26,19 @@ jobs:
                 include:
                     - {
                           name: Linux,
-                          python: "3.9",
+                          python: "3.10",
                           os: ubuntu-latest,
-                          tox: py39,
+                          tox: py310,
                       }
                     # - {
                     #       name: Windows,
-                    #       python: "3.9",
+                    #       python: "3.10",
                     #       os: windows-latest,
-                    #       tox: py39,
+                    #       tox: py310,
                     #   }
-                    # - { name: Mac, python: "3.9", os: macos-latest, tox: py39 }
+                    # - { name: Mac, python: "3.10", os: macos-latest, tox: py310 }
         steps:
-            - uses: actions/checkout@v3.1.0
+            - uses: actions/checkout@v3
             - uses: actions/setup-python@v4
               with:
                   python-version: ${{ matrix.python }}
@@ -65,10 +65,10 @@ jobs:
         runs-on: ubuntu-latest
         concurrency: docs
         steps:
-            - uses: actions/checkout@v3.1.0
+            - uses: actions/checkout@v3
             - uses: actions/setup-python@v4
               with:
-                  python-version: "3.9"
+                  python-version: "3.10"
             - name: install-deps
               run: pip install -r requirements/docs.txt
             - name: make-docs
@@ -84,11 +84,13 @@ jobs:
         runs-on: ubuntu-latest
         concurrency: publish
         steps:
-            - uses: actions/checkout@v3.1.0
+            - uses: actions/checkout@v3
               with:
                   fetch-depth: 0
             - name: publish
-              uses: sweetrpg/python-semantic-release@master
+              uses: relekang/python-semantic-release@master
               with:
-                  bump: "--patch"
+                  additional_options: "--patch"
                   github_token: ${{ secrets.GITHUB_TOKEN }}
+                  repository_username: __token__
+                  repository_password: ${{ secrets.PYPI_TOKEN }}
