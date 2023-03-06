@@ -75,8 +75,3 @@ jobs:
                       BUILD_SHA=${{ github.sha }}
                       BUILD_DATE=${{ steps.getbuilddate.outputs.isodate }}
                       BUILD_VERSION=${{ steps.previoustag.outputs.tag }}
-            # - name: Scan image
-            #   uses: sysdiglabs/scan-action@v1
-            #   with:
-            #     image-tag: registry.sweetrpg.com/sweetrpg-library-api:latest
-            #     sysdig-secure-token: ${{ secrets.SYSDIG_SECURE_TOKEN }}
