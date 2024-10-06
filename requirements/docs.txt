@@ -40,7 +40,7 @@ docutils==0.17.1
     #   rstcheck-core
     #   sphinx
     #   sphinx-tabs
-flask==2.3.3
+flask==3.0.3
     # via
     #   -r requirements/app.in
     #   flask-caching
@@ -114,7 +114,7 @@ requests==2.32.3
     #   -r requirements/app.in
     #   analytics-python
     #   sphinx
-rich==13.8.1
+rich==13.9.2
     # via typer
 rstcheck==6.2.4
     # via -r requirements/docs.in
@@ -156,7 +156,7 @@ sphinxcontrib-qthelp==2.0.0
     # via sphinx
 sphinxcontrib-serializinghtml==2.0.0
     # via sphinx
-sweetrpg-web-core==0.0.681
+sweetrpg-web-core==0.0.131
     # via -r requirements/app.in
 typer==0.12.5
     # via rstcheck
@@ -164,6 +164,7 @@ typing-extensions==4.12.2
     # via
     #   pydantic
     #   pydantic-core
+    #   rich
     #   typer
 urllib3==1.26.20
     # via

@@ -44,7 +44,7 @@ filelock==3.16.1
     # via
     #   tox
     #   virtualenv
-flask==2.3.3
+flask==3.0.3
     # via
     #   -r requirements/app.in
     #   flask-caching
@@ -124,11 +124,11 @@ six==1.16.0
     #   flask-cors
     #   python-dateutil
     #   tox
-sweetrpg-web-core==0.0.681
+sweetrpg-web-core==0.0.131
     # via -r requirements/app.in
 toml==0.10.2
     # via tox
-tomli==2.0.1
+tomli==2.0.2
     # via
     #   coverage
     #   pytest

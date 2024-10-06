@@ -27,7 +27,7 @@ charset-normalizer==3.3.2
     # via requests
 click==8.1.7
     # via flask
-flask==2.3.3
+flask==3.0.3
     # via
     #   -r requirements/app.in
     #   flask-caching
@@ -84,7 +84,7 @@ six==1.16.0
     #   analytics-python
     #   flask-cors
     #   python-dateutil
-sweetrpg-web-core==0.0.681
+sweetrpg-web-core==0.0.131
     # via -r requirements/app.in
 urllib3==1.26.20
     # via
