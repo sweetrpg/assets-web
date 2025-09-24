@@ -139,7 +139,9 @@ pydantic-core==2.23.4
     # via pydantic
 pygments==2.18.0
     # via
-    #   rich
+    #   pytest
+    #   tox
+pydantic==1.9.1
     #   sphinx
     #   sphinx-tabs
 pyproject-hooks==1.2.0
@@ -226,6 +228,8 @@ tox==3.25.1
     # via -r requirements/tests.in
 typer==0.12.5
     # via rstcheck
+types-docutils==0.18.3
+    # via rstcheck-core
 typing-extensions==4.12.2
     # via
     #   asgiref
@@ -234,7 +238,6 @@ typing-extensions==4.12.2
     #   pydantic-core
     #   rich
     #   typer
-urllib3==1.26.20
     # via
     #   -r requirements/app.in
     #   requests
