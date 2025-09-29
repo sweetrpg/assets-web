@@ -6,7 +6,7 @@ setup(
     install_requires=[
         "analytics-python~=1.0",
         "Flask-Caching~=2.0",
-        "Flask-CORS~=5.0",
+        "Flask-CORS>=5,<7",
         "Flask-DotEnv~=0.1",
         "Flask-Session~=0.4",
         "Flask~=3.0",
