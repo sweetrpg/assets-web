@@ -134,6 +134,7 @@ platformdirs==4.4.0
 pluggy==1.6.0
     # via
     #   pytest
+    #   pytest-cov
     #   tox
 pydantic==2.11.9
     # via rstcheck-core
@@ -155,7 +156,7 @@ pytest==8.4.2
     # via
     #   -r requirements/tests.in
     #   pytest-cov
-pytest-cov==4.1.0
+pytest-cov==7.0.0
     # via -r requirements/tests.in
 python-dateutil==2.9.0.post0
     # via
