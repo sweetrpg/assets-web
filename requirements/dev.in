@@ -1,5 +1,5 @@
 -r app.in
 -r tests.in
 -r docs.in
-pip-tools~=7.0
+pip-tools~=7.5
 black~=25.0
