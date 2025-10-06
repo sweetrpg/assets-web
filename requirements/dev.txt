@@ -223,7 +223,7 @@ sphinxcontrib-serializinghtml==2.0.0
     # via sphinx
 sweetrpg-web-core==0.0.697
     # via -r requirements/app.in
-tox==4.30.2
+tox==4.30.3
     # via -r requirements/tests.in
 typer==0.19.2
     # via rstcheck
