@@ -81,7 +81,7 @@ flask-dotenv==0.1.2
     # via -r requirements/app.in
 flask-session==0.8.0
     # via -r requirements/app.in
-hiredis==3.2.1
+hiredis==3.3.0
     # via -r requirements/app.in
 idna==3.11
     # via requests
