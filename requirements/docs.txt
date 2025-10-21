@@ -26,7 +26,7 @@ certifi==2025.10.5
     # via
     #   requests
     #   sentry-sdk
-charset-normalizer==3.4.3
+charset-normalizer==3.4.4
     # via requests
 click==8.3.0
     # via
@@ -54,7 +54,7 @@ flask-dotenv==0.1.2
     # via -r requirements/app.in
 flask-session==0.8.0
     # via -r requirements/app.in
-hiredis==3.2.1
+hiredis==3.3.0
     # via -r requirements/app.in
 idna==3.11
     # via requests
@@ -86,9 +86,9 @@ packaging==25.0
     #   sphinx
 pallets-sphinx-themes==2.3.0
     # via -r requirements/docs.in
-pydantic==2.12.1
+pydantic==2.12.3
     # via rstcheck-core
-pydantic-core==2.41.3
+pydantic-core==2.41.4
     # via pydantic
 pygments==2.19.2
     # via
@@ -118,7 +118,7 @@ rstcheck==6.2.5
     # via -r requirements/docs.in
 rstcheck-core==1.2.2
     # via rstcheck
-sentry-sdk[flask]==2.41.0
+sentry-sdk[flask]==2.42.1
     # via -r requirements/app.in
 shellingham==1.5.4
     # via typer
@@ -158,7 +158,7 @@ sphinxcontrib-serializinghtml==2.0.0
     # via sphinx
 sweetrpg-web-core==0.0.697
     # via -r requirements/app.in
-typer==0.19.2
+typer==0.20.0
     # via rstcheck
 typing-extensions==4.15.0
     # via
