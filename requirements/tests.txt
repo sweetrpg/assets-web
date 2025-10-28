@@ -110,7 +110,7 @@ python-dateutil==2.9.0.post0
     # via
     #   -r requirements/app.in
     #   analytics-python
-python-dotenv==1.1.1
+python-dotenv==1.2.1
     # via -r requirements/app.in
 python-editor==1.0.4
     # via -r requirements/app.in
@@ -128,7 +128,7 @@ six==1.17.0
     #   python-dateutil
 sweetrpg-web-core==0.0.697
     # via -r requirements/app.in
-tox==4.31.0
+tox==4.32.0
     # via -r requirements/tests.in
 urllib3==2.5.0
     # via
