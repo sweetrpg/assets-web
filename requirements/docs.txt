@@ -22,13 +22,13 @@ cachelib==0.13.0
     # via
     #   flask-caching
     #   flask-session
-certifi==2025.10.5
+certifi==2025.11.12
     # via
     #   requests
     #   sentry-sdk
 charset-normalizer==3.4.4
     # via requests
-click==8.3.0
+click==8.3.1
     # via
     #   flask
     #   typer
@@ -86,9 +86,9 @@ packaging==25.0
     #   sphinx
 pallets-sphinx-themes==2.3.0
     # via -r requirements/docs.in
-pydantic==2.12.3
+pydantic==2.12.4
     # via rstcheck-core
-pydantic-core==2.41.4
+pydantic-core==2.41.5
     # via pydantic
 pygments==2.19.2
     # via
@@ -118,7 +118,7 @@ rstcheck==6.2.5
     # via -r requirements/docs.in
 rstcheck-core==1.2.2
     # via rstcheck
-sentry-sdk[flask]==2.42.1
+sentry-sdk[flask]==2.44.0
     # via -r requirements/app.in
 shellingham==1.5.4
     # via typer
