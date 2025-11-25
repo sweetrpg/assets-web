@@ -6,7 +6,7 @@
 #
 analytics-python==1.4.post1
     # via -r requirements/app.in
-asgiref==3.10.0
+asgiref==3.11.0
     # via -r requirements/tests.in
 backoff==1.10.0
     # via analytics-python
@@ -33,7 +33,7 @@ click==8.3.1
     # via flask
 colorama==0.4.6
     # via tox
-coverage[toml]==7.11.3
+coverage[toml]==7.12.0
     # via
     #   coverage-badge
     #   pytest-cov
@@ -80,7 +80,7 @@ markupsafe==3.0.3
     #   werkzeug
 monotonic==1.6
     # via analytics-python
-msgspec==0.19.0
+msgspec==0.20.0
     # via flask-session
 packaging==25.0
     # via
@@ -120,7 +120,7 @@ requests==2.32.5
     # via
     #   -r requirements/app.in
     #   analytics-python
-sentry-sdk[flask]==2.44.0
+sentry-sdk[flask]==2.46.0
     # via -r requirements/app.in
 six==1.17.0
     # via
