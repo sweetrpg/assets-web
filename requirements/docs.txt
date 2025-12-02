@@ -32,7 +32,7 @@ click==8.3.1
     # via
     #   flask
     #   typer
-docutils==0.21.2
+docutils==0.22.3
     # via
     #   rstcheck-core
     #   sphinx
@@ -86,7 +86,7 @@ packaging==25.0
     #   sphinx
 pallets-sphinx-themes==2.3.0
     # via -r requirements/docs.in
-pydantic==2.12.4
+pydantic==2.12.5
     # via rstcheck-core
 pydantic-core==2.41.5
     # via pydantic
@@ -112,7 +112,7 @@ requests==2.32.5
     #   sphinx
 rich==14.2.0
     # via typer
-roman-numerals-py==3.1.0
+roman-numerals==3.1.0
     # via sphinx
 rstcheck==6.2.5
     # via -r requirements/docs.in
@@ -128,7 +128,7 @@ six==1.17.0
     #   python-dateutil
 snowballstemmer==3.0.1
     # via sphinx
-sphinx==8.2.3
+sphinx==9.0.1
     # via
     #   -r requirements/docs.in
     #   pallets-sphinx-themes
@@ -173,7 +173,7 @@ urllib3==2.5.0
     #   -r requirements/app.in
     #   requests
     #   sentry-sdk
-werkzeug==3.1.3
+werkzeug==3.1.4
     # via
     #   flask
     #   flask-cors
