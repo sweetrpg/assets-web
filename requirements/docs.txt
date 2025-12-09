@@ -118,7 +118,7 @@ rstcheck==6.2.5
     # via -r requirements/docs.in
 rstcheck-core==1.2.2
     # via rstcheck
-sentry-sdk[flask]==2.46.0
+sentry-sdk[flask]==2.47.0
     # via -r requirements/app.in
 shellingham==1.5.4
     # via typer
@@ -128,7 +128,7 @@ six==1.17.0
     #   python-dateutil
 snowballstemmer==3.0.1
     # via sphinx
-sphinx==9.0.1
+sphinx==9.0.4
     # via
     #   -r requirements/docs.in
     #   pallets-sphinx-themes
@@ -168,7 +168,7 @@ typing-extensions==4.15.0
     #   typing-inspection
 typing-inspection==0.4.2
     # via pydantic
-urllib3==2.5.0
+urllib3==2.6.1
     # via
     #   -r requirements/app.in
     #   requests

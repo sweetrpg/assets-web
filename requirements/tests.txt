@@ -33,7 +33,7 @@ click==8.3.1
     # via flask
 colorama==0.4.6
     # via tox
-coverage[toml]==7.12.0
+coverage[toml]==7.13.0
     # via
     #   coverage-badge
     #   pytest-cov
@@ -87,7 +87,7 @@ packaging==25.0
     #   pyproject-api
     #   pytest
     #   tox
-platformdirs==4.5.0
+platformdirs==4.5.1
     # via
     #   tox
     #   virtualenv
@@ -120,7 +120,7 @@ requests==2.32.5
     # via
     #   -r requirements/app.in
     #   analytics-python
-sentry-sdk[flask]==2.46.0
+sentry-sdk[flask]==2.47.0
     # via -r requirements/app.in
 six==1.17.0
     # via
@@ -130,7 +130,7 @@ sweetrpg-web-core==0.0.697
     # via -r requirements/app.in
 tox==4.32.0
     # via -r requirements/tests.in
-urllib3==2.5.0
+urllib3==2.6.1
     # via
     #   -r requirements/app.in
     #   requests
