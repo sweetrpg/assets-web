@@ -130,7 +130,7 @@ sweetrpg-web-core==0.0.697
     # via -r requirements/app.in
 tox==4.32.0
     # via -r requirements/tests.in
-urllib3==2.6.1
+urllib3==2.6.2
     # via
     #   -r requirements/app.in
     #   requests
