@@ -73,7 +73,7 @@ requests==2.32.5
     # via
     #   -r requirements/app.in
     #   analytics-python
-sentry-sdk[flask]==2.47.0
+sentry-sdk[flask]==2.48.0
     # via -r requirements/app.in
 six==1.17.0
     # via
