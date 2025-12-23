@@ -55,7 +55,7 @@ coverage-badge==1.1.2
     # via -r requirements/tests.in
 distlib==0.4.0
     # via virtualenv
-docutils==0.22.3
+docutils==0.22.4
     # via
     #   rstcheck-core
     #   sphinx
@@ -177,13 +177,13 @@ requests==2.32.5
     #   sphinx
 rich==14.2.0
     # via typer
-roman-numerals==3.1.0
+roman-numerals==4.1.0
     # via sphinx
 rstcheck==6.2.5
     # via -r requirements/docs.in
 rstcheck-core==1.2.2
     # via rstcheck
-sentry-sdk[flask]==2.47.0
+sentry-sdk[flask]==2.48.0
     # via -r requirements/app.in
 shellingham==1.5.4
     # via typer
@@ -225,7 +225,7 @@ sweetrpg-web-core==0.0.697
     # via -r requirements/app.in
 tox==4.32.0
     # via -r requirements/tests.in
-typer==0.20.0
+typer==0.20.1
     # via rstcheck
 typing-extensions==4.15.0
     # via
