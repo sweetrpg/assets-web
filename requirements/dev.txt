@@ -47,7 +47,7 @@ click==8.3.1
     #   typer
 colorama==0.4.6
     # via tox
-coverage[toml]==7.13.0
+coverage[toml]==7.13.1
     # via
     #   coverage-badge
     #   pytest-cov
@@ -225,7 +225,7 @@ sweetrpg-web-core==0.0.697
     # via -r requirements/app.in
 tox==4.32.0
     # via -r requirements/tests.in
-typer==0.20.1
+typer==0.21.0
     # via rstcheck
 typing-extensions==4.15.0
     # via
