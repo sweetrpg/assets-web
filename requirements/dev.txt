@@ -31,7 +31,7 @@ cachelib==0.13.0
     #   flask-session
 cachetools==6.2.4
     # via tox
-certifi==2025.11.12
+certifi==2026.1.4
     # via
     #   requests
     #   sentry-sdk
@@ -60,7 +60,7 @@ docutils==0.22.4
     #   rstcheck-core
     #   sphinx
     #   sphinx-tabs
-filelock==3.20.1
+filelock==3.20.2
     # via
     #   tox
     #   virtualenv
@@ -223,7 +223,7 @@ sphinxcontrib-serializinghtml==2.0.0
     # via sphinx
 sweetrpg-web-core==0.0.697
     # via -r requirements/app.in
-tox==4.32.0
+tox==4.33.0
     # via -r requirements/tests.in
 typer==0.21.0
     # via rstcheck
