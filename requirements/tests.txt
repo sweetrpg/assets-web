@@ -41,7 +41,7 @@ coverage-badge==1.1.2
     # via -r requirements/tests.in
 distlib==0.4.0
     # via virtualenv
-filelock==3.20.2
+filelock==3.20.3
     # via
     #   tox
     #   virtualenv
@@ -120,7 +120,7 @@ requests==2.32.5
     # via
     #   -r requirements/app.in
     #   analytics-python
-sentry-sdk[flask]==2.48.0
+sentry-sdk[flask]==2.49.0
     # via -r requirements/app.in
 six==1.17.0
     # via
@@ -128,16 +128,16 @@ six==1.17.0
     #   python-dateutil
 sweetrpg-web-core==0.0.697
     # via -r requirements/app.in
-tox==4.33.0
+tox==4.34.1
     # via -r requirements/tests.in
-urllib3==2.6.2
+urllib3==2.6.3
     # via
     #   -r requirements/app.in
     #   requests
     #   sentry-sdk
-virtualenv==20.35.4
+virtualenv==20.36.1
     # via tox
-werkzeug==3.1.4
+werkzeug==3.1.5
     # via
     #   flask
     #   flask-cors
