@@ -166,7 +166,7 @@ python-dotenv==1.2.1
     # via -r requirements/app.in
 python-editor==1.0.4
     # via -r requirements/app.in
-pytokens==0.3.0
+pytokens==0.4.0
     # via black
 pyyaml==6.0.3
     # via -r requirements/app.in
