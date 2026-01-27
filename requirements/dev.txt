@@ -29,7 +29,7 @@ cachelib==0.13.0
     # via
     #   flask-caching
     #   flask-session
-cachetools==6.2.4
+cachetools==6.2.5
     # via tox
 certifi==2026.1.4
     # via
@@ -47,7 +47,7 @@ click==8.3.1
     #   typer
 colorama==0.4.6
     # via tox
-coverage[toml]==7.13.1
+coverage[toml]==7.13.2
     # via
     #   coverage-badge
     #   pytest-cov
@@ -111,7 +111,7 @@ msgspec==0.20.0
     # via flask-session
 mypy-extensions==1.1.0
     # via black
-packaging==25.0
+packaging==26.0
     # via
     #   black
     #   build
@@ -120,6 +120,7 @@ packaging==25.0
     #   pytest
     #   sphinx
     #   tox
+    #   wheel
 pallets-sphinx-themes==2.3.0
     # via -r requirements/docs.in
 pathspec==1.0.3
@@ -175,7 +176,7 @@ requests==2.32.5
     #   -r requirements/app.in
     #   analytics-python
     #   sphinx
-rich==14.2.0
+rich==14.3.1
     # via typer
 roman-numerals==4.1.0
     # via sphinx
@@ -183,7 +184,7 @@ rstcheck==6.2.5
     # via -r requirements/docs.in
 rstcheck-core==1.2.2
     # via rstcheck
-sentry-sdk[flask]==2.49.0
+sentry-sdk[flask]==2.50.0
     # via -r requirements/app.in
 shellingham==1.5.4
     # via typer
@@ -246,7 +247,7 @@ werkzeug==3.1.5
     # via
     #   flask
     #   flask-cors
-wheel==0.45.1
+wheel==0.46.3
     # via pip-tools
 
 # The following packages are considered to be unsafe in a requirements file:
