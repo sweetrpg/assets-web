@@ -10,7 +10,7 @@ analytics-python==1.4.post1
     # via -r requirements/app.in
 annotated-types==0.7.0
     # via pydantic
-babel==2.17.0
+babel==2.18.0
     # via sphinx
 backoff==1.10.0
     # via analytics-python
@@ -110,7 +110,7 @@ requests==2.32.5
     #   -r requirements/app.in
     #   analytics-python
     #   sphinx
-rich==14.3.1
+rich==14.3.2
     # via typer
 roman-numerals==4.1.0
     # via sphinx
@@ -118,7 +118,7 @@ rstcheck==6.2.5
     # via -r requirements/docs.in
 rstcheck-core==1.2.2
     # via rstcheck
-sentry-sdk[flask]==2.50.0
+sentry-sdk[flask]==2.51.0
     # via -r requirements/app.in
 shellingham==1.5.4
     # via typer
