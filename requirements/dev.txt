@@ -10,7 +10,7 @@ analytics-python==1.4.post1
     # via -r requirements/app.in
 annotated-types==0.7.0
     # via pydantic
-asgiref==3.11.0
+asgiref==3.11.1
     # via -r requirements/tests.in
 babel==2.18.0
     # via sphinx
