@@ -29,7 +29,7 @@ cachelib==0.13.0
     # via
     #   flask-caching
     #   flask-session
-cachetools==7.0.0
+cachetools==7.0.1
     # via tox
 certifi==2026.1.4
     # via
@@ -60,7 +60,7 @@ docutils==0.22.4
     #   rstcheck-core
     #   sphinx
     #   sphinx-tabs
-filelock==3.20.3
+filelock==3.24.2
     # via
     #   tox
     #   virtualenv
@@ -127,7 +127,7 @@ pathspec==1.0.4
     # via black
 pip-tools==7.5.2
     # via -r requirements/dev.in
-platformdirs==4.5.1
+platformdirs==4.9.2
     # via
     #   black
     #   tox
@@ -224,7 +224,7 @@ sphinxcontrib-serializinghtml==2.0.0
     # via sphinx
 sweetrpg-web-core==0.0.697
     # via -r requirements/app.in
-tox==4.34.1
+tox==4.36.0
     # via -r requirements/tests.in
 typer==0.21.1
     # via rstcheck
