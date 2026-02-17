@@ -6,7 +6,7 @@
 #
 analytics-python==1.4.post1
     # via -r requirements/app.in
-asgiref==3.11.0
+asgiref==3.11.1
     # via -r requirements/tests.in
 backoff==1.10.0
     # via analytics-python
@@ -19,7 +19,7 @@ cachelib==0.13.0
     # via
     #   flask-caching
     #   flask-session
-cachetools==7.0.0
+cachetools==7.0.1
     # via tox
 certifi==2026.1.4
     # via
@@ -33,7 +33,7 @@ click==8.3.1
     # via flask
 colorama==0.4.6
     # via tox
-coverage[toml]==7.13.2
+coverage[toml]==7.13.4
     # via
     #   coverage-badge
     #   pytest-cov
@@ -41,7 +41,7 @@ coverage-badge==1.1.2
     # via -r requirements/tests.in
 distlib==0.4.0
     # via virtualenv
-filelock==3.20.3
+filelock==3.24.2
     # via
     #   tox
     #   virtualenv
@@ -87,7 +87,7 @@ packaging==26.0
     #   pyproject-api
     #   pytest
     #   tox
-platformdirs==4.5.1
+platformdirs==4.9.2
     # via
     #   tox
     #   virtualenv
@@ -120,7 +120,7 @@ requests==2.32.5
     # via
     #   -r requirements/app.in
     #   analytics-python
-sentry-sdk[flask]==2.51.0
+sentry-sdk[flask]==2.53.0
     # via -r requirements/app.in
 six==1.17.0
     # via
@@ -128,14 +128,14 @@ six==1.17.0
     #   python-dateutil
 sweetrpg-web-core==0.0.697
     # via -r requirements/app.in
-tox==4.34.1
+tox==4.36.1
     # via -r requirements/tests.in
 urllib3==2.6.3
     # via
     #   -r requirements/app.in
     #   requests
     #   sentry-sdk
-virtualenv==20.36.1
+virtualenv==20.37.0
     # via tox
 werkzeug==3.1.5
     # via
