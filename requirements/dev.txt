@@ -226,7 +226,7 @@ sphinxcontrib-serializinghtml==2.0.0
     # via sphinx
 sweetrpg-web-core==0.0.697
     # via -r requirements/app.in
-tox==4.36.1
+tox==4.44.0
     # via -r requirements/tests.in
 typer==0.24.0
     # via rstcheck
@@ -242,7 +242,7 @@ urllib3==2.6.3
     #   -r requirements/app.in
     #   requests
     #   sentry-sdk
-virtualenv==20.37.0
+virtualenv==20.39.0
     # via tox
 werkzeug==3.1.5
     # via
