@@ -86,7 +86,7 @@ packaging==26.0
     # via
     #   pallets-sphinx-themes
     #   sphinx
-pallets-sphinx-themes==2.3.0
+pallets-sphinx-themes==2.5.0
     # via -r requirements/docs.in
 pydantic==2.12.5
     # via rstcheck-core
