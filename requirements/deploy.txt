@@ -16,7 +16,7 @@ cachelib==0.13.0
     # via
     #   flask-caching
     #   flask-session
-certifi==2026.1.4
+certifi==2026.2.25
     # via
     #   requests
     #   sentry-sdk
@@ -63,7 +63,7 @@ python-dateutil==2.9.0.post0
     # via
     #   -r requirements/app.in
     #   analytics-python
-python-dotenv==1.2.1
+python-dotenv==1.2.2
     # via -r requirements/app.in
 python-editor==1.0.4
     # via -r requirements/app.in
@@ -73,7 +73,7 @@ requests==2.32.5
     # via
     #   -r requirements/app.in
     #   analytics-python
-sentry-sdk[flask]==2.53.0
+sentry-sdk[flask]==2.54.0
     # via -r requirements/app.in
 six==1.17.0
     # via
