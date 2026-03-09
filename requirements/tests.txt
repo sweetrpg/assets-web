@@ -19,7 +19,7 @@ cachelib==0.13.0
     # via
     #   flask-caching
     #   flask-session
-cachetools==7.0.2
+cachetools==7.0.4
     # via tox
 certifi==2026.2.25
     # via
@@ -86,7 +86,7 @@ packaging==26.0
     #   pyproject-api
     #   pytest
     #   tox
-platformdirs==4.9.2
+platformdirs==4.9.4
     # via
     #   python-discovery
     #   tox
@@ -130,7 +130,9 @@ six==1.17.0
     #   python-dateutil
 sweetrpg-web-core==0.0.697
     # via -r requirements/app.in
-tox==4.47.0
+tomli-w==1.2.0
+    # via tox
+tox==4.49.0
     # via -r requirements/tests.in
 urllib3==2.6.3
     # via
