@@ -142,7 +142,7 @@ sphinx-issues==5.0.1
     # via -r requirements/docs.in
 sphinx-notfound-page==1.1.0
     # via pallets-sphinx-themes
-sphinx-tabs==3.4.7
+sphinx-tabs==3.5.0
     # via -r requirements/docs.in
 sphinxcontrib-applehelp==2.0.0
     # via sphinx
