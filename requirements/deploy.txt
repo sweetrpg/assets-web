@@ -73,7 +73,7 @@ requests==2.32.5
     # via
     #   -r requirements/app.in
     #   analytics-python
-sentry-sdk[flask]==2.54.0
+sentry-sdk[flask]==2.55.0
     # via -r requirements/app.in
 six==1.17.0
     # via
@@ -88,7 +88,7 @@ urllib3==2.6.3
     #   sentry-sdk
 uwsgi==2.0.31
     # via -r requirements/deploy.in
-werkzeug==3.1.6
+werkzeug==3.1.7
     # via
     #   flask
     #   flask-cors
