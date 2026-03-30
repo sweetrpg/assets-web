@@ -165,8 +165,10 @@ python-dateutil==2.9.0.post0
     # via
     #   -r requirements/app.in
     #   analytics-python
-python-discovery==1.2.0
-    # via virtualenv
+python-discovery==1.2.1
+    # via
+    #   tox
+    #   virtualenv
 python-dotenv==1.2.2
     # via -r requirements/app.in
 python-editor==1.0.4
@@ -230,7 +232,7 @@ sweetrpg-web-core==0.0.697
     # via -r requirements/app.in
 tomli-w==1.2.0
     # via tox
-tox==4.50.3
+tox==4.51.0
     # via -r requirements/tests.in
 typer==0.24.1
     # via rstcheck
