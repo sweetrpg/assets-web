@@ -92,7 +92,7 @@ pydantic==2.12.5
     # via rstcheck-core
 pydantic-core==2.41.5
     # via pydantic
-pygments==2.19.2
+pygments==2.20.0
     # via
     #   rich
     #   sphinx
@@ -107,7 +107,7 @@ python-editor==1.0.4
     # via -r requirements/app.in
 pyyaml==6.0.3
     # via -r requirements/app.in
-requests==2.32.5
+requests==2.33.1
     # via
     #   -r requirements/app.in
     #   analytics-python
@@ -120,7 +120,7 @@ rstcheck==6.2.5
     # via -r requirements/docs.in
 rstcheck-core==1.2.2
     # via rstcheck
-sentry-sdk[flask]==2.55.0
+sentry-sdk[flask]==2.56.0
     # via -r requirements/app.in
 shellingham==1.5.4
     # via typer

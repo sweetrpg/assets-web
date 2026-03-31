@@ -96,7 +96,7 @@ pluggy==1.6.0
     #   pytest
     #   pytest-cov
     #   tox
-pygments==2.19.2
+pygments==2.20.0
     # via pytest
 pyproject-api==1.10.0
     # via tox
@@ -110,19 +110,21 @@ python-dateutil==2.9.0.post0
     # via
     #   -r requirements/app.in
     #   analytics-python
-python-discovery==1.2.0
-    # via virtualenv
+python-discovery==1.2.1
+    # via
+    #   tox
+    #   virtualenv
 python-dotenv==1.2.2
     # via -r requirements/app.in
 python-editor==1.0.4
     # via -r requirements/app.in
 pyyaml==6.0.3
     # via -r requirements/app.in
-requests==2.32.5
+requests==2.33.1
     # via
     #   -r requirements/app.in
     #   analytics-python
-sentry-sdk[flask]==2.55.0
+sentry-sdk[flask]==2.56.0
     # via -r requirements/app.in
 six==1.17.0
     # via
@@ -132,7 +134,7 @@ sweetrpg-web-core==0.0.697
     # via -r requirements/app.in
 tomli-w==1.2.0
     # via tox
-tox==4.50.3
+tox==4.52.0
     # via -r requirements/tests.in
 urllib3==2.6.3
     # via

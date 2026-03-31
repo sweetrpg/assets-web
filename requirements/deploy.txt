@@ -69,11 +69,11 @@ python-editor==1.0.4
     # via -r requirements/app.in
 pyyaml==6.0.3
     # via -r requirements/app.in
-requests==2.32.5
+requests==2.33.1
     # via
     #   -r requirements/app.in
     #   analytics-python
-sentry-sdk[flask]==2.55.0
+sentry-sdk[flask]==2.56.0
     # via -r requirements/app.in
 six==1.17.0
     # via
