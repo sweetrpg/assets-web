@@ -28,9 +28,9 @@ certifi==2026.2.25
     # via
     #   requests
     #   sentry-sdk
-charset-normalizer==3.4.6
+charset-normalizer==3.4.7
     # via requests
-click==8.3.1
+click==8.3.2
     # via
     #   flask
     #   typer
@@ -120,7 +120,7 @@ rstcheck==6.2.5
     # via -r requirements/docs.in
 rstcheck-core==1.2.2
     # via rstcheck
-sentry-sdk[flask]==2.56.0
+sentry-sdk[flask]==2.57.0
     # via -r requirements/app.in
 shellingham==1.5.4
     # via typer
@@ -174,7 +174,7 @@ urllib3==2.6.3
     #   -r requirements/app.in
     #   requests
     #   sentry-sdk
-werkzeug==3.1.7
+werkzeug==3.1.8
     # via
     #   flask
     #   flask-cors

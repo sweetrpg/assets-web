@@ -25,9 +25,9 @@ certifi==2026.2.25
     # via
     #   requests
     #   sentry-sdk
-charset-normalizer==3.4.6
+charset-normalizer==3.4.7
     # via requests
-click==8.3.1
+click==8.3.2
     # via flask
 colorama==0.4.6
     # via tox
@@ -124,7 +124,7 @@ requests==2.33.1
     # via
     #   -r requirements/app.in
     #   analytics-python
-sentry-sdk[flask]==2.56.0
+sentry-sdk[flask]==2.57.0
     # via -r requirements/app.in
 six==1.17.0
     # via
@@ -143,7 +143,7 @@ urllib3==2.6.3
     #   sentry-sdk
 virtualenv==21.2.0
     # via tox
-werkzeug==3.1.7
+werkzeug==3.1.8
     # via
     #   flask
     #   flask-cors
