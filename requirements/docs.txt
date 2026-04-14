@@ -80,7 +80,7 @@ mdurl==0.1.2
     # via markdown-it-py
 monotonic==1.6
     # via analytics-python
-msgspec==0.20.0
+msgspec==0.21.1
     # via flask-session
 packaging==26.0
     # via
@@ -88,9 +88,9 @@ packaging==26.0
     #   sphinx
 pallets-sphinx-themes==2.5.0
     # via -r requirements/docs.in
-pydantic==2.12.5
+pydantic==2.13.0
     # via rstcheck-core
-pydantic-core==2.41.5
+pydantic-core==2.46.0
     # via pydantic
 pygments==2.20.0
     # via
@@ -112,7 +112,7 @@ requests==2.33.1
     #   -r requirements/app.in
     #   analytics-python
     #   sphinx
-rich==14.3.3
+rich==15.0.0
     # via typer
 roman-numerals==4.1.0
     # via sphinx
@@ -120,7 +120,7 @@ rstcheck==6.2.5
     # via -r requirements/docs.in
 rstcheck-core==1.2.2
     # via rstcheck
-sentry-sdk[flask]==2.57.0
+sentry-sdk[flask]==2.58.0
     # via -r requirements/app.in
 shellingham==1.5.4
     # via typer
