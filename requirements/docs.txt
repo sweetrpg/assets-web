@@ -48,7 +48,7 @@ flask==3.1.3
     #   flask-session
     #   sentry-sdk
     #   sweetrpg-web-core
-flask-caching==2.3.1
+flask-caching==2.4.0
     # via -r requirements/app.in
 flask-cors==6.0.2
     # via -r requirements/app.in
@@ -82,15 +82,15 @@ monotonic==1.6
     # via analytics-python
 msgspec==0.21.1
     # via flask-session
-packaging==26.0
+packaging==26.1
     # via
     #   pallets-sphinx-themes
     #   sphinx
 pallets-sphinx-themes==2.5.0
     # via -r requirements/docs.in
-pydantic==2.13.0
+pydantic==2.13.3
     # via rstcheck-core
-pydantic-core==2.46.0
+pydantic-core==2.46.3
     # via pydantic
 pygments==2.20.0
     # via
