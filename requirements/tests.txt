@@ -21,13 +21,13 @@ cachelib==0.13.0
     #   flask-session
 cachetools==7.0.6
     # via tox
-certifi==2026.2.25
+certifi==2026.4.22
     # via
     #   requests
     #   sentry-sdk
 charset-normalizer==3.4.7
     # via requests
-click==8.3.2
+click==8.3.3
     # via flask
 colorama==0.4.6
     # via tox
@@ -63,7 +63,7 @@ flask-session==0.8.0
     # via -r requirements/app.in
 hiredis==3.3.1
     # via -r requirements/app.in
-idna==3.11
+idna==3.13
     # via requests
 iniconfig==2.3.0
     # via pytest
@@ -81,7 +81,7 @@ monotonic==1.6
     # via analytics-python
 msgspec==0.21.1
     # via flask-session
-packaging==26.1
+packaging==26.2
     # via
     #   pyproject-api
     #   pytest
@@ -141,7 +141,7 @@ urllib3==2.6.3
     #   -r requirements/app.in
     #   requests
     #   sentry-sdk
-virtualenv==21.2.4
+virtualenv==21.3.0
     # via tox
 werkzeug==3.1.8
     # via

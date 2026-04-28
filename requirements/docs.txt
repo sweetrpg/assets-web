@@ -24,13 +24,13 @@ cachelib==0.13.0
     # via
     #   flask-caching
     #   flask-session
-certifi==2026.2.25
+certifi==2026.4.22
     # via
     #   requests
     #   sentry-sdk
 charset-normalizer==3.4.7
     # via requests
-click==8.3.2
+click==8.3.3
     # via
     #   flask
     #   typer
@@ -58,7 +58,7 @@ flask-session==0.8.0
     # via -r requirements/app.in
 hiredis==3.3.1
     # via -r requirements/app.in
-idna==3.11
+idna==3.13
     # via requests
 imagesize==2.0.0
     # via sphinx
@@ -82,7 +82,7 @@ monotonic==1.6
     # via analytics-python
 msgspec==0.21.1
     # via flask-session
-packaging==26.1
+packaging==26.2
     # via
     #   pallets-sphinx-themes
     #   sphinx
@@ -160,7 +160,7 @@ sphinxcontrib-serializinghtml==2.0.0
     # via sphinx
 sweetrpg-web-core==0.0.697
     # via -r requirements/app.in
-typer==0.24.1
+typer==0.25.0
     # via rstcheck
 typing-extensions==4.15.0
     # via
