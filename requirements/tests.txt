@@ -100,7 +100,7 @@ pygments==2.20.0
     # via pytest
 pyproject-api==1.10.0
     # via tox
-pytest==8.4.2
+pytest==9.0.3
     # via
     #   -r requirements/tests.in
     #   pytest-cov
