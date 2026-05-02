@@ -160,7 +160,7 @@ sphinxcontrib-serializinghtml==2.0.0
     # via sphinx
 sweetrpg-web-core==0.0.697
     # via -r requirements/app.in
-typer==0.25.0
+typer==0.25.1
     # via rstcheck
 typing-extensions==4.15.0
     # via

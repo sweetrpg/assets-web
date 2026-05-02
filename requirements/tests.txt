@@ -19,7 +19,7 @@ cachelib==0.13.0
     # via
     #   flask-caching
     #   flask-session
-cachetools==7.0.6
+cachetools==7.1.0
     # via tox
 certifi==2026.4.22
     # via
@@ -134,7 +134,7 @@ sweetrpg-web-core==0.0.697
     # via -r requirements/app.in
 tomli-w==1.2.0
     # via tox
-tox==4.53.0
+tox==4.53.1
     # via -r requirements/tests.in
 urllib3==2.6.3
     # via
