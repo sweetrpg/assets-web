@@ -107,7 +107,7 @@ python-editor==1.0.4
     # via -r requirements/app.in
 pyyaml==6.0.3
     # via -r requirements/app.in
-requests==2.33.1
+requests==2.34.0
     # via
     #   -r requirements/app.in
     #   analytics-python
