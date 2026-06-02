@@ -43,7 +43,7 @@ flask-session==0.8.0
     # via -r requirements/app.in
 hiredis==3.3.1
     # via -r requirements/app.in
-idna==3.16
+idna==3.17
     # via requests
 itsdangerous==2.2.0
     # via flask
@@ -73,7 +73,7 @@ requests==2.34.2
     # via
     #   -r requirements/app.in
     #   analytics-python
-sentry-sdk[flask]==2.60.0
+sentry-sdk[flask]==2.61.1
     # via -r requirements/app.in
 six==1.17.0
     # via
