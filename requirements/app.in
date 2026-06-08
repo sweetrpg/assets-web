@@ -5,12 +5,12 @@ Flask-CORS~=6.0
 Flask-DotEnv~=0.1
 Flask-Session~=0.4
 Flask~=3.0
-hiredis~=3.0
+hiredis~=3.4
 python-dateutil~=2.0
 python-dotenv~=1.0
 python-editor~=1.0
 PyYAML~=6.0
-hiredis~=3.0
+hiredis~=3.4
 requests~=2.0
 sentry-sdk[flask]~=2.0
 sweetrpg-web-core
