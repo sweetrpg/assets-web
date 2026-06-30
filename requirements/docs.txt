@@ -30,7 +30,7 @@ certifi==2026.6.17
     #   sentry-sdk
 charset-normalizer==3.4.7
     # via requests
-click==8.4.1
+click==8.4.2
     # via flask
 docutils==0.22.4
     # via
@@ -158,7 +158,7 @@ sphinxcontrib-serializinghtml==2.0.0
     # via sphinx
 sweetrpg-web-core==0.0.697
     # via -r requirements/app.in
-typer==0.26.7
+typer==0.26.8
     # via rstcheck
 typing-extensions==4.15.0
     # via
