@@ -20,7 +20,7 @@ certifi==2026.6.17
     # via
     #   requests
     #   sentry-sdk
-charset-normalizer==3.4.7
+charset-normalizer==3.4.8
     # via requests
 click==8.4.2
     # via flask
@@ -73,7 +73,7 @@ requests==2.34.2
     # via
     #   -r requirements/app.in
     #   analytics-python
-sentry-sdk[flask]==2.63.0
+sentry-sdk[flask]==2.64.0
     # via -r requirements/app.in
 six==1.17.0
     # via

@@ -25,13 +25,13 @@ certifi==2026.6.17
     # via
     #   requests
     #   sentry-sdk
-charset-normalizer==3.4.7
+charset-normalizer==3.4.8
     # via requests
 click==8.4.2
     # via flask
 colorama==0.4.6
     # via tox
-coverage[toml]==7.14.3
+coverage[toml]==7.15.0
     # via
     #   coverage-badge
     #   pytest-cov
@@ -39,7 +39,7 @@ coverage-badge==1.1.2
     # via -r requirements/tests.in
 distlib==0.4.3
     # via virtualenv
-filelock==3.29.4
+filelock==3.29.6
     # via
     #   python-discovery
     #   tox
@@ -110,7 +110,7 @@ python-dateutil==2.9.0.post0
     # via
     #   -r requirements/app.in
     #   analytics-python
-python-discovery==1.4.2
+python-discovery==1.4.3
     # via
     #   tox
     #   virtualenv
@@ -124,7 +124,7 @@ requests==2.34.2
     # via
     #   -r requirements/app.in
     #   analytics-python
-sentry-sdk[flask]==2.63.0
+sentry-sdk[flask]==2.64.0
     # via -r requirements/app.in
 six==1.17.0
     # via
@@ -141,7 +141,7 @@ urllib3==2.7.0
     #   -r requirements/app.in
     #   requests
     #   sentry-sdk
-virtualenv==21.5.1
+virtualenv==21.6.0
     # via tox
 werkzeug==3.1.8
     # via
