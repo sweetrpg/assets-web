@@ -6,7 +6,7 @@
 #
 analytics-python==1.4.post1
     # via -r requirements/app.in
-asgiref==3.11.1
+asgiref==3.12.1
     # via -r requirements/tests.in
 backoff==1.10.0
     # via analytics-python
