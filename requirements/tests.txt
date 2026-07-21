@@ -6,7 +6,7 @@
 #
 analytics-python==1.4.post1
     # via -r requirements/app.in
-asgiref==3.11.1
+asgiref==3.12.1
     # via -r requirements/tests.in
 backoff==1.10.0
     # via analytics-python
@@ -31,7 +31,7 @@ click==8.4.2
     # via flask
 colorama==0.4.6
     # via tox
-coverage[toml]==7.15.1
+coverage[toml]==7.15.2
     # via
     #   coverage-badge
     #   pytest-cov
@@ -39,7 +39,7 @@ coverage-badge==1.1.2
     # via -r requirements/tests.in
 distlib==0.4.3
     # via virtualenv
-filelock==3.29.7
+filelock==3.31.2
     # via
     #   python-discovery
     #   tox
@@ -86,7 +86,7 @@ packaging==26.2
     #   pyproject-api
     #   pytest
     #   tox
-platformdirs==4.10.0
+platformdirs==4.10.1
     # via
     #   python-discovery
     #   tox
@@ -124,7 +124,7 @@ requests==2.34.2
     # via
     #   -r requirements/app.in
     #   analytics-python
-sentry-sdk[flask]==2.65.0
+sentry-sdk[flask]==2.66.0
     # via -r requirements/app.in
 six==1.17.0
     # via
@@ -134,7 +134,7 @@ sweetrpg-web-core==0.0.697
     # via -r requirements/app.in
 tomli-w==1.2.0
     # via tox
-tox==4.56.4
+tox==4.57.2
     # via -r requirements/tests.in
 urllib3==2.7.0
     # via

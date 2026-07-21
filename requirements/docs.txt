@@ -118,7 +118,7 @@ rstcheck==6.2.5
     # via -r requirements/docs.in
 rstcheck-core==1.3.0
     # via rstcheck
-sentry-sdk[flask]==2.65.0
+sentry-sdk[flask]==2.66.0
     # via -r requirements/app.in
 shellingham==1.5.4
     # via typer
@@ -158,7 +158,7 @@ sphinxcontrib-serializinghtml==2.0.0
     # via sphinx
 sweetrpg-web-core==0.0.697
     # via -r requirements/app.in
-typer==0.26.8
+typer==0.27.0
     # via rstcheck
 typing-extensions==4.16.0
     # via
