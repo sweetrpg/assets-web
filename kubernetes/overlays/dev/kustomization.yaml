@@ -11,6 +11,7 @@ resources:
     - pdb.yaml
     - destination-rules.yaml
     - secrets.yaml
+    - podmonitor.yaml
 patchesStrategicMerge:
     - replicas.yaml
 
