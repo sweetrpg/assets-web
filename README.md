@@ -10,7 +10,9 @@
 [![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 [![Built with love](https://ForTheBadge.com/images/badges/built-with-love.svg)](https://ForTheBadge.com/images/badges/built-with-love.svg)
 
-Put something useful here.
+Flask service that stores and serves the SweetRPG platform's binary assets (avatars, maps,
+tokens, portraits) - `GET /<kind>/<id>` fetches one, `POST /<kind>/<id>` (authenticated) uploads
+one. Files live on a shared `ReadWriteMany` volume; reads are cached in Redis.
 
 ## Documentation
 
