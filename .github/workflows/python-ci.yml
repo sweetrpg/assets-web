@@ -42,7 +42,7 @@ jobs:
                     --health-timeout 5s
                     --health-retries 5
         steps:
-            - uses: actions/checkout@v6
+            - uses: actions/checkout@v7
             - uses: actions/setup-python@v6
               with:
                   python-version: ${{ matrix.python }}
@@ -69,7 +69,7 @@ jobs:
         runs-on: ubuntu-latest
         concurrency: docs
         steps:
-            - uses: actions/checkout@v6
+            - uses: actions/checkout@v7
             - uses: actions/setup-python@v6
               with:
                   python-version: "3.11"
@@ -88,7 +88,7 @@ jobs:
         runs-on: ubuntu-latest
         concurrency: publish
         steps:
-            - uses: actions/checkout@v6
+            - uses: actions/checkout@v7
               with:
                   fetch-depth: 0
             - name: publish
