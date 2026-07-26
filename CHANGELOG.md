@@ -1,3 +1,17 @@
+## [0.1.0] - 2026-07-26
+
+### 🚀 Features
+
+- *(static)* Serve shared frontend static assets
+- *(release)* Adopt the platform's real release workflow
+
+### 🐛 Bug Fixes
+
+- *(kubernetes)* Drop DestinationRule, no working Istio webhook for it
+- *(kubernetes)* Add missing REDIS_HOST to the common ConfigMap
+- *(kubernetes)* Add Ingress, drop unreachable LoadBalancer Service
+- *(web)* Replace broken landing page with a real placeholder
+- *(packaging)* Bundle static/ into built wheels via MANIFEST.in
 # Changelog
 
 <!--next-version-placeholder-->

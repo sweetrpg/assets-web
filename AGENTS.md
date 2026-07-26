@@ -93,6 +93,16 @@ code looks different from git blame around it:
 Git-flow (see `docs/git-flow.md` in `sweetrpg/platform`): `develop` is the integration branch,
 `master` reflects the latest release. Feature/fix branches off `develop`, PR back into `develop`.
 
+Releasing: dispatch the "Prepare Release" workflow - it computes the next version via
+`git-cliff`, bumps `__version__` in `src/sweetrpg_assets_web/__init__.py`, updates
+`CHANGELOG.md`, and opens a `release/<version>` PR into `master`. Merging that PR tags the
+release, which builds and pushes the Docker image and bumps the deployed image tag in
+`sweetrpg/kubernetes` automatically (`.github/workflows/prepare-release.yaml`/`release.yaml`/
+`tag-release.yaml`, using the `sweetrpg/github-actions` reusable Python release workflow family -
+this repo is its first consumer). Previously this repo had no real release workflow at all: a
+`relekang/python-semantic-release` step auto-tagged every `develop` push directly, with no
+review step and no changelog - removed in favor of the above.
+
 ## Running Checks Locally
 
 ```bash
