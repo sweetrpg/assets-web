@@ -1,0 +1,91 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+    name: assets-web-v1
+
+spec:
+    strategy:
+        rollingUpdate:
+            maxSurge: 1
+            maxUnavailable: 1
+        type: RollingUpdate
+    selector:
+        matchLabels:
+            app: assets-web
+            platform: sweetrpg
+            package: assets
+            component: web
+            version: v1
+    template:
+        metadata:
+            labels:
+                app: assets-web
+                platform: sweetrpg
+                package: assets
+                component: web
+                version: v1
+        spec:
+            serviceAccountName: assets-web
+            # Kubernetes auto-injects <SERVICE_NAME>_PORT-style env vars for every Service in
+            # the namespace - support/common/cache's Redis Service is named literally "redis",
+            # so without this, the auto-injected REDIS_PORT silently wins over this app's own
+            # intended value (see catalog-api#121, the same collision, already hit once).
+            enableServiceLinks: false
+            imagePullSecrets:
+                - name: sweetrpg-registry
+            containers:
+                - name: app
+                  image: ghcr.io/sweetrpg/assets-web:latest
+                  imagePullPolicy: Always
+                  envFrom:
+                      - configMapRef:
+                            name: assets-web-common
+                      - configMapRef:
+                            name: assets-web-env
+                      - secretRef:
+                            name: assets-web-auth
+                      - secretRef:
+                            name: assets-web-misc
+                      - secretRef:
+                            name: assets-web-cache
+                  env: []
+                  ports:
+                      - containerPort: 8081
+                        name: http
+                  resources:
+                      requests:
+                          cpu: "20m"
+                          memory: "55m"
+                      limits:
+                          cpu: "1.0"
+                          memory: "1Gi"
+                  livenessProbe:
+                      httpGet:
+                          path: /health/ping
+                          port: http
+                      initialDelaySeconds: 90
+                      timeoutSeconds: 10
+                  readinessProbe:
+                      httpGet:
+                          path: /health/ping
+                          port: http
+                      initialDelaySeconds: 30
+                      timeoutSeconds: 10
+                  volumeMounts:
+                      - mountPath: /data
+                        name: data
+                      - mountPath: /config
+                        name: config
+            volumes:
+                - name: config
+                  secret:
+                      secretName: assets-web-files
+                      items:
+                          - key: newrelic.ini
+                            path: newrelic.ini
+                - name: data
+                  persistentVolumeClaim:
+                      claimName: assets-web-data
+            restartPolicy: Always
