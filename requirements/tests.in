@@ -5,3 +5,4 @@ coverage-badge~=1.0
 pytest~=9.0
 pytest-cov~=7.0
 tox~=4.0
+tox-uv~=1.0

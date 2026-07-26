@@ -3,7 +3,9 @@
 # Licensed under the MIT License. See https://go.microsoft.com/fwlink/?linkid=2090316 for license information.
 #-------------------------------------------------------------------------------------------------------------
 
-FROM python:3.11
+FROM python:3.14
+
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /usr/local/bin/
 
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
@@ -37,13 +39,13 @@ RUN apt-get update \
     && apt-get install -y git iproute2 procps lsb-release \
     #
     # Install pylint
-    && pip install pylint newrelic \
+    && uv pip install --system pylint newrelic \
     #
     # Other stuff
     # && apt-get install -y postgresql-client \
     #
     # Update Python environment based on requirements.txt
-    && pip --disable-pip-version-check --no-cache-dir install -r /tmp/pip-tmp/requirements.txt \
+    && uv pip install --system --no-cache -r /tmp/pip-tmp/requirements.txt \
     && rm -rf /tmp/pip-tmp \
     #
     # Create a non-root user to use if preferred - see https://aka.ms/vscode-remote/containers/non-root-user.
