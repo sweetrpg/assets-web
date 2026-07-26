@@ -11,6 +11,8 @@ resources:
     - pdb.yaml
     - secrets.yaml
     - podmonitor.yaml
+    - ingress.yaml
+    - middlewares.yaml
 patchesStrategicMerge:
     - replicas.yaml
 
