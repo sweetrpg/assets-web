@@ -5,20 +5,15 @@ __author__ = "Paul Schifferer <dm@sweetrpg.com>"
 
 from functools import wraps
 from sweetrpg_assets_web.application import constants
-import jinja2
-from flask import Blueprint, request, session, jsonify, current_app, make_response, render_template, send_file, abort
+from flask import Blueprint, request, session, jsonify, current_app, make_response, send_file, abort
 from werkzeug.exceptions import HTTPException
 from werkzeug.utils import secure_filename
 from io import BytesIO
-import json
 import mimetypes
-import os
 from pathlib import Path
-from sweetrpg_assets_web.application import constants
 from sweetrpg_assets_web.application.cache import cache
 import analytics
 import datetime
-from sweetrpg_web_core import constants as core_constants
 
 
 blueprint = Blueprint("web", __name__)
@@ -104,38 +99,23 @@ def error_handler(ex):
     return response
 
 
-def render_page(page:str, context:dict={}):
-    """Call `render_template` for the specified page, and merge the
-    provided context into an initialized, common context.
-
-    :param str page:
-    :param dict context:
-    :returns:
-    """
-    show_cookie_message = True
-    if request.cookies.get("cookies-accepted"):
-        show_cookie_message = False
-    context.update({
-       "showCookieMessage": show_cookie_message,
-    })
-
-    userinfo = session.get(core_constants.PROFILE_KEY)
-    if userinfo:
-        context.update({
-            "user_info": userinfo,
-            "segment_write_key": os.environ.get(constants.SEGMENT_WRITE_KEY, "")
-        })
-
-    current_app.logger.debug(f"context: {context}")
-    return render_template(page, **context)
+# Assets are fetched by kind and ID known from other services (e.g. a catalog entry's image
+# reference), not browsed - this is a static placeholder, not a real landing page.
+_PLACEHOLDER_PAGE = """<!DOCTYPE html>
+<html>
+<head><title>SweetRPG Assets</title></head>
+<body>
+<h1>SweetRPG Assets</h1>
+<p>This service stores and serves the SweetRPG platform's binary assets. There is nothing to
+browse here - assets are fetched by kind and ID from other services.</p>
+</body>
+</html>
+"""
 
 
 @blueprint.route("/")
 def main_page():
-    context = {"user_info": session.get(constants.SWEETRPG_AUTH_KEY)}
-
-    print(f"context: {context}")
-    return render_page("index.html", context)
+    return make_response(_PLACEHOLDER_PAGE, 200, {"Content-Type": "text/html"})
 
 
 def _asset_path(kind: str, id: str) -> Path:
