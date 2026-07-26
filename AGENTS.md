@@ -105,8 +105,17 @@ review step and no changelog - removed in favor of the above.
 
 ## Running Checks Locally
 
+Python 3.14, managed via [uv](https://docs.astral.sh/uv/) rather than pip/pip-tools directly -
+`uv` replaces pip-tools' `pip-compile` (see `scripts/update-requirements.sh`) and is the install
+tool for both local dev and CI. `tox` still drives the actual test run, but with `tox.ini`'s
+`runner = uv-venv-runner` (from the `tox-uv` plugin, listed in `requirements/tests.in`) it
+creates environments and installs dependencies through `uv` instead of `virtualenv`/`pip` -
+`tox-uv` doesn't take over just by being installed; the `runner` setting is what opts in.
+
 ```bash
-pip install -r requirements/tests.txt -e .
+uv venv --python 3.14
+source .venv/bin/activate
+uv pip install -r requirements/tests.txt -e .
 python -m pytest tests
 ```
 

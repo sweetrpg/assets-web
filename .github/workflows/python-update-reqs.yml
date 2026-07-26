@@ -17,12 +17,11 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v7
-            - uses: actions/setup-python@v7
+            - uses: astral-sh/setup-uv@v5
               with:
-                  python-version: "3.11"
+                  python-version: "3.14"
             - name: update-reqs
               run: |
-                  pip install -U wheel setuptools pip-tools
                   git config --global user.email "ci@sweetrpg.com"
                   git config --global user.name "SweetRPG Requirement Updater"
                   git checkout ${{ github.head_ref || github.ref_name }}
