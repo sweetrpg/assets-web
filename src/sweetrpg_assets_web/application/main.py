@@ -53,7 +53,11 @@ def create_app(app_name=constants.APPLICATION_NAME):
         }
     )
 
-    app = Flask(app_name)
+    # static_folder=None: app_name isn't a real module name, so Flask's default static_folder
+    # would resolve relative to the process's cwd rather than this package - the shared static
+    # route in blueprints/__init__.py serves its own directory from an absolute, __file__-derived
+    # path instead of relying on that.
+    app = Flask(app_name, static_folder=None)
     # Load config before touching app.debug - it must reflect BaseConfig.DEBUG, not Flask's
     # own pre-config default, or the Sentry setup below (`if not app.debug`) checks a value
     # that was never actually set from the environment.

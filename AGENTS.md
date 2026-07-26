@@ -30,6 +30,19 @@ yet), so the choices below are this repo's own, not a platform-wide standard.
   `_populate` in `blueprints/__init__.py`, populated from `X-Forwarded-User`/`X-Forwarded-Email`
   set by the upstream auth proxy, not validated by this app itself) - 401 otherwise.
 
+### Shared static assets
+
+`GET /static/<path:filename>` is a second, distinct route from the kind/id store above - it
+serves shared frontend branding (logo, favicon, stylesheet) checked into this repo at
+`src/sweetrpg_assets_web/static/` and deployed with the app, not the PVC. No authentication: these
+files are meant to be publicly embedded by any frontend (see `docs/frontend-conventions.md` in
+`sweetrpg/platform` for the base-URL convention consuming frontends use to reference them).
+Flask's own implicit static-file handling is disabled (`Flask(app_name, static_folder=None)` in
+`main.py`) because `app_name` isn't a real importable module name, so Flask's default
+`static_folder` would resolve relative to the process's working directory rather than this
+package - this route computes its directory from `__file__` instead, which is correct regardless
+of `cwd`.
+
 ### Known gaps fixed while building this
 
 Several were live bugs, not stylistic nits - worth knowing about if you're wondering why the

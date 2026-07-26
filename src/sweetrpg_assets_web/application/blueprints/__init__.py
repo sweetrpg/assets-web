@@ -5,7 +5,7 @@ __author__ = "Paul Schifferer <dm@sweetrpg.com>"
 
 from functools import wraps
 from sweetrpg_assets_web.application import constants
-from flask import Blueprint, request, session, jsonify, current_app, make_response, send_file, abort
+from flask import Blueprint, request, session, jsonify, current_app, make_response, send_file, send_from_directory, abort
 from werkzeug.exceptions import HTTPException
 from werkzeug.utils import secure_filename
 from io import BytesIO
@@ -116,6 +116,18 @@ browse here - assets are fetched by kind and ID from other services.</p>
 @blueprint.route("/")
 def main_page():
     return make_response(_PLACEHOLDER_PAGE, 200, {"Content-Type": "text/html"})
+
+
+# Shared frontend branding (logo, favicon, stylesheet) checked into this repo and deployed with
+# the app - distinct from the /<kind>/<id> store below, which is authenticated, PVC-backed,
+# user-uploaded content. No auth needed: these files are meant to be publicly embedded by any
+# frontend.
+_STATIC_ASSETS_DIR = Path(__file__).resolve().parent.parent.parent / "static"
+
+
+@blueprint.route("/static/<path:filename>")
+def static_asset(filename: str):
+    return send_from_directory(_STATIC_ASSETS_DIR, filename)
 
 
 def _asset_path(kind: str, id: str) -> Path:
