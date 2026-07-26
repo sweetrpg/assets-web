@@ -11,6 +11,7 @@ on:
             - tox.ini
             - "requirements/**"
             - "docs/**"
+            - ".github/workflows/**"
     workflow_run:
         workflows: ["Update Requirements"]
         types: [completed]
@@ -63,9 +64,13 @@ jobs:
               with:
                   python-version: "3.14"
             - name: install-deps
-              run: uv pip install --system -r requirements/docs.txt
+              run: |
+                  uv venv
+                  uv pip install -r requirements/docs.txt
             - name: make-docs
-              run: cd docs && make html
+              run: |
+                  source .venv/bin/activate
+                  cd docs && make html
             - name: publish-docs
               uses: peaceiris/actions-gh-pages@v4
               with:
