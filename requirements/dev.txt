@@ -10,7 +10,7 @@ analytics-python==1.4.post1
     # via -r requirements/app.in
 annotated-doc==0.0.4
     # via typer
-annotated-types==0.7.0
+annotated-types==0.8.0
     # via pydantic
 asgiref==3.12.1
     # via -r requirements/tests.in
@@ -31,9 +31,9 @@ cachelib==0.14.0
     # via
     #   flask-caching
     #   flask-session
-cachetools==7.1.4
+cachetools==7.1.6
     # via tox
-certifi==2026.6.17
+certifi==2026.7.22
     # via
     #   requests
     #   sentry-sdk
@@ -52,6 +52,8 @@ coverage[toml]==7.15.2
     #   pytest-cov
 coverage-badge==1.1.2
     # via -r requirements/tests.in
+deprecated==1.3.1
+    # via limits
 distlib==0.4.3
     # via virtualenv
 docutils==0.22.4
@@ -59,7 +61,7 @@ docutils==0.22.4
     #   rstcheck-core
     #   sphinx
     #   sphinx-tabs
-filelock==3.31.2
+filelock==3.32.0
     # via
     #   python-discovery
     #   tox
@@ -70,7 +72,9 @@ flask==3.1.3
     #   flask-caching
     #   flask-cors
     #   flask-dotenv
+    #   flask-limiter
     #   flask-session
+    #   prometheus-flask-exporter
     #   sentry-sdk
     #   sweetrpg-web-core
 flask-caching==2.4.1
@@ -79,8 +83,12 @@ flask-cors==6.0.5
     # via -r requirements/app.in
 flask-dotenv==0.1.2
     # via -r requirements/app.in
+flask-limiter==4.1.1
+    # via -r requirements/app.in
 flask-session==0.8.0
     # via -r requirements/app.in
+googleapis-common-protos==1.75.0
+    # via opentelemetry-exporter-otlp-proto-http
 hiredis==3.4.0
     # via -r requirements/app.in
 idna==3.18
@@ -95,6 +103,8 @@ jinja2==3.1.6
     # via
     #   flask
     #   sphinx
+limits==5.8.0
+    # via flask-limiter
 markdown-it-py==4.2.0
     # via rich
 markupsafe==3.0.3
@@ -111,10 +121,53 @@ msgspec==0.21.1
     # via flask-session
 mypy-extensions==1.1.0
     # via black
+opentelemetry-api==1.44.0
+    # via
+    #   opentelemetry-exporter-otlp-proto-http
+    #   opentelemetry-instrumentation
+    #   opentelemetry-instrumentation-flask
+    #   opentelemetry-instrumentation-wsgi
+    #   opentelemetry-sdk
+    #   opentelemetry-semantic-conventions
+opentelemetry-exporter-otlp-proto-common==1.44.0
+    # via opentelemetry-exporter-otlp-proto-http
+opentelemetry-exporter-otlp-proto-http==1.44.0
+    # via -r requirements/app.in
+opentelemetry-instrumentation==0.65b0
+    # via
+    #   opentelemetry-instrumentation-flask
+    #   opentelemetry-instrumentation-wsgi
+opentelemetry-instrumentation-flask==0.65b0
+    # via -r requirements/app.in
+opentelemetry-instrumentation-wsgi==0.65b0
+    # via opentelemetry-instrumentation-flask
+opentelemetry-proto==1.44.0
+    # via
+    #   opentelemetry-exporter-otlp-proto-common
+    #   opentelemetry-exporter-otlp-proto-http
+opentelemetry-sdk==1.44.0
+    # via
+    #   -r requirements/app.in
+    #   opentelemetry-exporter-otlp-proto-http
+opentelemetry-semantic-conventions==0.65b0
+    # via
+    #   opentelemetry-instrumentation
+    #   opentelemetry-instrumentation-flask
+    #   opentelemetry-instrumentation-wsgi
+    #   opentelemetry-sdk
+opentelemetry-util-http==0.65b0
+    # via
+    #   opentelemetry-instrumentation-flask
+    #   opentelemetry-instrumentation-wsgi
+ordered-set==4.1.0
+    # via flask-limiter
 packaging==26.2
     # via
     #   black
     #   build
+    #   limits
+    #   opentelemetry-instrumentation
+    #   opentelemetry-instrumentation-flask
     #   pallets-sphinx-themes
     #   pyproject-api
     #   pytest
@@ -127,7 +180,7 @@ pathspec==1.1.1
     # via black
 pip-tools==7.6.0
     # via -r requirements/dev.in
-platformdirs==4.10.1
+platformdirs==4.11.0
     # via
     #   black
     #   python-discovery
@@ -138,6 +191,14 @@ pluggy==1.6.0
     #   pytest
     #   pytest-cov
     #   tox
+prometheus-client==0.26.0
+    # via prometheus-flask-exporter
+prometheus-flask-exporter==0.23.2
+    # via -r requirements/app.in
+protobuf==7.35.1
+    # via
+    #   googleapis-common-protos
+    #   opentelemetry-proto
 pydantic==2.13.4
     # via rstcheck-core
 pydantic-core==2.46.4
@@ -148,7 +209,7 @@ pygments==2.20.0
     #   rich
     #   sphinx
     #   sphinx-tabs
-pyproject-api==1.10.1
+pyproject-api==1.11.0
     # via tox
 pyproject-hooks==1.2.0
     # via
@@ -164,7 +225,7 @@ python-dateutil==2.9.0.post0
     # via
     #   -r requirements/app.in
     #   analytics-python
-python-discovery==1.4.4
+python-discovery==1.5.0
     # via
     #   tox
     #   virtualenv
@@ -172,14 +233,19 @@ python-dotenv==1.2.2
     # via -r requirements/app.in
 python-editor==1.0.4
     # via -r requirements/app.in
+python-json-logger==4.1.0
+    # via -r requirements/app.in
 pytokens==0.4.1
     # via black
 pyyaml==6.0.3
+    # via -r requirements/app.in
+redis==6.4.0
     # via -r requirements/app.in
 requests==2.34.2
     # via
     #   -r requirements/app.in
     #   analytics-python
+    #   opentelemetry-exporter-otlp-proto-http
     #   sphinx
 rich==15.0.0
     # via typer
@@ -189,7 +255,7 @@ rstcheck==6.2.5
     # via -r requirements/docs.in
 rstcheck-core==1.3.0
     # via rstcheck
-sentry-sdk[flask]==2.66.0
+sentry-sdk[flask]==2.66.1
     # via -r requirements/app.in
 shellingham==1.5.4
     # via typer
@@ -231,12 +297,18 @@ sweetrpg-web-core==0.0.697
     # via -r requirements/app.in
 tomli-w==1.2.0
     # via tox
-tox==4.57.2
+tox==4.58.0
     # via -r requirements/tests.in
 typer==0.27.0
     # via rstcheck
 typing-extensions==4.16.0
     # via
+    #   flask-limiter
+    #   limits
+    #   opentelemetry-api
+    #   opentelemetry-exporter-otlp-proto-http
+    #   opentelemetry-sdk
+    #   opentelemetry-semantic-conventions
     #   pydantic
     #   pydantic-core
     #   typing-inspection
@@ -247,7 +319,7 @@ urllib3==2.7.0
     #   -r requirements/app.in
     #   requests
     #   sentry-sdk
-virtualenv==21.6.1
+virtualenv==21.7.0
     # via tox
 werkzeug==3.1.8
     # via
@@ -255,6 +327,10 @@ werkzeug==3.1.8
     #   flask-cors
 wheel==0.47.0
     # via pip-tools
+wrapt==2.2.2
+    # via
+    #   deprecated
+    #   opentelemetry-instrumentation
 
 # The following packages are considered to be unsafe in a requirements file:
 # pip

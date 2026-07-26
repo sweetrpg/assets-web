@@ -10,6 +10,9 @@ from flask_cors import CORS
 from flask_session import Session
 from dotenv import load_dotenv, find_dotenv
 from sweetrpg_assets_web.application.cache import cache
+from sweetrpg_assets_web.application.limiter import limiter
+from sweetrpg_assets_web.application.metrics import setup_metrics
+from sweetrpg_assets_web.application.tracing import setup_tracing
 from sweetrpg_assets_web.application import constants
 from logging.config import dictConfig
 from redis.client import Redis
@@ -30,39 +33,44 @@ def create_app(app_name=constants.APPLICATION_NAME):
         {
             "version": 1,
             "formatters": {
-                "default": {
-                    "format": "[%(asctime)s] %(levelname)s %(module)s/%(funcName)s: %(message)s",
-                },
-                "logstash": {
-                    "class": "logstash_async.formatter.FlaskLogstashFormatter",
-                    "metadata": {"beat": "sweetrpg-assets-web"},
+                # One JSON object per line to stdout - matches the Go/Swift services'
+                # structured-logging convention so log aggregation parses all of them the same
+                # way.
+                "json": {
+                    "class": "pythonjsonlogger.json.JsonFormatter",
+                    "format": "%(asctime)s %(levelname)s %(module)s %(funcName)s %(message)s",
                 },
             },
             "handlers": {
-                "wsgi": {"class": "logging.StreamHandler", "stream": "ext://flask.logging.wsgi_errors_stream", "formatter": "default"},
-                # "logstash": {"class": "logstash_async.handler.AsynchronousLogstashHandler", "formatter": "logstash",
-                #              "host": os.environ[constants.LOGSTASH_HOST],
-                #              "port": int(os.environ[constants.LOGSTASH_PORT]),
-                #              "database_path": "/tmp/sweetrpg_assets_web_flask_logstash.db",
-                #              "transport": "logstash_async.transport.BeatsTransport",
-                #              },
+                "wsgi": {"class": "logging.StreamHandler", "stream": "ext://flask.logging.wsgi_errors_stream", "formatter": "json"},
             },
             "root": {
                 "level": os.environ.get(constants.LOG_LEVEL) or "INFO",
                 "handlers": [
                     "wsgi",
                 ],
-            },  # "logstash"]},
+            },
         }
     )
 
     app = Flask(app_name)
-    app.debug = app.config.get(constants.DEBUG, False)
+    # Load config before touching app.debug - it must reflect BaseConfig.DEBUG, not Flask's
+    # own pre-config default, or the Sentry setup below (`if not app.debug`) checks a value
+    # that was never actually set from the environment.
     app.config.from_object("sweetrpg_assets_web.application.config.BaseConfig")
-    # env = DotEnv(app)
 
     app.logger.info("Setting up cache...")
     cache.init_app(app)
+
+    app.logger.info("Setting up rate limiter...")
+    app.config["RATELIMIT_DEFAULT"] = app.config["RATE_LIMIT"]
+    limiter.init_app(app)
+
+    app.logger.info("Setting up metrics...")
+    setup_metrics(app)
+
+    app.logger.info("Setting up tracing...")
+    setup_tracing(app)
 
     app.logger.info("Setting up analytics...")
     analytics.write_key = app.config.get(constants.SEGMENT_WRITE_KEY)
@@ -83,14 +91,14 @@ def create_app(app_name=constants.APPLICATION_NAME):
 
     from sweetrpg_web_core.blueprints.health import blueprint as health_blueprint
 
-    main_blueprint.register_blueprint(health_blueprint)
+    # main_blueprint is a module-level singleton, so registering health_blueprint onto it is a
+    # one-time setup step, not per-app-instance - Flask rejects registering the same Blueprint
+    # object twice. Only relevant when create_app() runs more than once in a process (tests,
+    # a REPL); each real worker process calls it exactly once.
+    if not main_blueprint._got_registered_once:
+        main_blueprint.register_blueprint(health_blueprint)
 
     app.register_blueprint(main_blueprint)
-
-    # app.wsgi_app = SassMiddleware(app.wsgi_app, {
-    #     'application': ('static/sass', 'static/css', '/static/css')
-    # })
-    # scss = Scss(app, static_dir='static', asset_dir='assets')
 
     print(app.url_map)
 

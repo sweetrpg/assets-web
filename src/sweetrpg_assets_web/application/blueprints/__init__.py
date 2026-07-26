@@ -6,11 +6,16 @@ __author__ = "Paul Schifferer <dm@sweetrpg.com>"
 from functools import wraps
 from sweetrpg_assets_web.application import constants
 import jinja2
-from flask import Blueprint, request, session, jsonify, current_app, make_response, render_template
+from flask import Blueprint, request, session, jsonify, current_app, make_response, render_template, send_file, abort
 from werkzeug.exceptions import HTTPException
+from werkzeug.utils import secure_filename
+from io import BytesIO
 import json
+import mimetypes
 import os
+from pathlib import Path
 from sweetrpg_assets_web.application import constants
+from sweetrpg_assets_web.application.cache import cache
 import analytics
 import datetime
 from sweetrpg_web_core import constants as core_constants
@@ -75,6 +80,12 @@ def _store_user():
 
 @blueprint.before_request
 def _track():
+    # analytics.identify/track raise AssertionError if write_key isn't configured - without
+    # this guard, every authenticated request 500s in any environment that hasn't set
+    # SEGMENT_WRITE_KEY.
+    if not analytics.write_key:
+        return
+
     email = session.get(constants.SESSION_EMAIL)
     print(f"email: {email}")
     user_id = session.get(constants.SESSION_USER_ID)
@@ -127,17 +138,71 @@ def main_page():
     return render_page("index.html", context)
 
 
-@blueprint.route("/<kind>/<id>", methods=['GET'])
-def get_asset(kind:str, id:str):
-    resp = make_response()
+def _asset_path(kind: str, id: str) -> Path:
+    """Resolve the on-disk path for an asset, rejecting an id that doesn't survive
+    `secure_filename` unchanged (path traversal, empty, or otherwise unsafe)."""
+    safe_id = secure_filename(id)
+    if not safe_id or safe_id != id:
+        abort(400, description="Invalid asset id")
+    return Path(current_app.config["ASSET_DATA_PATH"]) / kind / safe_id
 
-    return resp
+
+def _require_known_kind(kind: str) -> None:
+    if kind not in constants.ALLOWED_KINDS:
+        abort(400, description=f"Unknown asset kind: {kind}")
+
+
+def _require_authenticated() -> None:
+    if not (session.get(constants.SESSION_USER_ID) and session.get(constants.SESSION_EMAIL)):
+        abort(401, description="Authentication required")
+
+
+def _cache_key(kind: str, id: str) -> str:
+    return f"asset:{kind}:{id}"
+
+
+@blueprint.route("/<kind>/<id>", methods=['GET'])
+def get_asset(kind: str, id: str):
+    _require_known_kind(kind)
+
+    cache_key = _cache_key(kind, id)
+    cached = cache.get(cache_key)
+    if cached is not None:
+        data, mimetype = cached
+        return send_file(BytesIO(data), mimetype=mimetype)
+
+    path = _asset_path(kind, id)
+    if not path.is_file():
+        abort(404, description="Asset not found")
+
+    data = path.read_bytes()
+    mimetype = mimetypes.guess_type(path.name)[0] or "application/octet-stream"
+    cache.set(cache_key, (data, mimetype), timeout=current_app.config["ASSET_CACHE_TTL"])
+
+    return send_file(BytesIO(data), mimetype=mimetype)
 
 
 @blueprint.route("/<kind>/<id>", methods=['POST'])
-def store_asset(kind:str, id:str):
+def store_asset(kind: str, id: str):
+    _require_authenticated()
+    _require_known_kind(kind)
 
-    return {}, 201
+    upload = request.files.get("file")
+    if upload is None or not upload.filename:
+        abort(400, description="No file provided")
+
+    path = _asset_path(kind, id)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    upload.save(path)
+
+    # Invalidate rather than repopulate - the next GET will read the new file and refill the
+    # cache with the correct content, avoiding a race with a GET that's mid-flight right now.
+    cache.delete(_cache_key(kind, id))
+
+    response = jsonify(kind=kind, id=id)
+    response.status_code = 201
+    response.headers["Location"] = f"/{kind}/{id}"
+    return response
 
 
 from sweetrpg_web_core.blueprints import health
