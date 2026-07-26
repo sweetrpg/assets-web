@@ -14,6 +14,7 @@ on:
     workflow_run:
         workflows: ["Update Requirements"]
         types: [completed]
+    workflow_dispatch: {}
 
 jobs:
     tests:
