@@ -9,7 +9,6 @@ resources:
     - configmaps.yaml
     - hpa.yaml
     - pdb.yaml
-    - destination-rules.yaml
     - secrets.yaml
     - podmonitor.yaml
 patchesStrategicMerge:
