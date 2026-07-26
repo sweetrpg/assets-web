@@ -11,6 +11,7 @@ on:
             - tox.ini
             - "requirements/**"
             - "docs/**"
+            - ".github/workflows/**"
 
 jobs:
     tests:

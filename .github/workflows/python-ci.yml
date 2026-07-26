@@ -11,6 +11,7 @@ on:
             - tox.ini
             - "requirements/**"
             - "docs/**"
+            - ".github/workflows/**"
     workflow_run:
         workflows: ["Update Requirements"]
         types: [completed]
