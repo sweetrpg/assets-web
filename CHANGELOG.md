@@ -1,3 +1,30 @@
+## [0.1.1] - 2026-07-26
+
+### 🚀 Features
+
+- *(static)* Serve shared frontend static assets
+- *(release)* Adopt the platform's real release workflow
+- *(tooling)* Move to Python 3.14 and uv (#233)
+
+### 🐛 Bug Fixes
+
+- *(kubernetes)* Drop DestinationRule, no working Istio webhook for it
+- *(kubernetes)* Add missing REDIS_HOST to the common ConfigMap
+- *(kubernetes)* Add Ingress, drop unreachable LoadBalancer Service
+- *(web)* Replace broken landing page with a real placeholder
+- *(packaging)* Bundle static/ into built wheels via MANIFEST.in
+- *(ci)* Docs job's uv install fails against a uv-managed Python (#234)
+- *(ci)* Don't create a second venv on top of setup-uv's own (#235)
+- *(kubernetes)* Drop DestinationRule from release
+- *(kubernetes)* Add missing REDIS_HOST into release
+- *(kubernetes)* Add Ingress into release
+- *(web)* Landing page placeholder into release
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* 0.1.0
+- *(release)* Shared frontend static assets
+- *(release)* Merge master into develop (one-time reconciliation)
 ## [0.1.0] - 2026-07-26
 
 ### 🚀 Features
