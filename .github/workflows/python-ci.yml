@@ -64,9 +64,7 @@ jobs:
               with:
                   python-version: "3.14"
             - name: install-deps
-              run: |
-                  uv venv
-                  uv pip install -r requirements/docs.txt
+              run: uv pip install -r requirements/docs.txt
             - name: make-docs
               run: |
                   source .venv/bin/activate
