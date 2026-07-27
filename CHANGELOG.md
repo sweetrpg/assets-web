@@ -1,3 +1,24 @@
+## [0.2.1] - 2026-07-27
+
+### 🚀 Features
+
+- *(tooling)* Move to Python 3.14 and uv (#233)
+- Add new images
+
+### 🐛 Bug Fixes
+
+- *(ci)* Docs job's uv install fails against a uv-managed Python (#234)
+- *(ci)* Don't create a second venv on top of setup-uv's own (#235)
+- *(ci)* Validate PRs into master too, not just develop (#238)
+- Prefix the kind/id asset store with /asset (#239)
+- Address CodeQL findings - workflow permissions, path injection (#242)
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop (one-time reconciliation)
+- *(release)* Merge master into develop after v0.1.1
+- *(release)* Merge master into develop after v0.2.0
+- Remove replicas patch
 ## [0.2.0] - 2026-07-27
 
 ### 🚀 Features
