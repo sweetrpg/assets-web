@@ -7,21 +7,20 @@ namespace: sweetrpg-support
 resources:
     - ../../base
     - configmaps.yaml
-    - hpa.yaml
-    - pdb.yaml
+    # - hpa.yaml
+    # - pdb.yaml
     - secrets.yaml
     - podmonitor.yaml
     - ingress.yaml
     - middlewares.yaml
-patchesStrategicMerge:
-    - replicas.yaml
 
-commonLabels:
-    app: assets
-    version: v1
-    platform: sweetrpg
-    package: support
-    component: assets
+labels:
+  - pairs:
+      app: assets
+      version: v1
+      platform: sweetrpg
+      package: support
+      component: assets
 
 generatorOptions:
     disableNameSuffixHash: true

@@ -131,8 +131,12 @@ def static_asset(filename: str):
 
 
 def _asset_path(kind: str, id: str) -> Path:
-    """Resolve the on-disk path for an asset, rejecting an id that doesn't survive
-    `secure_filename` unchanged (path traversal, empty, or otherwise unsafe)."""
+    """Resolve the on-disk path for an asset. Rejects a kind outside the fixed ALLOWED_KINDS
+    allowlist and an id that doesn't survive `secure_filename` unchanged (path traversal,
+    empty, or otherwise unsafe) - both checked here, in the same function that builds the
+    path, rather than relying solely on callers to have validated kind first via
+    `_require_known_kind`."""
+    _require_known_kind(kind)
     safe_id = secure_filename(id)
     if not safe_id or safe_id != id:
         abort(400, description="Invalid asset id")
