@@ -1,3 +1,20 @@
+## [0.1.2] - 2026-07-27
+
+### 🚀 Features
+
+- *(tooling)* Move to Python 3.14 and uv (#233)
+
+### 🐛 Bug Fixes
+
+- *(ci)* Docs job's uv install fails against a uv-managed Python (#234)
+- *(ci)* Don't create a second venv on top of setup-uv's own (#235)
+- *(ci)* Validate PRs into master too, not just develop (#238)
+- Prefix the kind/id asset store with /asset (#239)
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop (one-time reconciliation)
+- *(release)* Merge master into develop after v0.1.1
 ## [0.1.1] - 2026-07-26
 
 ### 🚀 Features
