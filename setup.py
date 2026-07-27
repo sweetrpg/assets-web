@@ -22,7 +22,7 @@ setup(
         "python-json-logger~=4.1",
         "PyYAML~=6.0",
         "hiredis~=3.0",
-        "redis~=6.0",
+        "redis~=8.0",
         "requests~=2.0",
         "sentry-sdk[flask]~=2.0",
         "sweetrpg-web-core",
