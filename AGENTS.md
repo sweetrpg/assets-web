@@ -6,12 +6,14 @@ working in this repository.
 ## About This Project
 
 `assets-web` is a Flask service that stores and serves the SweetRPG platform's binary assets
-(avatars, maps, tokens, portraits). `GET /<kind>/<id>` fetches one; `POST /<kind>/<id>`
-(authenticated) uploads one. It's the org's first Python **web frontend** to get the full
-observability treatment (tracing/JSON logs/metrics/rate limiting) - there's no
-`docs/service-conventions.md`-equivalent for Python yet (that doc is explicitly Go-specific and
-says to write the convention up once a second Python service exists to compare against - not
-yet), so the choices below are this repo's own, not a platform-wide standard.
+(avatars, maps, tokens, portraits). `GET /asset/<kind>/<id>` fetches one; `POST
+/asset/<kind>/<id>` (authenticated) uploads one - the `/asset` prefix distinguishes this store
+from the `/static/<path:filename>` shared-branding route below. It's the org's first Python
+**web frontend** to get the full observability treatment (tracing/JSON logs/metrics/rate
+limiting) - there's no `docs/service-conventions.md`-equivalent for Python yet (that doc is
+explicitly Go-specific and says to write the convention up once a second Python service exists
+to compare against - not yet), so the choices below are this repo's own, not a platform-wide
+standard.
 
 ### Asset storage model
 

@@ -119,7 +119,7 @@ def main_page():
 
 
 # Shared frontend branding (logo, favicon, stylesheet) checked into this repo and deployed with
-# the app - distinct from the /<kind>/<id> store below, which is authenticated, PVC-backed,
+# the app - distinct from the /asset/<kind>/<id> store below, which is authenticated, PVC-backed,
 # user-uploaded content. No auth needed: these files are meant to be publicly embedded by any
 # frontend.
 _STATIC_ASSETS_DIR = Path(__file__).resolve().parent.parent.parent / "static"
@@ -153,7 +153,7 @@ def _cache_key(kind: str, id: str) -> str:
     return f"asset:{kind}:{id}"
 
 
-@blueprint.route("/<kind>/<id>", methods=['GET'])
+@blueprint.route("/asset/<kind>/<id>", methods=['GET'])
 def get_asset(kind: str, id: str):
     _require_known_kind(kind)
 
@@ -174,7 +174,7 @@ def get_asset(kind: str, id: str):
     return send_file(BytesIO(data), mimetype=mimetype)
 
 
-@blueprint.route("/<kind>/<id>", methods=['POST'])
+@blueprint.route("/asset/<kind>/<id>", methods=['POST'])
 def store_asset(kind: str, id: str):
     _require_authenticated()
     _require_known_kind(kind)
@@ -193,7 +193,7 @@ def store_asset(kind: str, id: str):
 
     response = jsonify(kind=kind, id=id)
     response.status_code = 201
-    response.headers["Location"] = f"/{kind}/{id}"
+    response.headers["Location"] = f"/asset/{kind}/{id}"
     return response
 
 
