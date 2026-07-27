@@ -6,4 +6,4 @@ metadata:
     name: assets-web-v1
 
 spec:
-    replicas: 2
+    replicas: 1
