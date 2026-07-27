@@ -12,6 +12,9 @@ on:
         paths:
             - "requirements/*.in"
 
+permissions:
+    contents: write
+
 jobs:
     update-reqs:
         runs-on: ubuntu-latest
