@@ -11,8 +11,9 @@
 [![Built with love](https://ForTheBadge.com/images/badges/built-with-love.svg)](https://ForTheBadge.com/images/badges/built-with-love.svg)
 
 Flask service that stores and serves the SweetRPG platform's binary assets (avatars, maps,
-tokens, portraits) - `GET /<kind>/<id>` fetches one, `POST /<kind>/<id>` (authenticated) uploads
-one. Files live on a shared `ReadWriteMany` volume; reads are cached in Redis.
+tokens, portraits) - `GET /asset/<kind>/<id>` fetches one, `POST /asset/<kind>/<id>`
+(authenticated) uploads one. Files live on a shared `ReadWriteMany` volume; reads are cached in
+Redis.
 
 ## Documentation
 
