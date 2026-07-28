@@ -24,6 +24,8 @@ jobs:
     tests:
         name: ${{ matrix.name }}
         runs-on: ${{ matrix.os }}
+        permissions:
+            contents: write
         concurrency:
             group: ci-${{ github.workflow }}-${{ github.ref }}
             cancel-in-progress: true
@@ -78,6 +80,24 @@ jobs:
             - name: coverage-threshold
               continue-on-error: true
               run: tox exec -e ${{ matrix.tox }} -- coverage report --fail-under=79
+            # Push-only: PR runs shouldn't write commits. Writes a shields.io
+            # endpoint-schema JSON badge and commits it back so the README can reference
+            # it via img.shields.io/endpoint. continue-on-error since a badge push racing
+            # another push to the same branch is a rejected, not fatal, non-fast-forward.
+            - name: coverage-badge
+              if: github.event_name == 'push'
+              continue-on-error: true
+              run: |
+                  PCT=$(tox exec -e ${{ matrix.tox }} -- coverage report --format=total)
+                  COLOR=$(awk -v p="$PCT" 'BEGIN { if (p>=80) print "brightgreen"; else if (p>=50) print "yellow"; else print "red" }')
+                  mkdir -p .github/badges
+                  printf '{"schemaVersion":1,"label":"coverage","message":"%s%%","color":"%s"}\n' \
+                      "$PCT" "$COLOR" > .github/badges/coverage.json
+                  git config user.name "github-actions[bot]"
+                  git config user.email "github-actions[bot]@users.noreply.github.com"
+                  git add .github/badges/coverage.json
+                  git diff --cached --quiet || git commit -m "chore: update coverage badge [skip ci]"
+                  git push origin "HEAD:${{ github.ref_name }}"
 
     docs:
         needs: [tests]
