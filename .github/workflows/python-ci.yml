@@ -85,7 +85,7 @@ jobs:
             - name: coverage-badge
               continue-on-error: true
               run: |
-                  PCT=$(tox exec -e ${{ matrix.tox }} -- coverage report --format=total)
+                  PCT=$(tox exec -e ${{ matrix.tox }} -- coverage report --format=total | grep -E '^[0-9]+$' | tail -1)
                   COLOR=$(awk -v p="$PCT" 'BEGIN { if (p>=80) print "brightgreen"; else if (p>=50) print "yellow"; else print "red" }')
                   mkdir -p badge
                   printf '{"schemaVersion":1,"label":"coverage","message":"%s%%","color":"%s"}\n' \
