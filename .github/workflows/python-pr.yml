@@ -66,3 +66,8 @@ jobs:
                   path: |
                       htmlcov/
                       coverage.xml
+            # Warn-only: continue-on-error means this never blocks a merge, only shows
+            # as a flagged step. Reuses the .coverage data the tests step already wrote.
+            - name: coverage-threshold
+              continue-on-error: true
+              run: tox exec -e ${{ matrix.tox }} -- coverage report --fail-under=79
