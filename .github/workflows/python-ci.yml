@@ -24,8 +24,6 @@ jobs:
     tests:
         name: ${{ matrix.name }}
         runs-on: ${{ matrix.os }}
-        permissions:
-            contents: write
         concurrency:
             group: ci-${{ github.workflow }}-${{ github.ref }}
             cancel-in-progress: true
@@ -80,24 +78,24 @@ jobs:
             - name: coverage-threshold
               continue-on-error: true
               run: tox exec -e ${{ matrix.tox }} -- coverage report --fail-under=79
-            # Push-only: PR runs shouldn't write commits. Writes a shields.io
-            # endpoint-schema JSON badge and commits it back so the README can reference
-            # it via img.shields.io/endpoint. continue-on-error since a badge push racing
-            # another push to the same branch is a rejected, not fatal, non-fast-forward.
+            # Written into a dir published below (docs job) rather than committed to
+            # develop - a direct push there is rejected outright by this repo's PR-only
+            # ruleset (found the hard way: continue-on-error silently absorbed the
+            # rejection when this used to `git push`).
             - name: coverage-badge
-              if: github.event_name == 'push'
               continue-on-error: true
               run: |
                   PCT=$(tox exec -e ${{ matrix.tox }} -- coverage report --format=total)
                   COLOR=$(awk -v p="$PCT" 'BEGIN { if (p>=80) print "brightgreen"; else if (p>=50) print "yellow"; else print "red" }')
-                  mkdir -p .github/badges
+                  mkdir -p badge
                   printf '{"schemaVersion":1,"label":"coverage","message":"%s%%","color":"%s"}\n' \
-                      "$PCT" "$COLOR" > .github/badges/coverage.json
-                  git config user.name "github-actions[bot]"
-                  git config user.email "github-actions[bot]@users.noreply.github.com"
-                  git add .github/badges/coverage.json
-                  git diff --cached --quiet || git commit -m "chore: update coverage badge [skip ci]"
-                  git push origin "HEAD:${{ github.ref_name }}"
+                      "$PCT" "$COLOR" > badge/coverage-badge.json
+            - name: upload-coverage-badge-artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: coverage-badge
+                  path: badge/coverage-badge.json
+                  if-no-files-found: warn
 
     docs:
         needs: [tests]
@@ -116,6 +114,16 @@ jobs:
               run: |
                   source .venv/bin/activate
                   cd docs && make html
+            # Piggybacks on this repo's existing docs Pages site rather than
+            # standing up a separate publish step - best-effort, since the tests job's
+            # own badge step is already continue-on-error and might not have produced
+            # an artifact.
+            - name: download-coverage-badge-artifact
+              uses: actions/download-artifact@v4
+              continue-on-error: true
+              with:
+                  name: coverage-badge
+                  path: docs/_build/html
             - name: publish-docs
               uses: peaceiris/actions-gh-pages@v4
               with:
