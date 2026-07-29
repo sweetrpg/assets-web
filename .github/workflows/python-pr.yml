@@ -13,6 +13,9 @@ on:
             - "docs/**"
             - ".github/workflows/**"
 
+permissions:
+    contents: read
+
 jobs:
     tests:
         name: ${{ matrix.name }}
@@ -48,3 +51,23 @@ jobs:
               run: uv tool install tox --with tox-uv
             - name: tests
               run: tox -e ${{ matrix.tox }}
+            - name: coverage-summary
+              run: |
+                  echo "## Python coverage" >> "$GITHUB_STEP_SUMMARY"
+                  echo '```' >> "$GITHUB_STEP_SUMMARY"
+                  tox exec -e ${{ matrix.tox }} -- coverage report -m >> "$GITHUB_STEP_SUMMARY"
+                  echo '```' >> "$GITHUB_STEP_SUMMARY"
+                  tox exec -e ${{ matrix.tox }} -- coverage xml
+                  tox exec -e ${{ matrix.tox }} -- coverage html
+            - name: upload-coverage-artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: coverage-report-${{ matrix.name }}
+                  path: |
+                      htmlcov/
+                      coverage.xml
+            # Warn-only: continue-on-error means this never blocks a merge, only shows
+            # as a flagged step. Reuses the .coverage data the tests step already wrote.
+            - name: coverage-threshold
+              continue-on-error: true
+              run: tox exec -e ${{ matrix.tox }} -- coverage report --fail-under=79
