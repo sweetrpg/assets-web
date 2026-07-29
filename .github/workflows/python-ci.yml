@@ -67,7 +67,7 @@ jobs:
                   tox exec -e ${{ matrix.tox }} -- coverage xml
                   tox exec -e ${{ matrix.tox }} -- coverage html
             - name: upload-coverage-artifact
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@v7
               with:
                   name: coverage-report-${{ matrix.name }}
                   path: |
@@ -91,7 +91,7 @@ jobs:
                   printf '{"schemaVersion":1,"label":"coverage","message":"%s%%","color":"%s"}\n' \
                       "$PCT" "$COLOR" > badge/coverage-badge.json
             - name: upload-coverage-badge-artifact
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@v7
               with:
                   name: coverage-badge
                   path: badge/coverage-badge.json
