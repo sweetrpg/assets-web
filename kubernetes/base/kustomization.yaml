@@ -7,4 +7,3 @@ resources:
   - configmaps.yaml
   - deployment.yaml
   - service.yaml
-  - pvc.yaml
