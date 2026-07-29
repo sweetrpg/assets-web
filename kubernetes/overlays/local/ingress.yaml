@@ -1,0 +1,23 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+
+metadata:
+    name: assets-web-v1
+
+spec:
+    # Tailscale Kubernetes operator manages this Ingress: no ExternalDNS entry to make (MagicDNS
+    # names it assets-web.<tailnet>.ts.net) and no cert-manager issuer to configure (it provisions
+    # a Let's Encrypt cert on first connection). Requires MagicDNS and HTTPS enabled on the
+    # tailnet - see https://tailscale.com/docs/kubernetes-operator/reference/limitations.
+    # This app's own routes are unprefixed (APPLICATION_BASE_PATH: "" in configmaps.yaml) so
+    # unlike the dev overlay's /assets path-prefix Ingress, no strip-prefix Middleware is needed.
+    ingressClassName: tailscale
+    defaultBackend:
+        service:
+            name: assets-web-v1
+            port:
+                name: http
+    tls:
+        - hosts:
+              - assets-web
