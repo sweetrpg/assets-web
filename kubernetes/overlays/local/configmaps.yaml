@@ -7,8 +7,8 @@ metadata:
 
 data:
     PORT: "8081"
-    SERVICE_CHECK_URL: http://dev.sweetrpg.com/health/ping
-    HEALTH_CHECK_URL: http://dev.sweetrpg.com/health/status
+    SERVICE_CHECK_URL: https://sweetrpg-local.curlew-smoot.ts.net/assets/health/ping
+    HEALTH_CHECK_URL: https://sweetrpg-local.curlew-smoot.ts.net/assets/health/status
     APPLICATION_BASE_PATH: ""
     BUILD_INFO_PATH: /app/build-info.json
     SERVICE_REGISTRATION_URL: "http://consul.sweetrpg-support.svc.cluster.local:1234"
