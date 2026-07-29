@@ -4,20 +4,24 @@ kind: Ingress
 
 metadata:
     name: assets-web-v1
+    annotations:
+        traefik.ingress.kubernetes.io/router.entrypoints: web
+        traefik.ingress.kubernetes.io/router.middlewares: sweetrpg-support-strip-prefix-assets@kubernetescrd
+        kubernetes.io/ingress.class: traefik
+        # TLS is terminated once, upstream, by the Tailscale Kubernetes operator's Ingress in
+        # support/config/K8s/traefik/overlays/minikube (traefik-tailscale) - this hop is plain
+        # HTTP inside the cluster, no cert-manager/websecure annotations needed here.
 
 spec:
-    # Tailscale Kubernetes operator manages this Ingress: no ExternalDNS entry to make (MagicDNS
-    # names it assets-web.<tailnet>.ts.net) and no cert-manager issuer to configure (it provisions
-    # a Let's Encrypt cert on first connection). Requires MagicDNS and HTTPS enabled on the
-    # tailnet - see https://tailscale.com/docs/kubernetes-operator/reference/limitations.
-    # This app's own routes are unprefixed (APPLICATION_BASE_PATH: "" in configmaps.yaml) so
-    # unlike the dev overlay's /assets path-prefix Ingress, no strip-prefix Middleware is needed.
-    ingressClassName: tailscale
-    defaultBackend:
-        service:
-            name: assets-web-v1
-            port:
-                name: http
-    tls:
-        - hosts:
-              - assets-web
+    ingressClassName: traefik
+    rules:
+        - host: sweetrpg-local.curlew-smoot.ts.net
+          http:
+              paths:
+                  - pathType: Prefix
+                    path: /assets
+                    backend:
+                        service:
+                            name: assets-web-v1
+                            port:
+                                name: http
