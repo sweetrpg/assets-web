@@ -79,12 +79,12 @@ spec:
                       - mountPath: /config
                         name: config
             volumes:
-                - name: config
-                  secret:
-                      secretName: assets-web-files
-                      items:
-                          - key: newrelic.ini
-                            path: newrelic.ini
+                # - name: config
+                #   secret:
+                #       secretName: assets-web-files
+                #       items:
+                #           - key: newrelic.ini
+                #             path: newrelic.ini
                 - name: data
                   persistentVolumeClaim:
                       claimName: assets-web-data
