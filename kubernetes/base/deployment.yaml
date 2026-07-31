@@ -76,8 +76,8 @@ spec:
                   volumeMounts:
                       - mountPath: /data
                         name: data
-                      - mountPath: /config
-                        name: config
+                      # - mountPath: /config
+                      #   name: config
             volumes:
                 # - name: config
                 #   secret:
