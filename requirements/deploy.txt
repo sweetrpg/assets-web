@@ -130,14 +130,14 @@ python-json-logger==4.1.0
     # via -r requirements/app.in
 pyyaml==6.0.3
     # via -r requirements/app.in
-redis==6.4.0
+redis==8.0.1
     # via -r requirements/app.in
 requests==2.34.2
     # via
     #   -r requirements/app.in
     #   analytics-python
     #   opentelemetry-exporter-otlp-proto-http
-sentry-sdk==2.66.1
+sentry-sdk[flask]==2.66.1
     # via -r requirements/app.in
 six==1.17.0
     # via
