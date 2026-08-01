@@ -1,11 +1,11 @@
-# ---
-# apiVersion: traefik.io/v1alpha1
-# kind: Middleware
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
 
-# metadata:
-#     name: strip-prefix-assets
+metadata:
+    name: strip-prefix-assets
 
-# spec:
-#     stripPrefix:
-#         prefixes:
-#             - /assets
+spec:
+    stripPrefix:
+        prefixes:
+            - /assets
