@@ -57,7 +57,7 @@ spec:
                   resources:
                       requests:
                           cpu: "20m"
-                          memory: "55m"
+                          memory: "55Mi"
                       limits:
                           cpu: "1.0"
                           memory: "1Gi"
@@ -76,15 +76,15 @@ spec:
                   volumeMounts:
                       - mountPath: /data
                         name: data
-                      - mountPath: /config
-                        name: config
+                      # - mountPath: /config
+                      #   name: config
             volumes:
-                - name: config
-                  secret:
-                      secretName: assets-web-files
-                      items:
-                          - key: newrelic.ini
-                            path: newrelic.ini
+                # - name: config
+                #   secret:
+                #       secretName: assets-web-files
+                #       items:
+                #           - key: newrelic.ini
+                #             path: newrelic.ini
                 - name: data
                   persistentVolumeClaim:
                       claimName: assets-web-data
