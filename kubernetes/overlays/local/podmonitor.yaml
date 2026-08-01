@@ -1,0 +1,21 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+
+metadata:
+    name: sweetrpg-assets-web
+    labels:
+        release: prometheus
+
+spec:
+    namespaceSelector:
+        matchNames:
+            - sweetrpg-support
+    podMetricsEndpoints:
+        - port: http
+    selector:
+        matchLabels:
+            app: assets
+            platform: sweetrpg
+            package: support
+            component: assets
