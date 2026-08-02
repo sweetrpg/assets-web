@@ -7,10 +7,10 @@ metadata:
     annotations:
         traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
         traefik.ingress.kubernetes.io/router.tls: "true"
-        traefik.ingress.kubernetes.io/router.middlewares: sweetrpg-support-strip-prefix-assets@kubernetescrd
+        traefik.ingress.kubernetes.io/router.middlewares: sweetrpg-assets-strip-prefix-assets@kubernetescrd
         kubernetes.io/ingress.class: traefik
         cert-manager.io/cluster-issuer: letsencrypt-prd
-        # catalog-web's Ingress already owns the ExternalDNS hostname/target annotations for
+        # main-web's Ingress owns the ExternalDNS hostname/target annotations for
         # dev.sweetrpg.com - deliberately not repeating them here (see that Ingress's own
         # comment): ExternalDNS ownership conflicts if more than one Ingress for the same host
         # sets them.

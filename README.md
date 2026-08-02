@@ -1,7 +1,7 @@
 # Assets web
 
 [![Unit tests](https://github.com/sweetrpg/assets-web/actions/workflows/python-ci.yml/badge.svg)](https://github.com/sweetrpg/assets-web/actions/workflows/python-ci.yml)
-[![Coverage](https://github.com/sweetrpg/assets-web/blob/develop/coverage.svg)](https://github.com/sweetrpg/assets-web)
+[![Coverage](https://img.shields.io/endpoint?url=https://sweetrpg.github.io/assets-web/coverage-badge.json)](https://sweetrpg.github.io/assets-web/)
 [![License](https://img.shields.io/github/license/sweetrpg/assets-web.svg)](https://img.shields.io/github/license/sweetrpg/assets-web.svg)
 [![Issues](https://img.shields.io/github/issues/sweetrpg/assets-web.svg)](https://img.shields.io/github/issues/sweetrpg/assets-web.svg)
 [![PRs](https://img.shields.io/github/issues-pr/sweetrpg/assets-web.svg)](https://img.shields.io/github/issues-pr/sweetrpg/assets-web.svg)

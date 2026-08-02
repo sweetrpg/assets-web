@@ -102,12 +102,134 @@ def error_handler(ex):
 # Assets are fetched by kind and ID known from other services (e.g. a catalog entry's image
 # reference), not browsed - this is a static placeholder, not a real landing page.
 _PLACEHOLDER_PAGE = """<!DOCTYPE html>
-<html>
-<head><title>SweetRPG Assets</title></head>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SweetRPG Assets</title>
+  <link rel="icon" href="/static/favicon.png">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap');
+
+    :root {
+      --color-bg: #f3f2f2;
+      --color-surface: #eae9e9;
+      --color-text: #201e1d;
+      --color-accent: #0088b0;
+      --color-neutral-300: #d7d3d3;
+      --font-heading: "Source Serif 4", system-ui, sans-serif;
+      --font-body: "Source Serif 4", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: var(--font-heading);
+      font-weight: 600;
+      margin: 0;
+    }
+
+    a {
+      color: var(--color-accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(20px, 5vw, 64px);
+      text-align: center;
+    }
+
+    .logo {
+      width: min(200px, 30vw);
+      height: auto;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      font-size: clamp(32px, 8vw, 56px);
+      margin-bottom: 16px;
+      color: var(--color-text);
+    }
+
+    .tagline {
+      font-size: 16px;
+      color: #666;
+      margin: 0 0 32px;
+      max-width: 60ch;
+    }
+
+    .info-box {
+      background: var(--color-surface);
+      border-radius: 8px;
+      padding: 28px 32px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .info-box p {
+      margin: 0 0 16px;
+      line-height: 1.6;
+    }
+
+    .info-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .info-box strong {
+      color: var(--color-text);
+      font-weight: 600;
+    }
+
+    footer {
+      padding: 24px;
+      text-align: center;
+      color: #999;
+      font-size: 12px;
+      border-top: 1px solid var(--color-neutral-300);
+      margin-top: auto;
+    }
+
+    footer a {
+      color: #666;
+    }
+  </style>
+</head>
 <body>
-<h1>SweetRPG Assets</h1>
-<p>This service stores and serves the SweetRPG platform's binary assets. There is nothing to
-browse here - assets are fetched by kind and ID from other services.</p>
+  <div class="container">
+    <img src="/static/sweetrpg-logo.png" alt="SweetRPG" class="logo">
+    <h1>Assets Service</h1>
+    <p class="tagline">Stores and serves binary assets for the SweetRPG platform</p>
+
+    <div class="info-box">
+      <p>This service manages all binary assets for the SweetRPG platform, including avatars, portraits, maps, and tokens.</p>
+      <p><strong>Note:</strong> There is nothing to browse here. Assets are fetched by other platform services using their kind and ID.</p>
+      <p>If you're looking for the SweetRPG platform, visit <a href="https://sweetrpg.com">sweetrpg.com</a>.</p>
+    </div>
+  </div>
+
+  <footer>
+    <span>&copy; 2026 Pilgrimage Software &middot; <a href="https://github.com/sweetrpg" target="_blank" rel="noopener">GitHub</a></span>
+  </footer>
 </body>
 </html>
 """
