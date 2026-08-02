@@ -436,7 +436,13 @@ def _asset_path(kind: str, id: str) -> Path:
     safe_id = secure_filename(id)
     if not safe_id or safe_id != id:
         abort(400, description="Invalid asset id")
-    return Path(current_app.config["ASSET_DATA_PATH"]) / kind / safe_id
+
+    base = Path(current_app.config["ASSET_DATA_PATH"]).resolve()
+    candidate = (base / kind / safe_id).resolve()
+    if candidate != base and base not in candidate.parents:
+        abort(400, description="Invalid asset path")
+
+    return candidate
 
 
 def _require_known_kind(kind: str) -> None:
