@@ -2,7 +2,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-namespace: sweetrpg-support
+namespace: sweetrpg-assets
 
 resources:
     - ../../base
@@ -18,8 +18,8 @@ labels:
       app: assets
       version: v1
       platform: sweetrpg
-      package: support
-      component: assets
+      package: assets
+      component: web
 
 generatorOptions:
     disableNameSuffixHash: true
