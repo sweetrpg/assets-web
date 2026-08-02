@@ -25,6 +25,7 @@ setup(
         "redis~=6.0",
         "requests~=2.0",
         "sentry-sdk[flask]~=2.0",
+        "sweetrpg-admin-api-client @ git+https://github.com/sweetrpg/admin-api-client.py.git@develop",
         "sweetrpg-web-core",
         "urllib3~=2.0",
     ],
