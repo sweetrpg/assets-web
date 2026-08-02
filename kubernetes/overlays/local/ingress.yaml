@@ -6,7 +6,7 @@ metadata:
     name: assets-web-v1
     annotations:
         traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
-        traefik.ingress.kubernetes.io/router.middlewares: sweetrpg-support-strip-prefix-assets@kubernetescrd
+        traefik.ingress.kubernetes.io/router.middlewares: sweetrpg-assets-strip-prefix-assets@kubernetescrd
         kubernetes.io/ingress.class: traefik
 
 spec:
