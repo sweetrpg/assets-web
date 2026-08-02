@@ -433,12 +433,15 @@ def _asset_path(kind: str, id: str) -> Path:
     path, rather than relying solely on callers to have validated kind first via
     `_require_known_kind`."""
     _require_known_kind(kind)
+    allowed_kinds = {k: k for k in constants.ALLOWED_KINDS}
+    safe_kind = allowed_kinds[kind]
+
     safe_id = secure_filename(id)
     if not safe_id or safe_id != id:
         abort(400, description="Invalid asset id")
 
     base = Path(current_app.config["ASSET_DATA_PATH"]).resolve()
-    candidate = (base / kind / safe_id).resolve()
+    candidate = (base / safe_kind / safe_id).resolve()
     if candidate != base and base not in candidate.parents:
         abort(400, description="Invalid asset path")
 
