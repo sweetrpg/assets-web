@@ -1,3 +1,52 @@
+## [0.3.0] - 2026-08-02
+
+### 🚀 Features
+
+- *(tooling)* Move to Python 3.14 and uv (#233)
+- Add new images
+- *(ci)* Add pytest-cov step summary, artifact upload (#249)
+- *(ci)* Add warn-only coverage threshold check (79%) (#251)
+- *(ci)* Add coverage badge, fix pre-existing broken badge link (#252)
+- *(assets-web)* Style placeholder page with SweetRPG branding
+
+### 🐛 Bug Fixes
+
+- *(ci)* Docs job's uv install fails against a uv-managed Python (#234)
+- *(ci)* Don't create a second venv on top of setup-uv's own (#235)
+- *(ci)* Validate PRs into master too, not just develop (#238)
+- Prefix the kind/id asset store with /asset (#239)
+- Address CodeQL findings - workflow permissions, path injection (#242)
+- *(k8s)* Remove HPA and PDB from dev overlay
+- *(ci)* Host coverage badge on GitHub Pages, not a branch commit (#253)
+- *(ci)* Filter tox exec noise out of the coverage badge percentage (#254)
+- Volume mounts
+- Namespace
+
+### 🚜 Refactor
+
+- Rename unused LIBRARY_API_BASE_URL constant to SHELF_API_BASE_URL (#259)
+
+### 📚 Documentation
+
+- *(k8s)* Point Ingress comment at main-web as DNS annotation owner (#250)
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop (one-time reconciliation)
+- *(release)* Merge master into develop after v0.1.1
+- *(release)* Merge master into develop after v0.2.0
+- Remove replicas patch
+- *(release)* Merge master into develop after v0.2.1
+- Local (#257)
+- Use default storage class for local
+- Build arm64 image alongside amd64
+- Fix memory spec
+- Clean up files
+- Remove NewRelic
+- Update hostnames
+- Update ingress config
+- Update config
+- *(kubernetes)* Move fully into sweetrpg-assets, own cache instance
 ## [0.2.1] - 2026-07-27
 
 ### 🚀 Features
