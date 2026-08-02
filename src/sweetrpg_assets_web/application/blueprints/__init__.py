@@ -8,6 +8,7 @@ from sweetrpg_assets_web.application import constants
 from flask import Blueprint, request, session, jsonify, current_app, make_response, send_file, send_from_directory, abort
 from werkzeug.exceptions import HTTPException
 from werkzeug.utils import secure_filename
+from markupsafe import escape
 from io import BytesIO
 import mimetypes
 from pathlib import Path
@@ -17,6 +18,179 @@ import datetime
 
 
 blueprint = Blueprint("web", __name__)
+
+
+_MAINTENANCE_PAGE_TEMPLATE = """<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SweetRPG Assets - Maintenance</title>
+  <link rel="icon" href="/static/favicon.png">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap');
+
+    :root {{
+      --color-bg: #f3f2f2;
+      --color-surface: #eae9e9;
+      --color-text: #201e1d;
+      --color-accent: #0088b0;
+      --color-neutral-300: #d7d3d3;
+      --font-heading: "Source Serif 4", system-ui, sans-serif;
+      --font-body: "Source Serif 4", system-ui, sans-serif;
+    }}
+
+    * {{ box-sizing: border-box; }}
+
+    body {{
+      margin: 0;
+      padding: 0;
+      background: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }}
+
+    h1, h2, h3, h4 {{
+      font-family: var(--font-heading);
+      font-weight: 600;
+      margin: 0;
+    }}
+
+    .container {{
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(20px, 5vw, 64px);
+      text-align: center;
+    }}
+
+    .logo {{
+      width: min(200px, 30vw);
+      height: auto;
+      margin-bottom: 24px;
+    }}
+
+    h1 {{
+      font-size: clamp(32px, 8vw, 56px);
+      margin-bottom: 16px;
+      color: var(--color-text);
+    }}
+
+    .tagline {{
+      font-size: 16px;
+      color: #666;
+      margin: 0 0 32px;
+      max-width: 60ch;
+    }}
+
+    .info-box {{
+      background: var(--color-surface);
+      border-radius: 8px;
+      padding: 28px 32px;
+      max-width: 600px;
+      margin: 0 auto;
+    }}
+
+    .info-box p {{
+      margin: 0 0 16px;
+      line-height: 1.6;
+    }}
+
+    .info-box p:last-child {{
+      margin-bottom: 0;
+    }}
+
+    .info-box strong {{
+      color: var(--color-text);
+      font-weight: 600;
+    }}
+
+    .window {{
+      color: #666;
+      font-size: 14px;
+    }}
+
+    footer {{
+      padding: 24px;
+      text-align: center;
+      color: #999;
+      font-size: 12px;
+      border-top: 1px solid var(--color-neutral-300);
+      margin-top: auto;
+    }}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="/static/sweetrpg-logo.png" alt="SweetRPG" class="logo">
+    <h1>{label}</h1>
+    <p class="tagline">{description}</p>
+
+    <div class="info-box">
+      <p>This service is temporarily unavailable for scheduled maintenance. Please check back shortly.</p>
+      {window}
+    </div>
+  </div>
+
+  <footer>
+    <span>&copy; 2026 Pilgrimage Software</span>
+  </footer>
+</body>
+</html>
+"""
+
+
+def _render_maintenance_page(mode):
+    window = ""
+    if mode.starts_at or mode.ends_at:
+        parts = []
+        if mode.starts_at:
+            parts.append(f"<strong>Starts:</strong> {escape(mode.starts_at)}")
+        if mode.ends_at:
+            parts.append(f"<strong>Ends:</strong> {escape(mode.ends_at)}")
+        window = f'<p class="window">{" &middot; ".join(parts)}</p>'
+
+    html = _MAINTENANCE_PAGE_TEMPLATE.format(
+        label=escape(mode.label) if mode.label else "Under Maintenance",
+        description=escape(mode.description) if mode.description else "",
+        window=window,
+    )
+    return make_response(html, 503, {"Content-Type": "text/html", "Retry-After": "120"})
+
+
+# Health checks must stay reachable during maintenance, or orchestration (k8s liveness/readiness
+# probes) sees the pod as unhealthy and restarts/removes it from service instead of just serving
+# the maintenance page. `health_blueprint` is registered as a nested blueprint on `blueprint`
+# ("web"), so its routes report `request.blueprint == "web.health"`.
+_HEALTH_BLUEPRINT_NAME = "web.health"
+
+
+@blueprint.before_request
+def _check_maintenance_mode():
+    if request.blueprint == _HEALTH_BLUEPRINT_NAME or request.path.startswith("/health/"):
+        return None
+
+    admin_client = getattr(current_app, "admin_client", None)
+    if admin_client is None:
+        return None
+
+    try:
+        modes = admin_client.fetch_maintenance_modes(constants.MAINTENANCE_MODE_SCOPES)
+    except Exception:
+        # The SDK's own contract is fail-open (never raises), but don't let a bug in this
+        # integration point itself take the whole app down - fall through to normal rendering.
+        current_app.logger.exception("Failed to check maintenance mode; rendering normally")
+        return None
+
+    if not modes:
+        return None
+
+    return _render_maintenance_page(modes[0])
 
 
 @blueprint.before_request
