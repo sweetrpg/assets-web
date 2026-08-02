@@ -59,3 +59,7 @@ class BaseConfig(object):
     # Redis instance/db as the cache - flask-limiter's own key prefixes avoid collisions.
     RATE_LIMIT = os.environ.get(constants.RATE_LIMIT) or "120/minute"
     RATELIMIT_STORAGE_URI = _redis_url(int(os.environ.get(constants.REDIS_DB) or 7))
+
+    # admin-api integration (banners, maintenance mode). Unset -> AdminClient runs disabled and
+    # fails open (fetch_* always returns []), so leaving this unset is safe, not a startup error.
+    ADMIN_API_URL = os.environ.get(constants.ADMIN_API_URL)
