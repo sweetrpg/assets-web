@@ -4,7 +4,7 @@ alabaster==1.0.0
     # via sphinx
 analytics-python==1.4.post1
     # via -r requirements/app.in
-annotated-doc==0.0.4
+annotated-doc==0.0.5
     # via typer
 annotated-types==0.8.0
     # via pydantic
@@ -16,7 +16,7 @@ blinker==1.9.0
     # via
     #   flask
     #   sentry-sdk
-cachelib==0.14.0
+cachelib==0.15.0
     # via
     #   flask-caching
     #   flask-session
@@ -172,13 +172,14 @@ requests==2.34.2
     #   analytics-python
     #   opentelemetry-exporter-otlp-proto-http
     #   sphinx
+    #   sweetrpg-admin-api-client
 rich==15.0.0
     # via typer
 roman-numerals==4.1.0
     # via sphinx
-rstcheck==6.2.5
+rstcheck==6.3.0
     # via -r requirements/docs.in
-rstcheck-core==1.3.0
+rstcheck-core==1.3.1
     # via rstcheck
 sentry-sdk==2.66.1
     # via -r requirements/app.in
@@ -218,6 +219,8 @@ sphinxcontrib-qthelp==2.0.0
     # via sphinx
 sphinxcontrib-serializinghtml==2.0.0
     # via sphinx
+sweetrpg-admin-api-client @ git+https://github.com/sweetrpg/admin-api-client.py.git@0dcce858e8635d466ee7aeeb3193067f394fef38
+    # via -r requirements/app.in
 sweetrpg-web-core==0.0.697
     # via -r requirements/app.in
 typer==0.27.0
@@ -244,7 +247,7 @@ werkzeug==3.1.8
     # via
     #   flask
     #   flask-cors
-wrapt==2.2.2
+wrapt==2.3.0
     # via
     #   deprecated
     #   opentelemetry-instrumentation

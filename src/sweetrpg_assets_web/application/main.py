@@ -17,6 +17,7 @@ from sweetrpg_assets_web.application import constants
 from logging.config import dictConfig
 from redis.client import Redis
 from sentry_sdk.integrations.wsgi import SentryWsgiMiddleware
+from sweetrpg_admin_api_client import AdminClient
 import analytics
 import os
 
@@ -82,6 +83,12 @@ def create_app(app_name=constants.APPLICATION_NAME):
 
     app.logger.info("Setting up session manager...")
     session = Session(app)
+
+    # One client for the process lifetime, same pattern as `cache`/`limiter` above - the SDK
+    # bakes in its own TTL cache, timeout, and fail-open behavior (returns [] rather than
+    # raising if ADMIN_API_URL is unset or admin-api is unreachable), so an unconfigured or down
+    # admin-api never breaks this app's own rendering.
+    app.admin_client = AdminClient(base_url=app.config.get("ADMIN_API_URL"))
 
     cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
