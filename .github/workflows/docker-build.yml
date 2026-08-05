@@ -80,5 +80,5 @@ jobs:
         uses: sweetrpg/github-actions/.github/workflows/argocd-update-deployment.yaml@master
         with:
             image-name: assets-web
-            manifest-path: clusters/dev/common/support/assets-web.yaml
+            manifest-path: clusters/dev/assets/web.yaml
         secrets: inherit
