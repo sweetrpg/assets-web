@@ -63,7 +63,9 @@ a:hover { color: var(--color-accent); text-decoration: underline; }
 	font-size: 18px;
 }
 .nav-brand a { color: var(--color-text) !important; text-decoration: none !important; }
-.nav-logo { width: 28px; height: 28px; }
+.nav-logo { width: 28px; height: 28px; display: block; }
+[data-theme="light"] .nav-logo-dark { display: none; }
+[data-theme="dark"] .nav-logo-light { display: none; }
 .nav-spacer { flex: 1; }
 .nav-search .input { max-width: 240px; }
 .nav-user { font-size: 14px; white-space: nowrap; }

@@ -127,7 +127,7 @@ _MAINTENANCE_PAGE_TEMPLATE = """<!DOCTYPE html>
 </head>
 <body>
   <div class="container">
-    <img src="/static/sweetrpg-logo.png" alt="SweetRPG" class="logo">
+    <img src="/static/sweetrpg-logo-black.svg" alt="SweetRPG" class="logo">
     <h1>{label}</h1>
     <p class="tagline">{description}</p>
 
@@ -390,7 +390,7 @@ _PLACEHOLDER_PAGE = """<!DOCTYPE html>
 </head>
 <body>
   <div class="container">
-    <img src="/static/sweetrpg-logo.png" alt="SweetRPG" class="logo">
+    <img src="/static/sweetrpg-logo-black.svg" alt="SweetRPG" class="logo">
     <h1>Assets Service</h1>
     <p class="tagline">Stores and serves binary assets for the SweetRPG platform</p>
 
