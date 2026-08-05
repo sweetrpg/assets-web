@@ -3,10 +3,10 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 
 metadata:
-    name: assets-web-v1
+    name: web-v1
     annotations:
         traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
-        traefik.ingress.kubernetes.io/router.middlewares: sweetrpg-assets-strip-prefix-assets@kubernetescrd
+        traefik.ingress.kubernetes.io/router.middlewares: sweetrpg-assets-strip-prefix-web@kubernetescrd
         kubernetes.io/ingress.class: traefik
 
 spec:
@@ -19,6 +19,6 @@ spec:
                     path: /assets
                     backend:
                         service:
-                            name: assets-web-v1
+                            name: web-v1
                             port:
                                 name: http
