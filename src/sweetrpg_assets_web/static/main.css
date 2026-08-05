@@ -21,6 +21,19 @@
 	--font-body: "Source Serif 4", system-ui, sans-serif;
 }
 
+/* Dark-theme overrides, applied via `data-theme="dark"` on <html> - set by the anti-flash
+ * bootstrap script each consuming frontend's <head> runs before first paint (see main-web's
+ * templates/main.html for the reference implementation). Only overrides what this shared
+ * stylesheet itself defines above - accent colors are left as-is since they already have
+ * enough contrast against the dark background.
+ */
+[data-theme="dark"] {
+	--color-bg: #1a1918;
+	--color-text: #f0efee;
+	--color-neutral-300: #3a3836;
+	--color-neutral-600: #a39d92;
+}
+
 * { box-sizing: border-box; }
 
 body {
@@ -150,8 +163,60 @@ a:hover { color: var(--color-accent); text-decoration: underline; }
 .tag-outline { border: 1px solid var(--color-neutral-300); color: var(--color-text); }
 .tag-cloud { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
 
+/* admin-api banner messages (severity info/warning/critical), rendered by every frontend that
+ * shows them. Previously duplicated inline per app (catalog-web's base.leaf had its own copy
+ * in a <style> block) rather than living here once - centralized so a severity's color only
+ * has one definition to keep in sync with the .tag-critical/.tag-status-expired variants below. */
+.banner-region { display: flex; flex-direction: column; gap: 4px; padding: 8px 16px 0; }
+.banner { border-radius: 6px; padding: 10px 16px; font-size: 0.9rem; border: 1px solid transparent; }
+.banner-info { background: #e6f2ff; border-color: #99c9ff; color: #0a3d7a; }
+.banner-warning { background: #fff6e0; border-color: #f0c669; color: #7a5a00; }
+.banner-critical { background: #fde8e8; border-color: #f0a3a3; color: #7a1212; font-weight: 600; }
+[data-theme="dark"] .banner-info { background: #16273d; border-color: #2c4d7a; color: #a9cdfa; }
+[data-theme="dark"] .banner-warning { background: #3d3312; border-color: #7a6425; color: #f5d78a; }
+[data-theme="dark"] .banner-critical { background: #3d1414; border-color: #7a2e2e; color: #f5a3a3; }
+
+/* Severity-style tag variants, matching the banner palette above so a status chip and a banner
+ * agree on what "critical" or "warning" looks like. Referenced by admin-web's maintenance-modes
+ * list but never previously defined here - those chips rendered with no color at all. */
+.tag-critical { background: #fde8e8; border: 1px solid #f0a3a3; color: #7a1212; }
+[data-theme="dark"] .tag-critical { background: #3a1f1f; border-color: #7a2e2e; color: #f5a3a3; }
+.tag-status-expired { background: #fff6e0; border: 1px solid #f0c669; color: #7a5a00; }
+[data-theme="dark"] .tag-status-expired { background: #3a2f10; border-color: #7a5a00; color: #f0c669; }
+
 .empty-state { opacity: 0.6; padding: 20px 0; }
 .empty-state-inline { opacity: 0.55; font-style: italic; font-size: 14px; }
+
+/* Data tables (admin-web's banners/users/maintenance-modes lists) - previously entirely
+ * unstyled, browser-default dense rendering with no cell padding read as "squished." */
+.table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+.table th, .table td { padding: 10px 14px; text-align: left; vertical-align: middle; }
+.table th {
+	font-size: 12px;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	opacity: 0.65;
+	border-bottom: 1px solid var(--color-neutral-300);
+}
+.table td { border-bottom: 1px solid var(--color-neutral-300); font-size: 14px; }
+.table tr:last-child td { border-bottom: none; }
+.table-actions { display: flex; gap: 8px; align-items: center; }
+
+/* Admin forms (admin-web's banner/maintenance-mode create-edit forms) - previously entirely
+ * unstyled, labels and inputs just stacked as default block elements with no column alignment. */
+.form {
+	display: grid;
+	grid-template-columns: 160px minmax(0, 1fr);
+	gap: 14px 16px;
+	align-items: start;
+	max-width: 640px;
+	margin-top: 20px;
+}
+.form-label { text-align: right; font-size: 14px; font-weight: 600; padding-top: 9px; }
+.form .input, .form select, .form textarea { width: 100%; }
+.form-error { grid-column: 2; color: #7a1212; font-size: 13px; margin: -6px 0 0; }
+.form-actions { grid-column: 2; display: flex; gap: 10px; margin-top: 8px; }
+.form > button[type="submit"] { grid-column: 2; justify-self: start; margin-top: 8px; }
 
 .back-link { display: inline-block; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; margin-top: 40px; }
 
