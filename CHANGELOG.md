@@ -1,3 +1,26 @@
+## [0.4.0] - 2026-08-05
+
+### 🚀 Features
+
+- *(assets-web)* Wire up AdminClient for admin-api integration
+- *(assets-web)* Render a maintenance page during active maintenance mode
+- *(static)* Add shared avatar-menu CSS/JS
+- *(styles)* Add dark-theme variables and centralize shared component CSS
+- *(branding)* Serve SVG logo variants for nav swap
+
+### 🐛 Bug Fixes
+
+- *(kubernetes)* Rename resources to namespace-scoped web-v1 convention
+
+### 💼 Other
+
+- Add admin-api-client.py git dependency
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.3.0
+- Start work on #18 (suite-avatar-menu)
+- Add SVG versions of site logo
 ## [0.3.0] - 2026-08-02
 
 ### 🚀 Features

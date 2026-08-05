@@ -15,7 +15,7 @@ resources:
 
 labels:
   - pairs:
-      app: assets
+      app: web
       version: v1
       platform: sweetrpg
       package: assets

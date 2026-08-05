@@ -1,0 +1,83 @@
+/*
+ * Shared avatar dropdown menu, consumed by main-web and catalog-web (independently maintained
+ * Askama/Leaf templates) - see the suite-avatar-menu OpenSpec change in sweetrpg/platform.
+ * Colors reference the Broadsheet custom properties (--color-bg, --color-text, --color-accent,
+ * --color-neutral-*) each consuming frontend already defines, including dark-theme overrides
+ * via [data-theme="dark"] - this file defines no colors of its own, only structure.
+ */
+
+.avatar-menu { position: relative; display: inline-block; }
+
+.avatar-menu-trigger {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	border-radius: 999px;
+	border: 1px solid var(--color-neutral-300);
+	background: var(--color-accent);
+	color: white;
+	font-size: 13px;
+	font-weight: 600;
+	line-height: 1;
+	cursor: pointer;
+	padding: 0;
+}
+.avatar-menu-trigger:hover { border-color: var(--color-accent); }
+.avatar-menu-trigger:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+
+.avatar-menu-panel {
+	position: absolute;
+	top: calc(100% + 8px);
+	right: 0;
+	min-width: 200px;
+	background: var(--color-bg);
+	border: 1px solid var(--color-neutral-300);
+	border-radius: 8px;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+	padding: 6px;
+	z-index: 100;
+}
+.avatar-menu-panel[hidden] { display: none; }
+
+.avatar-menu-name {
+	display: block;
+	padding: 8px 10px;
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--color-text);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.avatar-menu-divider {
+	height: 1px;
+	margin: 4px 2px;
+	background: var(--color-neutral-300);
+	border: none;
+}
+
+.avatar-menu-item {
+	display: block;
+	width: 100%;
+	box-sizing: border-box;
+	padding: 8px 10px;
+	border: none;
+	border-radius: 4px;
+	background: transparent;
+	color: var(--color-text);
+	font-size: 14px;
+	font-family: inherit;
+	text-align: left;
+	text-decoration: none !important;
+	cursor: pointer;
+}
+.avatar-menu-item:hover,
+.avatar-menu-item:focus-visible {
+	background: var(--color-neutral-300);
+	outline: none;
+}
+
+.avatar-menu-item-form { margin: 0; }
