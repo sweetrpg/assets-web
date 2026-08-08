@@ -390,14 +390,14 @@ _PLACEHOLDER_PAGE = """<!DOCTYPE html>
 </head>
 <body>
   <div class="container">
-    <img src="/static/sweetrpg-logo-black.svg" alt="SweetRPG" class="logo">
+    <img src="/static/sweetrpg-logo-blueprint.png" alt="SweetRPG" class="logo">
     <h1>Assets Service</h1>
     <p class="tagline">Stores and serves binary assets for the SweetRPG platform</p>
 
     <div class="info-box">
       <p>This service manages all binary assets for the SweetRPG platform, including avatars, portraits, maps, and tokens.</p>
-      <p><strong>Note:</strong> There is nothing to browse here. Assets are fetched by other platform services using their kind and ID.</p>
-      <p>If you're looking for the SweetRPG platform, visit <a href="https://sweetrpg.com">sweetrpg.com</a>.</p>
+      <p>There is nothing to browse here.</p>
+      <p>If you're looking for the SweetRPG platform, visit <a href="{root_url}">{root_url}</a>.</p>
     </div>
   </div>
 
@@ -411,7 +411,11 @@ _PLACEHOLDER_PAGE = """<!DOCTYPE html>
 
 @blueprint.route("/")
 def main_page():
-    return make_response(_PLACEHOLDER_PAGE, 200, {"Content-Type": "text/html"})
+    # str.replace, not .format - the page's inline CSS is full of literal `{`/`}` braces that
+    # .format would choke on.
+    root_url = current_app.config["SWEETRPG_ROOT_URL"]
+    html = _PLACEHOLDER_PAGE.replace("{root_url}", escape(root_url))
+    return make_response(html, 200, {"Content-Type": "text/html"})
 
 
 # Shared frontend branding (logo, favicon, stylesheet) checked into this repo and deployed with
