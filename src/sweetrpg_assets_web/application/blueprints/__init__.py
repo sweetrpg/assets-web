@@ -16,6 +16,7 @@ from pathlib import Path
 from sweetrpg_assets_web.application.cache import cache
 import analytics
 import datetime
+import json
 
 
 blueprint = Blueprint("web", __name__, template_folder="../templates")
@@ -152,16 +153,26 @@ def error_handler(ex):
     return response
 
 
+def _load_build_info():
+    try:
+        with open("/app/build-info.json") as f:
+            info = json.load(f)
+            return info.get("date", "unknown"), info.get("sha", "unknown")
+    except Exception:
+        return "unknown", "unknown"
+
+
 @blueprint.route("/")
 def main_page():
+    build_timestamp, build_hash = _load_build_info()
     return render_template(
         "main.html",
         root_url=current_app.config["SWEETRPG_ROOT_URL"],
         logo_url=url_for("web.static_asset", filename="img/sweetrpg-logo.png"),
         favicon_url=url_for("web.static_asset", filename="img/favicon.png"),
         version=__version__,
-        build_timestamp=current_app.config.get("BUILD_TIMESTAMP", "unknown"),
-        build_hash=current_app.config.get("BUILD_HASH", "unknown"),
+        build_timestamp=build_timestamp,
+        build_hash=build_hash,
     )
 
 
