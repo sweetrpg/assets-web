@@ -1,3 +1,12 @@
+## [0.6.1] - 2026-08-08
+
+### 🐛 Bug Fixes
+
+- *(web)* Use url_for for static asset paths to support path prefixes
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.6.0
 ## [0.6.0] - 2026-08-08
 
 ### 🚀 Features
