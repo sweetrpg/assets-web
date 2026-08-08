@@ -13,6 +13,7 @@ data:
     BUILD_INFO_PATH: /app/build-info.json
     SERVICE_REGISTRATION_URL: "http://consul.sweetrpg-support.svc.cluster.local:1234"
     ASSET_DATA_PATH: /data
+    SWEETRPG_ROOT_URL: https://dev.sweetrpg.com/
     # Same collector the catalog services export to (tempo-distributor's OTLP/HTTP receiver).
     OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo-distributor.observability.svc.cluster.local:4318
     # Requests per minute, one shared process-wide bucket - a blunt backstop, not per-client.

@@ -63,3 +63,7 @@ class BaseConfig(object):
     # admin-api integration (banners, maintenance mode). Unset -> AdminClient runs disabled and
     # fails open (fetch_* always returns []), so leaving this unset is safe, not a startup error.
     ADMIN_API_URL = os.environ.get(constants.ADMIN_API_URL)
+
+    # Suite-wide platform root (see docs/frontend-conventions.md in sweetrpg/platform) - defaults
+    # to "/" so a local instance run standalone still links somewhere rather than to a broken URL.
+    SWEETRPG_ROOT_URL = os.environ.get(constants.SWEETRPG_ROOT_URL) or "/"

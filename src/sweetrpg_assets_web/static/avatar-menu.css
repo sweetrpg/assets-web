@@ -1,9 +1,14 @@
 /*
  * Shared avatar dropdown menu, consumed by main-web and catalog-web (independently maintained
  * Askama/Leaf templates) - see the suite-avatar-menu OpenSpec change in sweetrpg/platform.
- * Colors reference the Broadsheet custom properties (--color-bg, --color-text, --color-accent,
- * --color-neutral-*) each consuming frontend already defines, including dark-theme overrides
- * via [data-theme="dark"] - this file defines no colors of its own, only structure.
+ * Always rendered regardless of login state - logged-out visitors get a "mystery man" silhouette
+ * in the circle and a menu with a Log in item plus the theme picker; logged-in visitors get the
+ * full menu. Colors mostly reference the Broadsheet custom properties (--color-bg, --color-text,
+ * --color-accent, --color-neutral-*) each consuming frontend already defines, including
+ * dark-theme overrides via [data-theme="dark"]. The one exception is the destructive-action
+ * color on .avatar-menu-item-danger, which hardcodes the same critical/danger hex pair already
+ * duplicated across .tag-critical/.banner-critical (main.css) and .tag-danger (main-web's
+ * broadsheet.css) - no shared --color-danger variable exists yet to reference instead.
  */
 
 .avatar-menu { position: relative; display: inline-block; }
@@ -61,12 +66,25 @@
 }
 .avatar-menu-panel[hidden] { display: none; }
 
+.avatar-menu-identity {
+	padding: 8px 10px;
+}
+
 .avatar-menu-name {
 	display: block;
-	padding: 8px 10px;
 	font-size: 13px;
 	font-weight: 600;
 	color: var(--color-text);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.avatar-menu-email {
+	display: block;
+	margin-top: 2px;
+	font-size: 11px;
+	color: color-mix(in srgb, var(--color-text) 55%, transparent);
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -101,3 +119,35 @@
 }
 
 .avatar-menu-item-form { margin: 0; }
+
+/* Destructive action (e.g. "Log out") - same hex pair as .tag-critical/.banner-critical. */
+.avatar-menu-item-danger { color: #7a1212; }
+[data-theme="dark"] .avatar-menu-item-danger { color: #f5a3a3; }
+
+/*
+ * Light/dark/system theme picker, rendered as an always-visible 3-way segmented row (no
+ * separate open/close step, unlike the rest of the menu) so a visitor can preview each choice
+ * without re-opening anything. Present in both the logged-in and logged-out menu. The active
+ * choice is marked via aria-pressed, set by the shared theme.js - this file only styles the
+ * resulting state.
+ */
+.avatar-menu-theme-row {
+	display: flex;
+	gap: 4px;
+	padding: 4px;
+}
+.avatar-menu-theme-option {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 6px 0;
+	border: none;
+	border-radius: 4px;
+	background: transparent;
+	color: var(--color-text);
+	cursor: pointer;
+}
+.avatar-menu-theme-option:hover { background: var(--color-neutral-300); }
+.avatar-menu-theme-option:focus-visible { outline: 2px solid var(--color-accent); outline-offset: -2px; }
+.avatar-menu-theme-option[aria-pressed="true"] { background: var(--color-accent); color: white; }
