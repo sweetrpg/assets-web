@@ -67,3 +67,7 @@ class BaseConfig(object):
     # Suite-wide platform root (see docs/frontend-conventions.md in sweetrpg/platform) - defaults
     # to "/" so a local instance run standalone still links somewhere rather than to a broken URL.
     SWEETRPG_ROOT_URL = os.environ.get(constants.SWEETRPG_ROOT_URL) or "/"
+
+    # Build info for footer - set by CI/CD during image build
+    BUILD_TIMESTAMP = os.environ.get("BUILD_TIMESTAMP") or "unknown"
+    BUILD_HASH = os.environ.get("BUILD_HASH") or "unknown"

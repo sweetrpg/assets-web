@@ -5,6 +5,7 @@ __author__ = "Paul Schifferer <dm@sweetrpg.com>"
 
 from functools import wraps
 from sweetrpg_assets_web.application import constants
+from sweetrpg_assets_web import __version__, __build__
 from flask import Blueprint, request, session, jsonify, current_app, make_response, send_file, send_from_directory, abort, url_for
 from werkzeug.exceptions import HTTPException
 from werkzeug.utils import secure_filename
@@ -404,7 +405,8 @@ _PLACEHOLDER_PAGE = """<!DOCTYPE html>
   </div>
 
   <footer>
-    <span>&copy; 2026 Pilgrimage Software &middot; <a href="https://github.com/sweetrpg" target="_blank" rel="noopener">GitHub</a></span>
+    <div>&copy; 2026 Pilgrimage Software &middot; <a href="https://github.com/sweetrpg" target="_blank" rel="noopener">GitHub</a></div>
+    <div style="font-size: 11px; margin-top: 8px;">v{version} &middot; built {build_timestamp} / {build_hash}</div>
   </footer>
 </body>
 </html>
@@ -416,9 +418,14 @@ def main_page():
     root_url = current_app.config["SWEETRPG_ROOT_URL"]
     logo_url = url_for("web.static_asset", filename="sweetrpg-logo-blueprint.png")
     favicon_url = url_for("web.static_asset", filename="favicon.png")
+    build_timestamp = current_app.config.get("BUILD_TIMESTAMP", "unknown")
+    build_hash = current_app.config.get("BUILD_HASH", "unknown")
     html = _PLACEHOLDER_PAGE.replace("{root_url}", escape(root_url))
     html = html.replace("{logo_url}", escape(logo_url))
     html = html.replace("{favicon_url}", escape(favicon_url))
+    html = html.replace("{version}", __version__)
+    html = html.replace("{build_timestamp}", build_timestamp)
+    html = html.replace("{build_hash}", build_hash)
     return make_response(html, 200, {"Content-Type": "text/html"})
 
 
