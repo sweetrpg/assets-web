@@ -5,7 +5,7 @@ __author__ = "Paul Schifferer <dm@sweetrpg.com>"
 
 from functools import wraps
 from sweetrpg_assets_web.application import constants
-from flask import Blueprint, request, session, jsonify, current_app, make_response, send_file, send_from_directory, abort
+from flask import Blueprint, request, session, jsonify, current_app, make_response, send_file, send_from_directory, abort, url_for
 from werkzeug.exceptions import HTTPException
 from werkzeug.utils import secure_filename
 from markupsafe import escape
@@ -26,7 +26,7 @@ _MAINTENANCE_PAGE_TEMPLATE = """<!DOCTYPE html>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SweetRPG Assets - Maintenance</title>
-  <link rel="icon" href="/static/favicon.png">
+  <link rel="icon" href="{favicon_url}">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap');
 
@@ -127,7 +127,7 @@ _MAINTENANCE_PAGE_TEMPLATE = """<!DOCTYPE html>
 </head>
 <body>
   <div class="container">
-    <img src="/static/sweetrpg-logo-black.svg" alt="SweetRPG" class="logo">
+    <img src="{logo_url}" alt="SweetRPG" class="logo">
     <h1>{label}</h1>
     <p class="tagline">{description}</p>
 
@@ -159,6 +159,8 @@ def _render_maintenance_page(mode):
         label=escape(mode.label) if mode.label else "Under Maintenance",
         description=escape(mode.description) if mode.description else "",
         window=window,
+        logo_url=url_for("web.static_asset", filename="sweetrpg-logo-black.svg"),
+        favicon_url=url_for("web.static_asset", filename="favicon.png"),
     )
     return make_response(html, 503, {"Content-Type": "text/html", "Retry-After": "120"})
 
@@ -281,7 +283,7 @@ _PLACEHOLDER_PAGE = """<!DOCTYPE html>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SweetRPG Assets</title>
-  <link rel="icon" href="/static/favicon.png">
+  <link rel="icon" href="{favicon_url}">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap');
 
@@ -390,7 +392,7 @@ _PLACEHOLDER_PAGE = """<!DOCTYPE html>
 </head>
 <body>
   <div class="container">
-    <img src="/static/sweetrpg-logo-blueprint.png" alt="SweetRPG" class="logo">
+    <img src="{logo_url}" alt="SweetRPG" class="logo">
     <h1>Assets Service</h1>
     <p class="tagline">Stores and serves binary assets for the SweetRPG platform</p>
 
@@ -411,10 +413,12 @@ _PLACEHOLDER_PAGE = """<!DOCTYPE html>
 
 @blueprint.route("/")
 def main_page():
-    # str.replace, not .format - the page's inline CSS is full of literal `{`/`}` braces that
-    # .format would choke on.
     root_url = current_app.config["SWEETRPG_ROOT_URL"]
+    logo_url = url_for("web.static_asset", filename="sweetrpg-logo-blueprint.png")
+    favicon_url = url_for("web.static_asset", filename="favicon.png")
     html = _PLACEHOLDER_PAGE.replace("{root_url}", escape(root_url))
+    html = html.replace("{logo_url}", escape(logo_url))
+    html = html.replace("{favicon_url}", escape(favicon_url))
     return make_response(html, 200, {"Content-Type": "text/html"})
 
 
