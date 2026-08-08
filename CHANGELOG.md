@@ -1,3 +1,24 @@
+## [0.6.3] - 2026-08-08
+
+### 🐛 Bug Fixes
+
+- Move stray files to correct subdirectories
+- Add comment headers to CSS files and revert test assertion
+- Include template files in package manifest
+- Correct template_folder path for blueprint
+
+### 🚜 Refactor
+
+- *(web)* Move hardcoded HTML templates to Jinja2 template files
+- *(static)* Extract CSS to files and organize static assets by type
+
+### 🧪 Testing
+
+- Update static file paths to match new directory structure
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.6.2
 ## [0.6.2] - 2026-08-08
 
 ### ⚙️ Miscellaneous Tasks
