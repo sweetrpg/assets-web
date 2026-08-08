@@ -31,3 +31,15 @@ def test_avatar_menu_js_is_served(client):
     resp = client.get("/static/avatar-menu.js")
     assert resp.status_code == 200
     assert b"avatar-menu" in resp.data
+
+
+def test_theme_js_is_served(client):
+    resp = client.get("/static/theme.js")
+    assert resp.status_code == 200
+    assert b"avatar-menu-theme-row" in resp.data
+
+
+def test_mystery_man_svg_is_served(client):
+    resp = client.get("/static/mystery-man.svg")
+    assert resp.status_code == 200
+    assert resp.data.startswith(b"<svg")

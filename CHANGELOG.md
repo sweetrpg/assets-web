@@ -1,3 +1,19 @@
+## [0.6.0] - 2026-08-08
+
+### 🚀 Features
+
+- *(avatar-menu)* Always-present menu shared assets - mystery-man icon, promote theme.js
+- *(web)* Blueprint logo and dynamic platform link on front page
+- *(assets)* Add a cover asset kind and cover-image CSS for catalog-web
+
+### 🐛 Bug Fixes
+
+- *(ci)* Scope Docker Build's concurrency group by ref
+- *(kubernetes)* Make ArgoCD's per-release image tag override actually apply
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.5.0
 ## [0.5.0] - 2026-08-08
 
 ### 🚀 Features

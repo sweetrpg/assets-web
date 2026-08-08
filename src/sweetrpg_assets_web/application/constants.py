@@ -59,6 +59,9 @@ LOGSTASH_PORT = "LOGSTASH_PORT"
 SHELF_API_BASE_URL = "SHELF_API_BASE_URL"
 APPLICATION_BASE_PATH = "APPLICATION_BASE_PATH"
 
+# Suite-wide platform root (see docs/frontend-conventions.md in sweetrpg/platform)
+SWEETRPG_ROOT_URL = "SWEETRPG_ROOT_URL"
+
 # admin-api integration (banners, maintenance mode)
 ADMIN_API_URL = "ADMIN_API_URL"
 MAINTENANCE_MODE_SCOPES = ["platform", "service:assets"]
@@ -66,7 +69,7 @@ MAINTENANCE_MODE_SCOPES = ["platform", "service:assets"]
 # Asset storage
 ASSET_DATA_PATH = "ASSET_DATA_PATH"
 ASSET_CACHE_TTL = "ASSET_CACHE_TTL"
-ALLOWED_KINDS = frozenset({"avatar", "map", "token", "portrait"})
+ALLOWED_KINDS = frozenset({"avatar", "map", "token", "portrait", "cover"})
 
 # Rate limiting
 RATE_LIMIT = "RATE_LIMIT"
