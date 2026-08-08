@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SweetRPG Assets</title>
+  <link rel="icon" href="{{ favicon_url }}">
+  <link rel="stylesheet" href="{{ url_for('web.static_asset', filename='css/main.css') }}">
+</head>
+<body>
+  <div class="container">
+    <img src="{{ logo_url }}" alt="SweetRPG" class="logo">
+    <h1>Assets Service</h1>
+    <p class="tagline">Stores and serves binary assets for the SweetRPG platform</p>
+
+    <div class="info-box">
+      <p>This service manages all binary assets for the SweetRPG platform, including avatars, portraits, maps, and tokens.</p>
+      <p><strong>Note:</strong> There is nothing to browse here. Assets are fetched by other platform services using their kind and ID.</p>
+      <p>If you're looking for the SweetRPG platform, visit <a href="{{ root_url }}">{{ root_url }}</a>.</p>
+    </div>
+  </div>
+
+  <footer>
+    <div>&copy; 2026 Pilgrimage Software &middot; <a href="https://github.com/sweetrpg" target="_blank" rel="noopener">GitHub</a></div>
+    <div>v{{ version }} &middot; built {{ build_timestamp }} / {{ build_hash }}</div>
+  </footer>
+</body>
+</html>
