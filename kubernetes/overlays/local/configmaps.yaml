@@ -7,9 +7,13 @@ metadata:
 
 data:
     PORT: "8081"
-    APPLICATION_BASE_PATH: ""
+    # Traefik's strip-prefix-web Middleware removes /assets before this app sees the request -
+    # PrefixMiddleware (main.py) re-adds it to every url_for()-generated link so they round-trip
+    # back through the Ingress correctly.
+    APPLICATION_BASE_PATH: /assets
     BUILD_INFO_PATH: /app/build-info.json
     ASSET_DATA_PATH: /data
+    SWEETRPG_ROOT_URL: https://sweetrpg.local/
     # Same collector the catalog services export to (tempo-distributor's OTLP/HTTP receiver).
     # OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo-distributor.observability.svc.cluster.local:4318
     # Requests per minute, one shared process-wide bucket - a blunt backstop, not per-client.

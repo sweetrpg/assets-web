@@ -57,6 +57,9 @@ LOGSTASH_TRANSPORT = "LOGSTASH_TRANSPORT"
 LOGSTASH_PORT = "LOGSTASH_PORT"
 
 SHELF_API_BASE_URL = "SHELF_API_BASE_URL"
+# Prefix this app is mounted under behind the reverse proxy (e.g. "/assets") - Traefik strips it
+# before the request reaches this pod, so it must be re-added to every url_for()-generated link.
+# See PrefixMiddleware in main.py. Previously unused (always ""); now consumed there.
 APPLICATION_BASE_PATH = "APPLICATION_BASE_PATH"
 
 # Suite-wide platform root (see docs/frontend-conventions.md in sweetrpg/platform)
