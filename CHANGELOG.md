@@ -1,3 +1,16 @@
+## [0.5.0] - 2026-08-08
+
+### 🚀 Features
+
+- *(avatar-menu)* Support a Gravatar image with letter-avatar fallback
+
+### 🐛 Bug Fixes
+
+- *(ci)* Correct sweetrpg/kubernetes manifest path for update-deployment
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.4.1
 ## [0.4.1] - 2026-08-05
 
 ### ⚙️ Miscellaneous Tasks
