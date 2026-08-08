@@ -59,9 +59,16 @@ LOGSTASH_PORT = "LOGSTASH_PORT"
 SHELF_API_BASE_URL = "SHELF_API_BASE_URL"
 APPLICATION_BASE_PATH = "APPLICATION_BASE_PATH"
 
+# Suite-wide platform root (see docs/frontend-conventions.md in sweetrpg/platform)
+SWEETRPG_ROOT_URL = "SWEETRPG_ROOT_URL"
+
 # admin-api integration (banners, maintenance mode)
 ADMIN_API_URL = "ADMIN_API_URL"
 MAINTENANCE_MODE_SCOPES = ["platform", "service:assets"]
+
+# Path to the build-info.json the Docker build writes (see Dockerfile) - already present as a
+# configmap key, previously unused by any code.
+BUILD_INFO_PATH = "BUILD_INFO_PATH"
 
 # Asset storage
 ASSET_DATA_PATH = "ASSET_DATA_PATH"

@@ -5,7 +5,8 @@ __author__ = "Paul Schifferer <dm@sweetrpg.com>"
 
 from functools import wraps
 from sweetrpg_assets_web.application import constants
-from flask import Blueprint, request, session, jsonify, current_app, make_response, send_file, send_from_directory, abort
+from sweetrpg_assets_web import __version__
+from flask import Blueprint, request, session, jsonify, current_app, make_response, send_file, send_from_directory, abort, url_for, render_template
 from werkzeug.exceptions import HTTPException
 from werkzeug.utils import secure_filename
 from markupsafe import escape
@@ -15,134 +16,10 @@ from pathlib import Path
 from sweetrpg_assets_web.application.cache import cache
 import analytics
 import datetime
+import json
 
 
-blueprint = Blueprint("web", __name__)
-
-
-_MAINTENANCE_PAGE_TEMPLATE = """<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SweetRPG Assets - Maintenance</title>
-  <link rel="icon" href="/static/favicon.png">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap');
-
-    :root {{
-      --color-bg: #f3f2f2;
-      --color-surface: #eae9e9;
-      --color-text: #201e1d;
-      --color-accent: #0088b0;
-      --color-neutral-300: #d7d3d3;
-      --font-heading: "Source Serif 4", system-ui, sans-serif;
-      --font-body: "Source Serif 4", system-ui, sans-serif;
-    }}
-
-    * {{ box-sizing: border-box; }}
-
-    body {{
-      margin: 0;
-      padding: 0;
-      background: var(--color-bg);
-      color: var(--color-text);
-      font-family: var(--font-body);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }}
-
-    h1, h2, h3, h4 {{
-      font-family: var(--font-heading);
-      font-weight: 600;
-      margin: 0;
-    }}
-
-    .container {{
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: clamp(20px, 5vw, 64px);
-      text-align: center;
-    }}
-
-    .logo {{
-      width: min(200px, 30vw);
-      height: auto;
-      margin-bottom: 24px;
-    }}
-
-    h1 {{
-      font-size: clamp(32px, 8vw, 56px);
-      margin-bottom: 16px;
-      color: var(--color-text);
-    }}
-
-    .tagline {{
-      font-size: 16px;
-      color: #666;
-      margin: 0 0 32px;
-      max-width: 60ch;
-    }}
-
-    .info-box {{
-      background: var(--color-surface);
-      border-radius: 8px;
-      padding: 28px 32px;
-      max-width: 600px;
-      margin: 0 auto;
-    }}
-
-    .info-box p {{
-      margin: 0 0 16px;
-      line-height: 1.6;
-    }}
-
-    .info-box p:last-child {{
-      margin-bottom: 0;
-    }}
-
-    .info-box strong {{
-      color: var(--color-text);
-      font-weight: 600;
-    }}
-
-    .window {{
-      color: #666;
-      font-size: 14px;
-    }}
-
-    footer {{
-      padding: 24px;
-      text-align: center;
-      color: #999;
-      font-size: 12px;
-      border-top: 1px solid var(--color-neutral-300);
-      margin-top: auto;
-    }}
-  </style>
-</head>
-<body>
-  <div class="container">
-    <img src="/static/sweetrpg-logo-black.svg" alt="SweetRPG" class="logo">
-    <h1>{label}</h1>
-    <p class="tagline">{description}</p>
-
-    <div class="info-box">
-      <p>This service is temporarily unavailable for scheduled maintenance. Please check back shortly.</p>
-      {window}
-    </div>
-  </div>
-
-  <footer>
-    <span>&copy; 2026 Pilgrimage Software</span>
-  </footer>
-</body>
-</html>
-"""
+blueprint = Blueprint("web", __name__, template_folder="../templates")
 
 
 def _render_maintenance_page(mode):
@@ -155,10 +32,13 @@ def _render_maintenance_page(mode):
             parts.append(f"<strong>Ends:</strong> {escape(mode.ends_at)}")
         window = f'<p class="window">{" &middot; ".join(parts)}</p>'
 
-    html = _MAINTENANCE_PAGE_TEMPLATE.format(
-        label=escape(mode.label) if mode.label else "Under Maintenance",
-        description=escape(mode.description) if mode.description else "",
+    html = render_template(
+        "maintenance.html",
+        label=mode.label if mode.label else "Under Maintenance",
+        description=mode.description if mode.description else "",
         window=window,
+        logo_url=url_for("web.static_asset", filename="img/sweetrpg-logo-black.svg"),
+        favicon_url=url_for("web.static_asset", filename="img/favicon.png"),
     )
     return make_response(html, 503, {"Content-Type": "text/html", "Retry-After": "120"})
 
@@ -273,145 +153,29 @@ def error_handler(ex):
     return response
 
 
+def _load_build_info():
+    try:
+        with open(current_app.config["BUILD_INFO_PATH"]) as f:
+            info = json.load(f)
+            return info.get("date", "unknown"), info.get("sha", "unknown")
+    except Exception:
+        return "unknown", "unknown"
+
+
 # Assets are fetched by kind and ID known from other services (e.g. a catalog entry's image
 # reference), not browsed - this is a static placeholder, not a real landing page.
-_PLACEHOLDER_PAGE = """<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SweetRPG Assets</title>
-  <link rel="icon" href="/static/favicon.png">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap');
-
-    :root {
-      --color-bg: #f3f2f2;
-      --color-surface: #eae9e9;
-      --color-text: #201e1d;
-      --color-accent: #0088b0;
-      --color-neutral-300: #d7d3d3;
-      --font-heading: "Source Serif 4", system-ui, sans-serif;
-      --font-body: "Source Serif 4", system-ui, sans-serif;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      padding: 0;
-      background: var(--color-bg);
-      color: var(--color-text);
-      font-family: var(--font-body);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    h1, h2, h3, h4 {
-      font-family: var(--font-heading);
-      font-weight: 600;
-      margin: 0;
-    }
-
-    a {
-      color: var(--color-accent);
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    .container {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: clamp(20px, 5vw, 64px);
-      text-align: center;
-    }
-
-    .logo {
-      width: min(200px, 30vw);
-      height: auto;
-      margin-bottom: 24px;
-    }
-
-    h1 {
-      font-size: clamp(32px, 8vw, 56px);
-      margin-bottom: 16px;
-      color: var(--color-text);
-    }
-
-    .tagline {
-      font-size: 16px;
-      color: #666;
-      margin: 0 0 32px;
-      max-width: 60ch;
-    }
-
-    .info-box {
-      background: var(--color-surface);
-      border-radius: 8px;
-      padding: 28px 32px;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    .info-box p {
-      margin: 0 0 16px;
-      line-height: 1.6;
-    }
-
-    .info-box p:last-child {
-      margin-bottom: 0;
-    }
-
-    .info-box strong {
-      color: var(--color-text);
-      font-weight: 600;
-    }
-
-    footer {
-      padding: 24px;
-      text-align: center;
-      color: #999;
-      font-size: 12px;
-      border-top: 1px solid var(--color-neutral-300);
-      margin-top: auto;
-    }
-
-    footer a {
-      color: #666;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <img src="/static/sweetrpg-logo-black.svg" alt="SweetRPG" class="logo">
-    <h1>Assets Service</h1>
-    <p class="tagline">Stores and serves binary assets for the SweetRPG platform</p>
-
-    <div class="info-box">
-      <p>This service manages all binary assets for the SweetRPG platform, including avatars, portraits, maps, and tokens.</p>
-      <p><strong>Note:</strong> There is nothing to browse here. Assets are fetched by other platform services using their kind and ID.</p>
-      <p>If you're looking for the SweetRPG platform, visit <a href="https://sweetrpg.com">sweetrpg.com</a>.</p>
-    </div>
-  </div>
-
-  <footer>
-    <span>&copy; 2026 Pilgrimage Software &middot; <a href="https://github.com/sweetrpg" target="_blank" rel="noopener">GitHub</a></span>
-  </footer>
-</body>
-</html>
-"""
-
-
 @blueprint.route("/")
 def main_page():
-    return make_response(_PLACEHOLDER_PAGE, 200, {"Content-Type": "text/html"})
+    build_timestamp, build_hash = _load_build_info()
+    return render_template(
+        "main.html",
+        root_url=current_app.config["SWEETRPG_ROOT_URL"],
+        logo_url=url_for("web.static_asset", filename="img/sweetrpg-logo-blueprint.png"),
+        favicon_url=url_for("web.static_asset", filename="img/favicon.png"),
+        version=__version__,
+        build_timestamp=build_timestamp,
+        build_hash=build_hash,
+    )
 
 
 # Shared frontend branding (logo, favicon, stylesheet) checked into this repo and deployed with
