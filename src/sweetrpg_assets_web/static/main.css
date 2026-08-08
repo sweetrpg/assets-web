@@ -137,6 +137,7 @@ a:hover { color: var(--color-accent); text-decoration: underline; }
 	text-decoration: none !important;
 }
 .card-cover {
+	position: relative;
 	aspect-ratio: 3 / 4;
 	background: var(--color-neutral-300);
 	display: flex;
@@ -148,7 +149,22 @@ a:hover { color: var(--color-accent); text-decoration: underline; }
 	text-transform: uppercase;
 	text-align: center;
 	padding: 10px;
+	overflow: hidden;
 }
+/*
+ * A cover image, when a volume has one stored (assets-web's /asset/<kind>/<id> route).
+ * Absolutely positioned so it stacks above the (statically positioned) "Cover pending"
+ * fallback text without needing z-index - consuming templates' inline
+ * `onerror="this.style.display='none'"` reveals the fallback on a 404 (no cover on file).
+ */
+.card-cover-img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+.card-cover-fallback { position: relative; }
 .card-body { padding: 14px 16px 18px; }
 .card-title { font-size: 17px; font-weight: 600; }
 .card-meta { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
@@ -234,7 +250,6 @@ a:hover { color: var(--color-accent); text-decoration: underline; }
 .detail-description { font-size: 16px; line-height: 1.65; max-width: 60ch; }
 .detail-description-empty { opacity: 0.55; font-style: italic; }
 .detail-notes { font-size: 14px; line-height: 1.6; max-width: 60ch; opacity: 0.75; }
-.detail-meta { font-size: 13px; letter-spacing: 0.03em; opacity: 0.6; }
 .detail-block { margin: 24px 0; }
 .review { margin-bottom: 16px; }
 .review-stars { color: var(--color-accent); letter-spacing: 1px; }

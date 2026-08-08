@@ -69,7 +69,7 @@ MAINTENANCE_MODE_SCOPES = ["platform", "service:assets"]
 # Asset storage
 ASSET_DATA_PATH = "ASSET_DATA_PATH"
 ASSET_CACHE_TTL = "ASSET_CACHE_TTL"
-ALLOWED_KINDS = frozenset({"avatar", "map", "token", "portrait"})
+ALLOWED_KINDS = frozenset({"avatar", "map", "token", "portrait", "cover"})
 
 # Rate limiting
 RATE_LIMIT = "RATE_LIMIT"

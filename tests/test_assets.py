@@ -57,3 +57,14 @@ def test_get_is_served_from_cache_after_overwrite_is_invalidated(client):
 
     _upload(client, "avatar", "1", data=b"second")
     assert client.get("/asset/avatar/1").data == b"second"
+
+
+def test_cover_kind_round_trip(client):
+    # catalog-web's volume cover images (expand-volume-detail-page) - a separate kind from
+    # `portrait` so book covers don't share a namespace with character portrait art.
+    store_resp = _upload(client, "cover", "volume-1", data=b"cover-bytes")
+    assert store_resp.status_code == 201
+
+    get_resp = client.get("/asset/cover/volume-1")
+    assert get_resp.status_code == 200
+    assert get_resp.data == b"cover-bytes"
