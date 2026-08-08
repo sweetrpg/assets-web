@@ -1,3 +1,12 @@
+## [0.6.4] - 2026-08-08
+
+### 🐛 Bug Fixes
+
+- Load build info from build-info.json and set SCRIPT_NAME for url_for path generation
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.6.3
 ## [0.6.3] - 2026-08-08
 
 ### 🐛 Bug Fixes
