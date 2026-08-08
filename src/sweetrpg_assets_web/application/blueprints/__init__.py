@@ -18,7 +18,7 @@ import analytics
 import datetime
 
 
-blueprint = Blueprint("web", __name__, template_folder="templates")
+blueprint = Blueprint("web", __name__, template_folder="../templates")
 
 
 def _render_maintenance_page(mode):
