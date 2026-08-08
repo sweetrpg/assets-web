@@ -23,3 +23,8 @@ labels:
 
 generatorOptions:
     disableNameSuffixHash: true
+
+images:
+  - name: assets-web
+    newName: ghcr.io/sweetrpg/assets-web
+    newTag: v0.0.1
