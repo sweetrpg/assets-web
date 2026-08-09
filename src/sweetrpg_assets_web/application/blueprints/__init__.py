@@ -157,7 +157,10 @@ def _load_build_info():
     try:
         with open(current_app.config["BUILD_INFO_PATH"]) as f:
             info = json.load(f)
-            return info.get("date", "unknown"), info.get("sha", "unknown")
+            # Matches catalog-web/main-web's convention of an 8-char short sha - Python's
+            # string slicing is a safe no-op on a shorter string, unlike Askama's build_hash[..8]
+            # which panicked on one (see main-web's routes/main.rs comment).
+            return info.get("date", "unknown"), info.get("sha", "unknown")[:8]
     except Exception:
         return "unknown", "unknown"
 
