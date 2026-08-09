@@ -155,20 +155,22 @@ def error_handler(ex):
 
 def _load_build_info():
     try:
-        with open("/app/build-info.json") as f:
+        with open(current_app.config["BUILD_INFO_PATH"]) as f:
             info = json.load(f)
             return info.get("date", "unknown"), info.get("sha", "unknown")
     except Exception:
         return "unknown", "unknown"
 
 
+# Assets are fetched by kind and ID known from other services (e.g. a catalog entry's image
+# reference), not browsed - this is a static placeholder, not a real landing page.
 @blueprint.route("/")
 def main_page():
     build_timestamp, build_hash = _load_build_info()
     return render_template(
         "main.html",
         root_url=current_app.config["SWEETRPG_ROOT_URL"],
-        logo_url=url_for("web.static_asset", filename="img/sweetrpg-logo.png"),
+        logo_url=url_for("web.static_asset", filename="img/sweetrpg-logo-blueprint.png"),
         favicon_url=url_for("web.static_asset", filename="img/favicon.png"),
         version=__version__,
         build_timestamp=build_timestamp,
