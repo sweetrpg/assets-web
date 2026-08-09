@@ -1,3 +1,20 @@
+## [0.7.0] - 2026-08-09
+
+### 🚀 Features
+
+- *(assets)* Add a cover asset kind and cover-image CSS for catalog-web
+- *(avatar-menu)* Always-present menu shared assets - mystery-man icon, promote theme.js
+- *(web)* Move hardcoded HTML to Jinja templates, organize static assets by type, add SWEETRPG_ROOT_URL
+
+### 🐛 Bug Fixes
+
+- *(ci)* Scope Docker Build's concurrency group by ref
+- *(kubernetes)* Make ArgoCD's per-release image tag override actually apply
+- *(web)* Wire APPLICATION_BASE_PATH into the WSGI environ so url_for() actually prefixes URLs
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.6.4
 ## [0.6.4] - 2026-08-08
 
 ### 🐛 Bug Fixes
