@@ -67,3 +67,9 @@ class BaseConfig(object):
     # Suite-wide platform root (see docs/frontend-conventions.md in sweetrpg/platform) - defaults
     # to "/" so a local instance run standalone still links somewhere rather than to a broken URL.
     SWEETRPG_ROOT_URL = os.environ.get(constants.SWEETRPG_ROOT_URL) or "/"
+
+    # Prefix this app is mounted under behind the reverse proxy (e.g. "/assets") - see
+    # PrefixMiddleware in main.py. Empty/unset when run standalone (local dev, tests).
+    APPLICATION_BASE_PATH = os.environ.get(constants.APPLICATION_BASE_PATH) or ""
+
+    BUILD_INFO_PATH = os.environ.get(constants.BUILD_INFO_PATH) or "/app/build-info.json"
