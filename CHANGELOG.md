@@ -1,3 +1,17 @@
+## [0.8.0] - 2026-08-10
+
+### 🚀 Features
+
+- *(templates)* Simplify main page info box text
+
+### 🐛 Bug Fixes
+
+- *(web)* Truncate build hash to 8 chars in footer
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.7.0
+- Update favicon
 ## [0.7.0] - 2026-08-09
 
 ### 🚀 Features
