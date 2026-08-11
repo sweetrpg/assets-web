@@ -10,6 +10,7 @@
 
 :root {
 	--color-bg: #fdfaf5;
+	--color-surface: #ffffff;
 	--color-text: #1a1a1a;
 	--color-accent: #b5442e;
 	--color-accent-700: #8f3524;
@@ -29,6 +30,7 @@
  */
 [data-theme="dark"] {
 	--color-bg: #1a1918;
+	--color-surface: #26241f;
 	--color-text: #f0efee;
 	--color-neutral-300: #3a3836;
 	--color-neutral-600: #a39d92;
@@ -129,7 +131,7 @@ a:hover { color: var(--color-accent); text-decoration: underline; }
 }
 .card {
 	display: block;
-	background: white;
+	background: var(--color-surface);
 	border: 1px solid var(--color-neutral-300);
 	border-radius: 8px;
 	overflow: hidden;

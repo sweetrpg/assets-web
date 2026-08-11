@@ -37,8 +37,8 @@ def _render_maintenance_page(mode):
         label=mode.label if mode.label else "Under Maintenance",
         description=mode.description if mode.description else "",
         window=window,
-        logo_url=url_for("web.static_asset", filename="img/sweetrpg-logo-black.svg"),
-        favicon_url=url_for("web.static_asset", filename="img/favicon.png"),
+        logo_url=url_for("web.static_asset", filename="img/assets/logo.svg"),
+        favicon_url=url_for("web.static_asset", filename="img/assets/favicon.png"),
     )
     return make_response(html, 503, {"Content-Type": "text/html", "Retry-After": "120"})
 
@@ -173,8 +173,8 @@ def main_page():
     return render_template(
         "main.html",
         root_url=current_app.config["SWEETRPG_ROOT_URL"],
-        logo_url=url_for("web.static_asset", filename="img/sweetrpg-logo-blueprint.png"),
-        favicon_url=url_for("web.static_asset", filename="img/favicon.png"),
+        logo_url=url_for("web.static_asset", filename="img/assets/logo.png"),
+        favicon_url=url_for("web.static_asset", filename="img/assets/favicon.png"),
         version=__version__,
         build_timestamp=build_timestamp,
         build_hash=build_hash,

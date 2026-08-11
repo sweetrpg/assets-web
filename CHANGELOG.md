@@ -1,3 +1,16 @@
+## [0.8.1] - 2026-08-11
+
+### 🐛 Bug Fixes
+
+- Separate assets favicon from the rest
+- *(css)* Add theme-aware --color-surface token for .card background
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.8.0
+- Create separate folders for app image assets
+- Move assets logo into its own folder
+- Create other asset folders
 ## [0.8.0] - 2026-08-10
 
 ### 🚀 Features
