@@ -1,3 +1,13 @@
+## [0.9.0] - 2026-08-11
+
+### 🚀 Features
+
+- Add Broadsheet CSS and footer fade JS
+- *(assets)* Enforce upload size and content-type limits
+
+### 🐛 Bug Fixes
+
+- *(tests)* Update stale logo path assertion in test_web.py
 ## [0.8.0] - 2026-08-10
 
 ### 🚀 Features
