@@ -13,7 +13,7 @@ def test_main_page_links_are_unprefixed_by_default(client):
     resp = client.get("/")
     assert resp.status_code == 200
     assert b'href="/static/css/page.css"' in resp.data
-    assert b'src="/static/img/sweetrpg-logo-blueprint.png"' in resp.data
+    assert b'src="/static/img/assets/logo.png"' in resp.data
 
 
 def test_main_page_links_are_prefixed_when_application_base_path_is_set(app):
@@ -35,7 +35,7 @@ def test_main_page_links_are_prefixed_when_application_base_path_is_set(app):
 
     assert resp.status_code == 200
     assert b'href="/assets/static/css/page.css"' in resp.data
-    assert b'src="/assets/static/img/sweetrpg-logo-blueprint.png"' in resp.data
+    assert b'src="/assets/static/img/assets/logo.png"' in resp.data
 
 
 def test_build_hash_is_truncated_to_8_chars(app, tmp_path):

@@ -225,6 +225,17 @@ def _require_authenticated() -> None:
         abort(401, description="Authentication required")
 
 
+def _require_valid_upload(upload) -> None:
+    if upload.mimetype not in constants.ALLOWED_CONTENT_TYPES:
+        abort(400, description=f"Unsupported content type: {upload.mimetype}")
+
+    upload.stream.seek(0, 2)
+    size = upload.stream.tell()
+    upload.stream.seek(0)
+    if size > constants.MAX_ASSET_UPLOAD_BYTES:
+        abort(400, description="File exceeds maximum upload size")
+
+
 def _cache_key(kind: str, id: str) -> str:
     return f"asset:{kind}:{id}"
 
@@ -258,6 +269,7 @@ def store_asset(kind: str, id: str):
     upload = request.files.get("file")
     if upload is None or not upload.filename:
         abort(400, description="No file provided")
+    _require_valid_upload(upload)
 
     path = _asset_path(kind, id)
     path.parent.mkdir(parents=True, exist_ok=True)
