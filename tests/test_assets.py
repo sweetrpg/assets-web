@@ -59,6 +59,29 @@ def test_get_is_served_from_cache_after_overwrite_is_invalidated(client):
     assert client.get("/asset/avatar/1").data == b"second"
 
 
+def test_store_rejects_oversized_upload(client):
+    oversized = b"x" * (5 * 1024 * 1024 + 1)
+    resp = _upload(client, "avatar", "1", data=oversized)
+    assert resp.status_code == 400
+
+
+def test_store_accepts_upload_at_max_size(client):
+    max_size = b"x" * (5 * 1024 * 1024)
+    resp = _upload(client, "avatar", "1", data=max_size)
+    assert resp.status_code == 201
+
+
+def test_store_rejects_unsupported_content_type(client):
+    resp = _upload(client, "avatar", "1", filename="a.pdf", data=b"not an image")
+    assert resp.status_code == 400
+
+
+def test_store_accepts_every_allowed_kind(client):
+    for kind in ("avatar", "map", "token", "portrait", "cover"):
+        resp = _upload(client, kind, "1", data=b"pixels")
+        assert resp.status_code == 201, kind
+
+
 def test_cover_kind_round_trip(client):
     # catalog-web's volume cover images (expand-volume-detail-page) - a separate kind from
     # `portrait` so book covers don't share a namespace with character portrait art.
