@@ -285,4 +285,21 @@ def store_asset(kind: str, id: str):
     return response
 
 
+@blueprint.route("/asset/<kind>/<id>", methods=['DELETE'])
+def delete_asset(kind: str, id: str):
+    _require_authenticated()
+    _require_known_kind(kind)
+
+    path = _asset_path(kind, id)
+    if not path.is_file():
+        abort(404, description="Asset not found")
+
+    path.unlink()
+    cache.delete(_cache_key(kind, id))
+
+    response = jsonify(kind=kind, id=id)
+    response.status_code = 204
+    return response
+
+
 from sweetrpg_web_core.blueprints import health

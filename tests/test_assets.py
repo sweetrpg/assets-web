@@ -77,9 +77,36 @@ def test_store_rejects_unsupported_content_type(client):
 
 
 def test_store_accepts_every_allowed_kind(client):
-    for kind in ("avatar", "map", "token", "portrait", "cover"):
+    for kind in ("avatar", "map", "token", "portrait", "cover", "cover-staged", "sample-staged"):
         resp = _upload(client, kind, "1", data=b"pixels")
         assert resp.status_code == 201, kind
+
+
+def test_delete_requires_authentication(client):
+    _upload(client, "avatar", "1")
+    resp = client.delete("/asset/avatar/1", headers={})
+    assert resp.status_code == 401
+
+
+def test_delete_rejects_unknown_kind(client):
+    resp = client.delete("/asset/not-a-kind/1", headers=AUTH_HEADERS)
+    assert resp.status_code == 400
+
+
+def test_delete_missing_asset_404s(client):
+    resp = client.delete("/asset/avatar/does-not-exist", headers=AUTH_HEADERS)
+    assert resp.status_code == 404
+
+
+def test_delete_removes_asset_and_invalidates_cache(client):
+    _upload(client, "cover-staged", "1", data=b"staged-bytes")
+    assert client.get("/asset/cover-staged/1").data == b"staged-bytes"
+
+    delete_resp = client.delete("/asset/cover-staged/1", headers=AUTH_HEADERS)
+    assert delete_resp.status_code == 204
+
+    get_resp = client.get("/asset/cover-staged/1")
+    assert get_resp.status_code == 404
 
 
 def test_cover_kind_round_trip(client):
