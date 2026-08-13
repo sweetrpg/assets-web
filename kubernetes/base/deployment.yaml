@@ -26,6 +26,8 @@ spec:
                 package: assets
                 component: web
                 version: v1
+            annotations:
+                reloader.stakater.com/auto: "true"
         spec:
             serviceAccountName: web
             # Kubernetes auto-injects <SERVICE_NAME>_PORT-style env vars for every Service in
