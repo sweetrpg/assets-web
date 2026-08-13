@@ -77,7 +77,16 @@ BUILD_INFO_PATH = "BUILD_INFO_PATH"
 ASSET_DATA_PATH = "ASSET_DATA_PATH"
 ASSET_CACHE_TTL = "ASSET_CACHE_TTL"
 ALLOWED_KINDS = frozenset(
-    {"avatar", "map", "token", "portrait", "cover", "cover-staged", "sample-staged"}
+    {
+        "avatar",
+        "map",
+        "token",
+        "portrait",
+        "cover",
+        "cover-staged",
+        "sample",
+        "sample-staged",
+    }
 )
 MAX_ASSET_UPLOAD_BYTES = 5 * 1024 * 1024
 ALLOWED_CONTENT_TYPES = frozenset({"image/png", "image/jpeg", "image/webp"})

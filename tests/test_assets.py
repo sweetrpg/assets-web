@@ -77,7 +77,16 @@ def test_store_rejects_unsupported_content_type(client):
 
 
 def test_store_accepts_every_allowed_kind(client):
-    for kind in ("avatar", "map", "token", "portrait", "cover", "cover-staged", "sample-staged"):
+    for kind in (
+        "avatar",
+        "map",
+        "token",
+        "portrait",
+        "cover",
+        "cover-staged",
+        "sample",
+        "sample-staged",
+    ):
         resp = _upload(client, kind, "1", data=b"pixels")
         assert resp.status_code == 201, kind
 
