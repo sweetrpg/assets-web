@@ -79,7 +79,7 @@ code looks different from git blame around it:
   comment for why: catalog-api shipped a bug where a misplaced `defer` shut its tracer down
   within milliseconds of startup, silently dropping every span. Don't repeat the shape here.
 - **Metrics**: `application/metrics.py`, `prometheus-flask-exporter` at `/metrics`, scraped via
-  the `PodMonitor` in `kubernetes/overlays/dev/podmonitor.yaml`.
+  the `PodMonitor` in `kubernetes/overlays/dev/pod-monitor.yaml`.
 - **Rate limiting**: `application/limiter.py`, Flask-Limiter with a constant key function (one
   shared bucket for every client and route, not per-client) - matches the Go services'
   `golang.org/x/time/rate` convention. Limit string from `RATE_LIMIT`.
