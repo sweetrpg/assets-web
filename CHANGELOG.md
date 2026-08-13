@@ -1,3 +1,16 @@
+## [0.10.0] - 2026-08-13
+
+### 🚀 Features
+
+- *(static)* Add edit/accept/cancel UI icons
+- *(static)* Add inline-edit field and icon-button CSS
+- *(assets)* Add cover-staged/sample-staged kinds and DELETE endpoint
+- *(assets)* Add sample to ALLOWED_KINDS
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.9.0
+- Add reloader annotation, pod monitor
 ## [0.9.0] - 2026-08-11
 
 ### 🚀 Features
