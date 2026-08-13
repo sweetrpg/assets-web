@@ -256,6 +256,26 @@ a:hover { color: var(--color-accent); text-decoration: underline; }
 .review { margin-bottom: 16px; }
 .review-stars { color: var(--color-accent); letter-spacing: 1px; }
 
+/* catalog-web's fluid volume-edit page: inline per-field edit affordances laid out to match
+ * the detail page's own typography, not a traditional labeled-grid form. */
+.icon-btn {
+	background: none;
+	border: none;
+	padding: 4px;
+	margin: 0;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	vertical-align: middle;
+	border-radius: 4px;
+}
+.icon-btn:hover { background: var(--color-neutral-300); }
+.icon-btn img { width: 16px; height: 16px; display: block; }
+.field-row { display: flex; align-items: baseline; gap: 6px; }
+.field-row-block { align-items: flex-start; }
+.field-actions { display: inline-flex; gap: 2px; }
+.field-input { display: block; width: 100%; max-width: 60ch; margin: 4px 0; }
+
 .auth-page { padding: 48px 0; max-width: 480px; }
 
 .footer {

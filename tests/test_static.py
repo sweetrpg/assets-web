@@ -53,3 +53,10 @@ def test_mystery_man_svg_is_served(client):
     resp = client.get("/static/img/mystery-man.svg")
     assert resp.status_code == 200
     assert resp.data.startswith(b"<svg")
+
+
+def test_ui_icons_are_served(client):
+    for name in ("edit", "accept", "cancel"):
+        resp = client.get(f"/static/img/icons/{name}.svg")
+        assert resp.status_code == 200, name
+        assert resp.data.startswith(b"<svg"), name
