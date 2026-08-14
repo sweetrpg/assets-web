@@ -1,3 +1,17 @@
+## [0.11.0] - 2026-08-14
+
+### 🚀 Features
+
+- Route generic error status codes to shared-web
+
+### 🐛 Bug Fixes
+
+- *(kubernetes)* Remove stale podmonitor.yaml kustomize reference
+- Update errors-shared-web Middleware for shared-web's renamed Service
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.10.0
 ## [0.10.0] - 2026-08-13
 
 ### 🚀 Features
