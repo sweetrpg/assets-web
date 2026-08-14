@@ -29,7 +29,7 @@ spec:
             - "504"
         query: /errors/{status}?service=assets-web
         service:
-            name: shared-web-v1
+            name: web-v1
             namespace: sweetrpg-shared
             port:
                 name: http
