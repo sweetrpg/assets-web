@@ -1,3 +1,12 @@
+## [0.11.1] - 2026-08-14
+
+### 🐛 Bug Fixes
+
+- Use a bare port number in errors-shared-web Middleware
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.11.0
 ## [0.11.0] - 2026-08-14
 
 ### 🚀 Features
