@@ -31,5 +31,4 @@ spec:
         service:
             name: web-v1
             namespace: sweetrpg-shared
-            port:
-                name: http
+            port: 8081
