@@ -172,7 +172,7 @@ def main_page():
     build_timestamp, build_hash = _load_build_info()
     return render_template(
         "main.html",
-        root_url=current_app.config["SWEETRPG_ROOT_URL"],
+        root_url=current_app.config["ROOT_URL"],
         logo_url=url_for("web.static_asset", filename="img/assets/logo.png"),
         favicon_url=url_for("web.static_asset", filename="img/assets/favicon.png"),
         version=__version__,

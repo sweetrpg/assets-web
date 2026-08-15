@@ -77,7 +77,7 @@
 
 - *(assets)* Add a cover asset kind and cover-image CSS for catalog-web
 - *(avatar-menu)* Always-present menu shared assets - mystery-man icon, promote theme.js
-- *(web)* Move hardcoded HTML to Jinja templates, organize static assets by type, add SWEETRPG_ROOT_URL
+- *(web)* Move hardcoded HTML to Jinja templates, organize static assets by type, add ROOT_URL
 
 ### 🐛 Bug Fixes
 
@@ -414,4 +414,3 @@
 
 
 ## v0.0.1 (2021-11-04)
-

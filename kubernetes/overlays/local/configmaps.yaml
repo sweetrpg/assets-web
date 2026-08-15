@@ -13,8 +13,11 @@ data:
     APPLICATION_BASE_PATH: /assets
     BUILD_INFO_PATH: /app/build-info.json
     ASSET_DATA_PATH: /data
-    SWEETRPG_ROOT_URL: https://sweetrpg.local/
     # Same collector the catalog services export to (tempo-distributor's OTLP/HTTP receiver).
     # OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo-distributor.observability.svc.cluster.local:4318
     # Requests per minute, one shared process-wide bucket - a blunt backstop, not per-client.
     RATE_LIMIT: "120/minute"
+    ROOT_URL: https://sweetrpg.local/
+    ASSETS_URL: https://sweetrpg.local/assets
+    SHARED_URL: https://sweetrpg.local/shared
+    ENV: local
