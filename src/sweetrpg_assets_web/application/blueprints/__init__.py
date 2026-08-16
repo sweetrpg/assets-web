@@ -182,7 +182,7 @@ def _asset_path(kind: str, id: str) -> Path:
         if candidate.exists():
             return candidate
 
-    abort(400, description="Invalid asset id")
+    abort(404, description=f"No asset found of any type for id {id}")
 
 
 def _require_known_kind(kind: str) -> None:
