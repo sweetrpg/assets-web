@@ -52,6 +52,8 @@ _HEALTH_BLUEPRINT_NAME = "web.health"
 
 @blueprint.before_request
 def _check_maintenance_mode():
+    current_app.logger.info("check_maintenance_mode", extra={"path": request.path})
+
     if request.blueprint == _HEALTH_BLUEPRINT_NAME or request.path.startswith("/health/"):
         return None
 
@@ -75,10 +77,10 @@ def _check_maintenance_mode():
 
 @blueprint.before_request
 def _populate():
-    print(f"session: {session}")
-    print(f"headers: {request.headers}")
-    print(f"cookies: {request.cookies}")
-    print(f"args: {request.args}")
+    current_app.logger.debug("session: %s", session)
+    current_app.logger.debug("headers: %s", request.headers)
+    current_app.logger.debug("cookies: %s", request.cookies)
+    current_app.logger.debug("args: %s", request.args)
 
     userinfo = None
     if constants.PROFILE_KEY in session:
@@ -90,16 +92,18 @@ def _populate():
     session[constants.SESSION_EMAIL] = request.headers.get("X-Forwarded-Email")
     session[constants.SESSION_USER_ID] = request.headers.get("X-Forwarded-User")
 
-    print(f"(updated) session: {session}")
-    print(f"userinfo: {userinfo}")
+    current_app.logger.debug("(updated) session: %s", session)
+    current_app.logger.debug("userinfo: %s", userinfo)
 
 
 @blueprint.before_request
 def _store_user():
+    current_app.logger.debug("store_user: session: %s", session)
+
     email = session.get(constants.SESSION_EMAIL)
-    print(f"email: {email}")
+    current_app.logger.debug("email: %s", email)
     user_id = session.get(constants.SESSION_USER_ID)
-    print(f"user_id: {user_id}")
+    current_app.logger.debug("user_id: %s", user_id)
     if user_id and email:
         # TODO: store user
         pass
@@ -114,9 +118,9 @@ def _track():
         return
 
     email = session.get(constants.SESSION_EMAIL)
-    print(f"email: {email}")
+    current_app.logger.debug("email: %s", email)
     user_id = session.get(constants.SESSION_USER_ID)
-    print(f"user_id: {user_id}")
+    current_app.logger.debug("user_id: %s", user_id)
     if user_id and email:
         analytics.identify(user_id, {"email": email, "created_at": datetime.datetime.now()})
 
@@ -125,7 +129,7 @@ def _track():
 
 @blueprint.errorhandler(Exception)
 def error_handler(ex):
-    current_app.logger.exception(f"Exception caught: {ex}")
+    current_app.logger.exception("Exception caught: %s", ex)
     response = jsonify(message=str(ex))
     response.status_code = ex.code if isinstance(ex, HTTPException) else 500
     return response
@@ -147,7 +151,7 @@ def _load_build_info():
 # reference), not browsed - this is a static placeholder, not a real landing page.
 @blueprint.route("/")
 def main_page():
-    request.logger.info("main_page")
+    current_app.logger.info("main_page")
     build_timestamp, build_hash = _load_build_info()
     return render_template(
         "main.html",
@@ -166,21 +170,27 @@ def _asset_path(kind: str, id: str) -> Path:
     empty, or otherwise unsafe) - both checked here, in the same function that builds the
     path, rather than relying solely on callers to have validated kind first via
     `_require_known_kind`."""
+    current_app.logger.debug("_asset_path: kind=%s id=%s", kind, id)
+
     _require_known_kind(kind)
     allowed_kinds = {k: k for k in constants.ALLOWED_KINDS}
-    safe_kind = allowed_kinds[kind]
 
+    safe_kind = allowed_kinds[kind]
     safe_id = secure_filename(id)
+    current_app.logger.debug("_asset_path: safe_kind=%s safe_id=%s", safe_kind, safe_id)
     if not safe_id or safe_id != id:
         abort(400, description="Invalid asset id")
 
     base = Path(current_app.config["ASSET_DATA_PATH"]).resolve()
+    current_app.logger.debug("_asset_path: base=%s", base)
 
     image_types = ['svg', 'webp', 'png', 'jpg', 'jpeg', 'gif']
 
     for image_type in image_types:
+        current_app.logger.debug("_asset_path: image_type=%s", image_type)
         candidate = (base / safe_kind / safe_id / f'image.{image_type}').resolve()
         if candidate.exists():
+            current_app.logger.debug("_asset_path: candidate=%s", candidate)
             return candidate
 
     abort(404, description=f"No asset found of any type for id {id}")
@@ -213,7 +223,7 @@ def _cache_key(kind: str, id: str) -> str:
 
 @blueprint.route("/asset/<kind>/<id>", methods=['GET'])
 def get_asset(kind: str, id: str):
-    request.logger.info("get_asset", extra={"kind": kind, "id": id})
+    current_app.logger.info("get_asset", extra={"kind": kind, "id": id})
 
     _require_known_kind(kind)
 
@@ -230,7 +240,7 @@ def get_asset(kind: str, id: str):
     data = path.read_bytes()
     mimetype = mimetypes.guess_type(path.name)[0] or "application/octet-stream"
 
-    request.logger.info("store_asset: setting cache key", extra={"kind": kind, "id": id, "cache_key": cache_key})
+    current_app.logger.info("store_asset: setting cache key", extra={"kind": kind, "id": id, "cache_key": cache_key})
     cache.set(cache_key, (data, mimetype), timeout=current_app.config["ASSET_CACHE_TTL"])
 
     return send_file(BytesIO(data), mimetype=mimetype)
@@ -238,7 +248,7 @@ def get_asset(kind: str, id: str):
 
 @blueprint.route("/asset/<kind>/<id>", methods=['POST'])
 def store_asset(kind: str, id: str):
-    request.logger.info("store_asset", extra={"kind": kind, "id": id})
+    current_app.logger.info("store_asset", extra={"kind": kind, "id": id})
 
     _require_authenticated()
     _require_known_kind(kind)
@@ -256,7 +266,7 @@ def store_asset(kind: str, id: str):
 
     # Invalidate rather than repopulate - the next GET will read the new file and refill the
     # cache with the correct content, avoiding a race with a GET that's mid-flight right now.
-    request.logger.info("store_asset: invalidating cache", extra={"kind": kind, "id": id})
+    current_app.logger.info("store_asset: invalidating cache", extra={"kind": kind, "id": id})
     cache.delete(_cache_key(kind, id))
 
     response = jsonify(kind=kind, id=id)
@@ -267,7 +277,7 @@ def store_asset(kind: str, id: str):
 
 @blueprint.route("/asset/<kind>/<id>", methods=['DELETE'])
 def delete_asset(kind: str, id: str):
-    request.logger.info("delete_asset", extra={"kind": kind, "id": id})
+    current_app.logger.info("delete_asset", extra={"kind": kind, "id": id})
 
     _require_authenticated()
     _require_known_kind(kind)
@@ -277,12 +287,12 @@ def delete_asset(kind: str, id: str):
         abort(404, description="Asset not found")
 
     for file in path.iterdir():
-        request.logger.info("delete_asset: deleting asset file", extra={"kind": kind, "id": id, "file": file.name})
+        current_app.logger.info("delete_asset: deleting asset file", extra={"kind": kind, "id": id, "file": file.name})
         file.unlink(missing_ok=True)
-    request.logger.info("delete_asset: deleting asset directory", extra={"kind": kind, "id": id})
+    current_app.logger.info("delete_asset: deleting asset directory", extra={"kind": kind, "id": id})
     path.rmdir()
 
-    request.logger.info("store_asset: invalidating cache", extra={"kind": kind, "id": id})
+    current_app.logger.info("store_asset: invalidating cache", extra={"kind": kind, "id": id})
     cache.delete(_cache_key(kind, id))
 
     response = jsonify(kind=kind, id=id)
