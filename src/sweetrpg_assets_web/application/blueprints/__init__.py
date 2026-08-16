@@ -17,6 +17,7 @@ from sweetrpg_assets_web.application.cache import cache
 import analytics
 import datetime
 import json
+import os
 
 
 blueprint = Blueprint("web", __name__, template_folder="../templates")
@@ -260,8 +261,8 @@ def store_asset(kind: str, id: str):
 
     asset_path = _asset_path(kind, id)
     asset_path.mkdir(parents=True, exist_ok=True)
-    filename_path = Path(upload.filename)
-    file_path = asset_path / f'image{filename_path.suffix}'
+    filename_base, filename_ext = os.path.splitext(upload.filename)
+    file_path = asset_path / f'image.{filename_ext}'
     upload.save(file_path)
 
     # Invalidate rather than repopulate - the next GET will read the new file and refill the
