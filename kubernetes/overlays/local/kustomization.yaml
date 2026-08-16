@@ -15,7 +15,7 @@ resources:
 
 labels:
   - pairs:
-      app: assets
+      app: web
       version: v1
       platform: sweetrpg
       package: assets
@@ -23,3 +23,8 @@ labels:
 
 generatorOptions:
     disableNameSuffixHash: true
+
+images:
+  - name: assets-web
+    newName: ghcr.io/sweetrpg/assets-web
+    newTag: v0.0.1

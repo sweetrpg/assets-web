@@ -3,17 +3,22 @@ apiVersion: v1
 kind: ConfigMap
 
 metadata:
-    name: assets-web-env
+    name: web-env
 
 data:
     PORT: "8081"
     SERVICE_CHECK_URL: http://dev.sweetrpg.com/health/ping
     HEALTH_CHECK_URL: http://dev.sweetrpg.com/health/status
-    APPLICATION_BASE_PATH: ""
+    # Traefik's strip-prefix-web Middleware removes /assets before this app sees the request -
+    # PrefixMiddleware (main.py) re-adds it to every url_for()-generated link so they round-trip
+    # back through the Ingress correctly.
+    APPLICATION_BASE_PATH: /assets
     BUILD_INFO_PATH: /app/build-info.json
     SERVICE_REGISTRATION_URL: "http://consul.sweetrpg-support.svc.cluster.local:1234"
     ASSET_DATA_PATH: /data
+    ROOT_URL: https://dev.sweetrpg.com/
     # Same collector the catalog services export to (tempo-distributor's OTLP/HTTP receiver).
     OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo-distributor.observability.svc.cluster.local:4318
     # Requests per minute, one shared process-wide bucket - a blunt backstop, not per-client.
     RATE_LIMIT: "120/minute"
+    ENV: dev

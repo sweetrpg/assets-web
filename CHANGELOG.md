@@ -1,3 +1,194 @@
+## [0.11.1] - 2026-08-14
+
+### 🐛 Bug Fixes
+
+- Use a bare port number in errors-shared-web Middleware
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.11.0
+## [0.11.0] - 2026-08-14
+
+### 🚀 Features
+
+- Route generic error status codes to shared-web
+
+### 🐛 Bug Fixes
+
+- *(kubernetes)* Remove stale podmonitor.yaml kustomize reference
+- Update errors-shared-web Middleware for shared-web's renamed Service
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.10.0
+## [0.10.0] - 2026-08-13
+
+### 🚀 Features
+
+- *(static)* Add edit/accept/cancel UI icons
+- *(static)* Add inline-edit field and icon-button CSS
+- *(assets)* Add cover-staged/sample-staged kinds and DELETE endpoint
+- *(assets)* Add sample to ALLOWED_KINDS
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.9.0
+- Add reloader annotation, pod monitor
+## [0.9.0] - 2026-08-11
+
+### 🚀 Features
+
+- Add Broadsheet CSS and footer fade JS
+- *(assets)* Enforce upload size and content-type limits
+
+### 🐛 Bug Fixes
+
+- *(tests)* Update stale logo path assertion in test_web.py
+## [0.8.1] - 2026-08-11
+
+### 🐛 Bug Fixes
+
+- Separate assets favicon from the rest
+- *(css)* Add theme-aware --color-surface token for .card background
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.8.0
+- Create separate folders for app image assets
+- Move assets logo into its own folder
+- Create other asset folders
+## [0.8.0] - 2026-08-10
+
+### 🚀 Features
+
+- *(templates)* Simplify main page info box text
+
+### 🐛 Bug Fixes
+
+- *(web)* Truncate build hash to 8 chars in footer
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.7.0
+- Update favicon
+## [0.7.0] - 2026-08-09
+
+### 🚀 Features
+
+- *(assets)* Add a cover asset kind and cover-image CSS for catalog-web
+- *(avatar-menu)* Always-present menu shared assets - mystery-man icon, promote theme.js
+- *(web)* Move hardcoded HTML to Jinja templates, organize static assets by type, add ROOT_URL
+
+### 🐛 Bug Fixes
+
+- *(ci)* Scope Docker Build's concurrency group by ref
+- *(kubernetes)* Make ArgoCD's per-release image tag override actually apply
+- *(web)* Wire APPLICATION_BASE_PATH into the WSGI environ so url_for() actually prefixes URLs
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.6.4
+## [0.6.4] - 2026-08-08
+
+### 🐛 Bug Fixes
+
+- Load build info from build-info.json and set SCRIPT_NAME for url_for path generation
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.6.3
+## [0.6.3] - 2026-08-08
+
+### 🐛 Bug Fixes
+
+- Move stray files to correct subdirectories
+- Add comment headers to CSS files and revert test assertion
+- Include template files in package manifest
+- Correct template_folder path for blueprint
+
+### 🚜 Refactor
+
+- *(web)* Move hardcoded HTML templates to Jinja2 template files
+- *(static)* Extract CSS to files and organize static assets by type
+
+### 🧪 Testing
+
+- Update static file paths to match new directory structure
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.6.2
+## [0.6.2] - 2026-08-08
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.6.1
+## [0.6.1] - 2026-08-08
+
+### 🐛 Bug Fixes
+
+- *(web)* Use url_for for static asset paths to support path prefixes
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.6.0
+## [0.6.0] - 2026-08-08
+
+### 🚀 Features
+
+- *(avatar-menu)* Always-present menu shared assets - mystery-man icon, promote theme.js
+- *(web)* Blueprint logo and dynamic platform link on front page
+- *(assets)* Add a cover asset kind and cover-image CSS for catalog-web
+
+### 🐛 Bug Fixes
+
+- *(ci)* Scope Docker Build's concurrency group by ref
+- *(kubernetes)* Make ArgoCD's per-release image tag override actually apply
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.5.0
+## [0.5.0] - 2026-08-08
+
+### 🚀 Features
+
+- *(avatar-menu)* Support a Gravatar image with letter-avatar fallback
+
+### 🐛 Bug Fixes
+
+- *(ci)* Correct sweetrpg/kubernetes manifest path for update-deployment
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.4.1
+## [0.4.1] - 2026-08-05
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.4.0
+## [0.4.0] - 2026-08-05
+
+### 🚀 Features
+
+- *(assets-web)* Wire up AdminClient for admin-api integration
+- *(assets-web)* Render a maintenance page during active maintenance mode
+- *(static)* Add shared avatar-menu CSS/JS
+- *(styles)* Add dark-theme variables and centralize shared component CSS
+- *(branding)* Serve SVG logo variants for nav swap
+
+### 🐛 Bug Fixes
+
+- *(kubernetes)* Rename resources to namespace-scoped web-v1 convention
+
+### 💼 Other
+
+- Add admin-api-client.py git dependency
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.3.0
+- Start work on #18 (suite-avatar-menu)
+- Add SVG versions of site logo
 ## [0.3.0] - 2026-08-02
 
 ### 🚀 Features
@@ -223,4 +414,3 @@
 
 
 ## v0.0.1 (2021-11-04)
-

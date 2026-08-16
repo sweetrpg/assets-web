@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 
 metadata:
-    name: assets-web-v1
+    name: web-v1
 
 spec:
     strategy:
@@ -13,7 +13,7 @@ spec:
         type: RollingUpdate
     selector:
         matchLabels:
-            app: assets-web
+            app: web
             platform: sweetrpg
             package: assets
             component: web
@@ -21,13 +21,15 @@ spec:
     template:
         metadata:
             labels:
-                app: assets-web
+                app: web
                 platform: sweetrpg
                 package: assets
                 component: web
                 version: v1
+            annotations:
+                reloader.stakater.com/auto: "true"
         spec:
-            serviceAccountName: assets-web
+            serviceAccountName: web
             # Kubernetes auto-injects <SERVICE_NAME>_PORT-style env vars for every Service in
             # the namespace - support/common/cache's Redis Service is named literally "redis",
             # so without this, the auto-injected REDIS_PORT silently wins over this app's own
@@ -37,19 +39,19 @@ spec:
                 - name: sweetrpg-registry
             containers:
                 - name: app
-                  image: ghcr.io/sweetrpg/assets-web:latest
+                  image: assets-web
                   imagePullPolicy: Always
                   envFrom:
                       - configMapRef:
-                            name: assets-web-common
+                            name: web-common
                       - configMapRef:
-                            name: assets-web-env
+                            name: web-env
                       - secretRef:
-                            name: assets-web-auth
+                            name: web-auth
                       - secretRef:
-                            name: assets-web-misc
+                            name: web-misc
                       - secretRef:
-                            name: assets-web-cache
+                            name: web-cache
                   env: []
                   ports:
                       - containerPort: 8081
@@ -87,5 +89,5 @@ spec:
                 #             path: newrelic.ini
                 - name: data
                   persistentVolumeClaim:
-                      claimName: assets-web-data
+                      claimName: web-data
             restartPolicy: Always

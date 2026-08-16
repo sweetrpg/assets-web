@@ -96,36 +96,3 @@ jobs:
                   name: coverage-badge
                   path: badge/coverage-badge.json
                   if-no-files-found: warn
-
-    docs:
-        needs: [tests]
-        runs-on: ubuntu-latest
-        concurrency: docs
-        permissions:
-            contents: write
-        steps:
-            - uses: actions/checkout@v7
-            - uses: astral-sh/setup-uv@v5
-              with:
-                  python-version: "3.14"
-            - name: install-deps
-              run: uv pip install -r requirements/docs.txt
-            - name: make-docs
-              run: |
-                  source .venv/bin/activate
-                  cd docs && make html
-            # Piggybacks on this repo's existing docs Pages site rather than
-            # standing up a separate publish step - best-effort, since the tests job's
-            # own badge step is already continue-on-error and might not have produced
-            # an artifact.
-            - name: download-coverage-badge-artifact
-              uses: actions/download-artifact@v4
-              continue-on-error: true
-              with:
-                  name: coverage-badge
-                  path: docs/_build/html
-            - name: publish-docs
-              uses: peaceiris/actions-gh-pages@v4
-              with:
-                  github_token: ${{ secrets.GITHUB_TOKEN }}
-                  publish_dir: ./docs/_build/html
