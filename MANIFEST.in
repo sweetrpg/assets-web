@@ -1,1 +1,2 @@
 recursive-include src/sweetrpg_assets_web/static *
+recursive-include src/sweetrpg_assets_web/application/templates *

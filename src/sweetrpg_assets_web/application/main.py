@@ -17,6 +17,7 @@ from sweetrpg_assets_web.application import constants
 from logging.config import dictConfig
 from redis.client import Redis
 from sentry_sdk.integrations.wsgi import SentryWsgiMiddleware
+from sweetrpg_admin_api_client import AdminClient
 import analytics
 import os
 
@@ -25,6 +26,28 @@ ENV_FILE = find_dotenv()
 if ENV_FILE:
     print(f"Loading environment from {ENV_FILE}...")
     load_dotenv(ENV_FILE)
+
+
+class PrefixMiddleware:
+    """Injects APPLICATION_BASE_PATH into the WSGI environ's SCRIPT_NAME so url_for() generates
+    links prefixed for the reverse proxy path this app is mounted under (e.g. "/assets").
+    Traefik's strip-prefix Middleware already removes that prefix from PATH_INFO before the
+    request reaches this app - uwsgi's --http mode builds environ purely from the incoming
+    request, so without this, WSGI's SCRIPT_NAME is never populated and every generated URL
+    comes out unprefixed, pointing at a path this app's Ingress doesn't own.
+    """
+
+    def __init__(self, app, prefix=""):
+        self.app = app
+        self.prefix = prefix
+
+    def __call__(self, environ, start_response):
+        if self.prefix:
+            environ["SCRIPT_NAME"] = self.prefix
+            path_info = environ.get("PATH_INFO", "")
+            if path_info.startswith(self.prefix):
+                environ["PATH_INFO"] = path_info[len(self.prefix):]
+        return self.app(environ, start_response)
 
 
 def create_app(app_name=constants.APPLICATION_NAME):
@@ -83,6 +106,12 @@ def create_app(app_name=constants.APPLICATION_NAME):
     app.logger.info("Setting up session manager...")
     session = Session(app)
 
+    # One client for the process lifetime, same pattern as `cache`/`limiter` above - the SDK
+    # bakes in its own TTL cache, timeout, and fail-open behavior (returns [] rather than
+    # raising if ADMIN_API_URL is unset or admin-api is unreachable), so an unconfigured or down
+    # admin-api never breaks this app's own rendering.
+    app.admin_client = AdminClient(base_url=app.config.get("ADMIN_API_URL"))
+
     cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
     if not app.debug:
@@ -103,6 +132,8 @@ def create_app(app_name=constants.APPLICATION_NAME):
         main_blueprint.register_blueprint(health_blueprint)
 
     app.register_blueprint(main_blueprint)
+
+    app.wsgi_app = PrefixMiddleware(app.wsgi_app, app.config.get("APPLICATION_BASE_PATH", ""))
 
     print(app.url_map)
 

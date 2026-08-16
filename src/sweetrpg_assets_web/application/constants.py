@@ -57,12 +57,39 @@ LOGSTASH_TRANSPORT = "LOGSTASH_TRANSPORT"
 LOGSTASH_PORT = "LOGSTASH_PORT"
 
 SHELF_API_BASE_URL = "SHELF_API_BASE_URL"
+# Prefix this app is mounted under behind the reverse proxy (e.g. "/assets") - Traefik strips it
+# before the request reaches this pod, so it must be re-added to every url_for()-generated link.
+# See PrefixMiddleware in main.py. Previously unused (always ""); now consumed there.
 APPLICATION_BASE_PATH = "APPLICATION_BASE_PATH"
+
+# Suite-wide platform root (see docs/frontend-conventions.md in sweetrpg/platform)
+ROOT_URL = "ROOT_URL"
+
+# admin-api integration (banners, maintenance mode)
+ADMIN_API_URL = "ADMIN_API_URL"
+MAINTENANCE_MODE_SCOPES = ["platform", "service:assets"]
+
+# Path to the build-info.json the Docker build writes (see Dockerfile) - already present as a
+# configmap key, previously unused by any code.
+BUILD_INFO_PATH = "BUILD_INFO_PATH"
 
 # Asset storage
 ASSET_DATA_PATH = "ASSET_DATA_PATH"
 ASSET_CACHE_TTL = "ASSET_CACHE_TTL"
-ALLOWED_KINDS = frozenset({"avatar", "map", "token", "portrait"})
+ALLOWED_KINDS = frozenset(
+    {
+        "avatar",
+        "map",
+        "token",
+        "portrait",
+        "cover",
+        "cover-staged",
+        "sample",
+        "sample-staged",
+    }
+)
+MAX_ASSET_UPLOAD_BYTES = 5 * 1024 * 1024
+ALLOWED_CONTENT_TYPES = frozenset({"image/png", "image/jpeg", "image/webp"})
 
 # Rate limiting
 RATE_LIMIT = "RATE_LIMIT"

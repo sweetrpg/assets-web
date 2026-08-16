@@ -10,12 +10,12 @@ metadata:
 spec:
     namespaceSelector:
         matchNames:
-            - sweetrpg-support
+            - sweetrpg-assets
     podMetricsEndpoints:
         - port: http
     selector:
         matchLabels:
-            app: assets
+            app: web
             platform: sweetrpg
-            package: support
-            component: assets
+            package: assets
+            component: web

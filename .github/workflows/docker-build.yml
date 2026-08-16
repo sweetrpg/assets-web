@@ -1,11 +1,13 @@
 name: Docker Build
 
-concurrency: docker
+concurrency: docker-${{ github.ref }}
 
 on:
     push:
         tags:
             - "v*"
+        branches:
+            - develop
     workflow_dispatch:
 
 permissions:
@@ -40,20 +42,19 @@ jobs:
                   images: |
                       ghcr.io/sweetrpg/assets-web
                   tags: |
-                      type=raw,value=latest
-                      type=raw,value=${{ steps.previoustag.outputs.tag }}
-                      type=raw,value=${{ steps.getbuilddate.outputs.tagdate }}
-                      type=ref,event=tag
-                      type=semver,pattern={{version}}
-                      type=semver,pattern={{major}}.{{minor}}
-                      type=semver,pattern={{major}}
-                      type=sha
+                        type=raw,value=latest
+                        type=ref,event=tag
+                        type=ref,event=branch
+                        type=semver,pattern={{version}}
+                        type=semver,pattern={{major}}.{{minor}}
+                        type=semver,pattern={{major}}
+                        type=sha
             - name: Set up QEMU
               uses: docker/setup-qemu-action@v4
             - name: Set up Docker Buildx
               uses: docker/setup-buildx-action@v4
             - name: Login to registry
-              uses: docker/login-action@v4
+              uses: docker/login-action@v4.5.2
               with:
                   registry: ghcr.io
                   username: ${{ github.actor }}
@@ -79,5 +80,5 @@ jobs:
         uses: sweetrpg/github-actions/.github/workflows/argocd-update-deployment.yaml@master
         with:
             image-name: assets-web
-            manifest-path: clusters/dev/common/support/assets-web.yaml
+            manifest-path: clusters/dev/assets/web.yaml
         secrets: inherit

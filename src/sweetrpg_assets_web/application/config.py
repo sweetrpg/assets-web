@@ -59,3 +59,17 @@ class BaseConfig(object):
     # Redis instance/db as the cache - flask-limiter's own key prefixes avoid collisions.
     RATE_LIMIT = os.environ.get(constants.RATE_LIMIT) or "120/minute"
     RATELIMIT_STORAGE_URI = _redis_url(int(os.environ.get(constants.REDIS_DB) or 7))
+
+    # admin-api integration (banners, maintenance mode). Unset -> AdminClient runs disabled and
+    # fails open (fetch_* always returns []), so leaving this unset is safe, not a startup error.
+    ADMIN_API_URL = os.environ.get(constants.ADMIN_API_URL)
+
+    # Suite-wide platform root (see docs/frontend-conventions.md in sweetrpg/platform) - defaults
+    # to "/" so a local instance run standalone still links somewhere rather than to a broken URL.
+    ROOT_URL = os.environ.get(constants.ROOT_URL) or "/"
+
+    # Prefix this app is mounted under behind the reverse proxy (e.g. "/assets") - see
+    # PrefixMiddleware in main.py. Empty/unset when run standalone (local dev, tests).
+    APPLICATION_BASE_PATH = os.environ.get(constants.APPLICATION_BASE_PATH) or ""
+
+    BUILD_INFO_PATH = os.environ.get(constants.BUILD_INFO_PATH) or "/app/build-info.json"
