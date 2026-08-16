@@ -147,6 +147,7 @@ def _load_build_info():
 # reference), not browsed - this is a static placeholder, not a real landing page.
 @blueprint.route("/")
 def main_page():
+    request.logger.info("main_page")
     build_timestamp, build_hash = _load_build_info()
     return render_template(
         "main.html",
@@ -212,6 +213,8 @@ def _cache_key(kind: str, id: str) -> str:
 
 @blueprint.route("/asset/<kind>/<id>", methods=['GET'])
 def get_asset(kind: str, id: str):
+    request.logger.info("get_asset", extra={"kind": kind, "id": id})
+
     _require_known_kind(kind)
 
     cache_key = _cache_key(kind, id)
@@ -222,10 +225,12 @@ def get_asset(kind: str, id: str):
 
     path = _asset_path(kind, id)
     if not path.is_file():
-        abort(404, description="Asset not found")
+        abort(404, description=f"Asset not found for id {id}")
 
     data = path.read_bytes()
     mimetype = mimetypes.guess_type(path.name)[0] or "application/octet-stream"
+
+    request.logger.info("store_asset: setting cache key", extra={"kind": kind, "id": id, "cache_key": cache_key})
     cache.set(cache_key, (data, mimetype), timeout=current_app.config["ASSET_CACHE_TTL"])
 
     return send_file(BytesIO(data), mimetype=mimetype)
@@ -233,6 +238,8 @@ def get_asset(kind: str, id: str):
 
 @blueprint.route("/asset/<kind>/<id>", methods=['POST'])
 def store_asset(kind: str, id: str):
+    request.logger.info("store_asset", extra={"kind": kind, "id": id})
+
     _require_authenticated()
     _require_known_kind(kind)
 
@@ -241,12 +248,15 @@ def store_asset(kind: str, id: str):
         abort(400, description="No file provided")
     _require_valid_upload(upload)
 
-    path = _asset_path(kind, id)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    upload.save(path)
+    asset_path = _asset_path(kind, id)
+    asset_path.mkdir(parents=True, exist_ok=True)
+    filename_path = Path(upload.filename)
+    file_path = asset_path / f'image{filename_path.suffix}'
+    upload.save(file_path)
 
     # Invalidate rather than repopulate - the next GET will read the new file and refill the
     # cache with the correct content, avoiding a race with a GET that's mid-flight right now.
+    request.logger.info("store_asset: invalidating cache", extra={"kind": kind, "id": id})
     cache.delete(_cache_key(kind, id))
 
     response = jsonify(kind=kind, id=id)
@@ -257,14 +267,22 @@ def store_asset(kind: str, id: str):
 
 @blueprint.route("/asset/<kind>/<id>", methods=['DELETE'])
 def delete_asset(kind: str, id: str):
+    request.logger.info("delete_asset", extra={"kind": kind, "id": id})
+
     _require_authenticated()
     _require_known_kind(kind)
 
     path = _asset_path(kind, id)
-    if not path.is_file():
+    if not path.is_dir():
         abort(404, description="Asset not found")
 
-    path.unlink()
+    for file in path.iterdir():
+        request.logger.info("delete_asset: deleting asset file", extra={"kind": kind, "id": id, "file": file.name})
+        file.unlink(missing_ok=True)
+    request.logger.info("delete_asset: deleting asset directory", extra={"kind": kind, "id": id})
+    path.rmdir()
+
+    request.logger.info("store_asset: invalidating cache", extra={"kind": kind, "id": id})
     cache.delete(_cache_key(kind, id))
 
     response = jsonify(kind=kind, id=id)
