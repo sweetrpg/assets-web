@@ -63,7 +63,7 @@ SHELF_API_BASE_URL = "SHELF_API_BASE_URL"
 APPLICATION_BASE_PATH = "APPLICATION_BASE_PATH"
 
 # Suite-wide platform root (see docs/frontend-conventions.md in sweetrpg/platform)
-SWEETRPG_ROOT_URL = "SWEETRPG_ROOT_URL"
+ROOT_URL = "ROOT_URL"
 
 # admin-api integration (banners, maintenance mode)
 ADMIN_API_URL = "ADMIN_API_URL"
