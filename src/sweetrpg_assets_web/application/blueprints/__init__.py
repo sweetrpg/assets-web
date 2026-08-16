@@ -159,18 +159,6 @@ def main_page():
     )
 
 
-# Shared frontend branding (logo, favicon, stylesheet) checked into this repo and deployed with
-# the app - distinct from the /asset/<kind>/<id> store below, which is authenticated, PVC-backed,
-# user-uploaded content. No auth needed: these files are meant to be publicly embedded by any
-# frontend.
-_STATIC_ASSETS_DIR = Path(__file__).resolve().parent.parent.parent / "static"
-
-
-@blueprint.route("/static/<path:filename>")
-def static_asset(filename: str):
-    return send_from_directory(_STATIC_ASSETS_DIR, filename)
-
-
 def _asset_path(kind: str, id: str) -> Path:
     """Resolve the on-disk path for an asset. Rejects a kind outside the fixed ALLOWED_KINDS
     allowlist and an id that doesn't survive `secure_filename` unchanged (path traversal,
@@ -186,11 +174,15 @@ def _asset_path(kind: str, id: str) -> Path:
         abort(400, description="Invalid asset id")
 
     base = Path(current_app.config["ASSET_DATA_PATH"]).resolve()
-    candidate = (base / safe_kind / safe_id).resolve()
-    if candidate != base and base not in candidate.parents:
-        abort(400, description="Invalid asset path")
 
-    return candidate
+    image_types = ['svg', 'webp', 'png', 'jpg', 'jpeg', 'gif']
+
+    for image_type in image_types:
+        candidate = (base / safe_kind / safe_id / f'image.{image_type}').resolve()
+        if candidate.exists():
+            return candidate
+
+    abort(400, description="Invalid asset id")
 
 
 def _require_known_kind(kind: str) -> None:
