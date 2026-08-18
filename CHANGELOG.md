@@ -1,3 +1,18 @@
+## [0.12.1] - 2026-08-18
+
+### 🐛 Bug Fixes
+
+- *(assets)* Use os.path.splitext for filename extension
+- *(assets)* Correct asset store/delete path resolution, add staged-asset reclaim job
+- *(web)* Repoint / and maintenance page logo/favicon at shared-web
+
+### 💼 Other
+
+- Catch up with develop
+
+### ⚙️ Miscellaneous Tasks
+
+- Merge master into develop after v0.12.0
 ## [0.12.0] - 2026-08-16
 
 ### 🚀 Features
