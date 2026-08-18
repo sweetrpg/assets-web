@@ -95,6 +95,7 @@ opentelemetry-api==1.44.0
     #   opentelemetry-instrumentation-wsgi
     #   opentelemetry-sdk
     #   opentelemetry-semantic-conventions
+    #   sweetrpg-admin-api-client
 opentelemetry-exporter-otlp-proto-common==1.44.0
     # via opentelemetry-exporter-otlp-proto-http
 opentelemetry-exporter-otlp-proto-http==1.44.0
@@ -199,7 +200,7 @@ sweetrpg-web-core==0.0.697
     # via -r requirements/app.in
 tomli-w==1.2.0
     # via tox
-tox==4.58.0
+tox==4.60.0
     # via
     #   -r requirements/tests.in
     #   tox-uv-bare
