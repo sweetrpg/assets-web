@@ -57,6 +57,21 @@ LOGSTASH_TRANSPORT = "LOGSTASH_TRANSPORT"
 LOGSTASH_PORT = "LOGSTASH_PORT"
 
 SHELF_API_BASE_URL = "SHELF_API_BASE_URL"
+
+# Cross-namespace edit-session store (sweetrpg-catalog's Redis, REDIS_DB=2) - see
+# docs/frontend-conventions.md's "Edit session schema" in sweetrpg/platform. Read-only here:
+# this app only checks whether a staged asset is still owned by a live session, never writes.
+EDIT_SESSION_REDIS_HOST = "EDIT_SESSION_REDIS_HOST"
+EDIT_SESSION_REDIS_PORT = "EDIT_SESSION_REDIS_PORT"
+EDIT_SESSION_REDIS_DB = "EDIT_SESSION_REDIS_DB"
+
+# catalog-api base URL, used by the staged-asset reclaim job to check whether a pending
+# submission still references a staged cover/sample before deleting it.
+CATALOG_API_URL = "CATALOG_API_URL"
+
+# Shared secret the reclaim CronJob presents via the X-Reclaim-Token header - the job runs
+# unauthenticated-session (no user), so it can't use the normal X-Forwarded-User check.
+RECLAIM_JOB_TOKEN = "RECLAIM_JOB_TOKEN"
 # Prefix this app is mounted under behind the reverse proxy (e.g. "/assets") - Traefik strips it
 # before the request reaches this pod, so it must be re-added to every url_for()-generated link.
 # See PrefixMiddleware in main.py. Previously unused (always ""); now consumed there.
@@ -64,6 +79,10 @@ APPLICATION_BASE_PATH = "APPLICATION_BASE_PATH"
 
 # Suite-wide platform root (see docs/frontend-conventions.md in sweetrpg/platform)
 ROOT_URL = "ROOT_URL"
+
+# shared-web base URL, serving the platform's shared branding (logo, favicon, stylesheet) -
+# see docs/frontend-conventions.md in sweetrpg/platform
+SHARED_URL = "SHARED_URL"
 
 # admin-api integration (banners, maintenance mode)
 ADMIN_API_URL = "ADMIN_API_URL"

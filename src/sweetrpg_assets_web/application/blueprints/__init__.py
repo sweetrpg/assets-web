@@ -6,7 +6,7 @@ __author__ = "Paul Schifferer <dm@sweetrpg.com>"
 from functools import wraps
 from sweetrpg_assets_web.application import constants
 from sweetrpg_assets_web import __version__
-from flask import Blueprint, request, session, jsonify, current_app, make_response, send_file, send_from_directory, abort, url_for, render_template
+from flask import Blueprint, request, session, jsonify, current_app, make_response, send_file, send_from_directory, abort, render_template
 from werkzeug.exceptions import HTTPException
 from werkzeug.utils import secure_filename
 from markupsafe import escape
@@ -14,9 +14,14 @@ from io import BytesIO
 import mimetypes
 from pathlib import Path
 from sweetrpg_assets_web.application.cache import cache
+from sweetrpg_assets_web.application import reclaim
 import analytics
 import datetime
+import hmac
 import json
+import os
+import redis
+import requests
 
 
 blueprint = Blueprint("web", __name__, template_folder="../templates")
@@ -37,8 +42,8 @@ def _render_maintenance_page(mode):
         label=mode.label if mode.label else "Under Maintenance",
         description=mode.description if mode.description else "",
         window=window,
-        logo_url=url_for("web.static_asset", filename="img/assets/logo.svg"),
-        favicon_url=url_for("web.static_asset", filename="img/assets/favicon.png"),
+        logo_url=f"{current_app.config['SHARED_URL']}/static/img/assets/logo.svg",
+        favicon_url=f"{current_app.config['SHARED_URL']}/static/img/assets/favicon.png",
     )
     return make_response(html, 503, {"Content-Type": "text/html", "Retry-After": "120"})
 
@@ -156,39 +161,51 @@ def main_page():
     return render_template(
         "main.html",
         root_url=current_app.config["ROOT_URL"],
-        logo_url=url_for("web.static_asset", filename="img/assets/logo.png"),
-        favicon_url=url_for("web.static_asset", filename="img/assets/favicon.png"),
+        logo_url=f"{current_app.config['SHARED_URL']}/static/img/assets/logo.png",
+        favicon_url=f"{current_app.config['SHARED_URL']}/static/img/assets/favicon.png",
         version=__version__,
         build_timestamp=build_timestamp,
         build_hash=build_hash,
     )
 
 
-def _asset_path(kind: str, id: str) -> Path:
-    """Resolve the on-disk path for an asset. Rejects a kind outside the fixed ALLOWED_KINDS
-    allowlist and an id that doesn't survive `secure_filename` unchanged (path traversal,
-    empty, or otherwise unsafe) - both checked here, in the same function that builds the
-    path, rather than relying solely on callers to have validated kind first via
-    `_require_known_kind`."""
-    current_app.logger.debug("_asset_path: kind=%s id=%s", kind, id)
+# Preference order when more than one image type exists for the same id - checked first to
+# last, first match wins.
+IMAGE_TYPES = ['svg', 'webp', 'png', 'jpg', 'jpeg', 'gif']
 
+
+def _validated_kind_id(kind: str, id: str) -> tuple[str, str]:
+    """Rejects a kind outside the fixed ALLOWED_KINDS allowlist and an id that doesn't survive
+    `secure_filename` unchanged (path traversal, empty, or otherwise unsafe)."""
     _require_known_kind(kind)
-    allowed_kinds = {k: k for k in constants.ALLOWED_KINDS}
 
-    safe_kind = allowed_kinds[kind]
     safe_id = secure_filename(id)
-    current_app.logger.debug("_asset_path: safe_kind=%s safe_id=%s", safe_kind, safe_id)
     if not safe_id or safe_id != id:
         abort(400, description="Invalid asset id")
 
+    return kind, safe_id
+
+
+def _asset_dir(kind: str, id: str) -> Path:
+    """The directory an asset's id is stored under - `base/<kind>/<id>/`, holding one or more
+    `image.<ext>` files. Doesn't require the directory to already exist - callers that need an
+    existing asset (GET) should use `_asset_path` instead, which resolves to a specific file."""
+    safe_kind, safe_id = _validated_kind_id(kind, id)
     base = Path(current_app.config["ASSET_DATA_PATH"]).resolve()
-    current_app.logger.debug("_asset_path: base=%s", base)
+    return (base / safe_kind / safe_id).resolve()
 
-    image_types = ['svg', 'webp', 'png', 'jpg', 'jpeg', 'gif']
 
-    for image_type in image_types:
+def _asset_path(kind: str, id: str) -> Path:
+    """Resolve the on-disk path of an existing asset's image file, preferring `IMAGE_TYPES`'
+    order when more than one type is present. 404s if no `_asset_dir(kind, id)` has any."""
+    current_app.logger.debug("_asset_path: kind=%s id=%s", kind, id)
+
+    directory = _asset_dir(kind, id)
+    current_app.logger.debug("_asset_path: directory=%s", directory)
+
+    for image_type in IMAGE_TYPES:
         current_app.logger.debug("_asset_path: image_type=%s", image_type)
-        candidate = (base / safe_kind / safe_id / f'image.{image_type}').resolve()
+        candidate = directory / f'image.{image_type}'
         if candidate.exists():
             current_app.logger.debug("_asset_path: candidate=%s", candidate)
             return candidate
@@ -258,10 +275,17 @@ def store_asset(kind: str, id: str):
         abort(400, description="No file provided")
     _require_valid_upload(upload)
 
-    asset_path = _asset_path(kind, id)
-    asset_path.mkdir(parents=True, exist_ok=True)
-    filename_path = Path(upload.filename)
-    file_path = asset_path / f'image{filename_path.suffix}'
+    asset_dir = _asset_dir(kind, id)
+    asset_dir.mkdir(parents=True, exist_ok=True)
+
+    # A re-upload replaces whatever image type was there before - otherwise a cover changed
+    # from .png to .jpg would leave the stale .png behind, and IMAGE_TYPES' priority order
+    # would keep serving it instead of the new upload.
+    for image_type in IMAGE_TYPES:
+        (asset_dir / f'image.{image_type}').unlink(missing_ok=True)
+
+    _, filename_ext = os.path.splitext(upload.filename)
+    file_path = asset_dir / f'image{filename_ext}'
     upload.save(file_path)
 
     # Invalidate rather than repopulate - the next GET will read the new file and refill the
@@ -282,7 +306,7 @@ def delete_asset(kind: str, id: str):
     _require_authenticated()
     _require_known_kind(kind)
 
-    path = _asset_path(kind, id)
+    path = _asset_dir(kind, id)
     if not path.is_dir():
         abort(404, description="Asset not found")
 
@@ -298,6 +322,34 @@ def delete_asset(kind: str, id: str):
     response = jsonify(kind=kind, id=id)
     response.status_code = 204
     return response
+
+
+def _require_reclaim_token() -> None:
+    expected = current_app.config.get("RECLAIM_JOB_TOKEN")
+    if not expected:
+        abort(503, description="Reclaim job is not configured")
+
+    presented = request.headers.get("X-Reclaim-Token", "")
+    if not hmac.compare_digest(presented, expected):
+        abort(401, description="Invalid reclaim token")
+
+
+@blueprint.route("/admin/reclaim-staged-assets", methods=["POST"])
+def reclaim_staged_assets():
+    """Triggered by a Kubernetes CronJob (see kubernetes/base/reclaim-cronjob.yaml), not a
+    user - see reclaim.py's docstring for what "orphaned" means and why the check is two-part."""
+    current_app.logger.info("reclaim_staged_assets")
+
+    _require_reclaim_token()
+
+    try:
+        deleted = reclaim.reclaim_staged_assets()
+    except (RuntimeError, requests.exceptions.RequestException, redis.exceptions.RedisError) as ex:
+        current_app.logger.exception("reclaim_staged_assets: dependency unavailable")
+        abort(503, description=str(ex))
+
+    current_app.logger.info("reclaim_staged_assets: done", extra={"deleted_count": len(deleted)})
+    return jsonify(deleted=deleted)
 
 
 from sweetrpg_web_core.blueprints import health

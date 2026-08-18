@@ -20,6 +20,11 @@ def app(tmp_path, monkeypatch):
 
     flask_app = create_app()
     flask_app.config["TESTING"] = True
+    # BaseConfig's class attributes are computed once, at that module's first import - a later
+    # test's monkeypatch.setenv("ASSET_DATA_PATH", ...) has no effect on them. Overriding the
+    # (mutable) Flask config dict directly guarantees each test gets its own tmp_path, instead
+    # of every test in the process sharing whichever tmp_path happened to trigger that import.
+    flask_app.config["ASSET_DATA_PATH"] = str(tmp_path)
     return flask_app
 
 

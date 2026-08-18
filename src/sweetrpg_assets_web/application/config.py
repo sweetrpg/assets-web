@@ -68,8 +68,21 @@ class BaseConfig(object):
     # to "/" so a local instance run standalone still links somewhere rather than to a broken URL.
     ROOT_URL = os.environ.get(constants.ROOT_URL) or "/"
 
+    # shared-web base URL for branding assets (logo, favicon, stylesheet) - defaults to
+    # shared-web's own local dev port so a standalone run still links somewhere real.
+    SHARED_URL = os.environ.get(constants.SHARED_URL) or "http://localhost:8081"
+
     # Prefix this app is mounted under behind the reverse proxy (e.g. "/assets") - see
     # PrefixMiddleware in main.py. Empty/unset when run standalone (local dev, tests).
     APPLICATION_BASE_PATH = os.environ.get(constants.APPLICATION_BASE_PATH) or ""
 
     BUILD_INFO_PATH = os.environ.get(constants.BUILD_INFO_PATH) or "/app/build-info.json"
+
+    # Staged-asset reclaim job (durable-volume-editing task 2.4). Unset EDIT_SESSION_REDIS_HOST
+    # -> the reclaim endpoint 503s rather than guessing at a host, since silently skipping the
+    # session check would mean deleting a still-in-use staged file.
+    EDIT_SESSION_REDIS_HOST = os.environ.get(constants.EDIT_SESSION_REDIS_HOST)
+    EDIT_SESSION_REDIS_PORT = int(os.environ.get(constants.EDIT_SESSION_REDIS_PORT) or 6379)
+    EDIT_SESSION_REDIS_DB = int(os.environ.get(constants.EDIT_SESSION_REDIS_DB) or 2)
+    CATALOG_API_URL = os.environ.get(constants.CATALOG_API_URL)
+    RECLAIM_JOB_TOKEN = os.environ.get(constants.RECLAIM_JOB_TOKEN)

@@ -1,0 +1,41 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+
+metadata:
+    name: reclaim-staged-assets
+
+spec:
+    # Hourly - see durable-volume-editing's design.md: "a bounded reclaim delay (e.g. hourly)
+    # is a reasonable trade for not needing synchronous cross-store cleanup on every expiry."
+    schedule: "0 * * * *"
+    concurrencyPolicy: Forbid
+    successfulJobsHistoryLimit: 3
+    failedJobsHistoryLimit: 3
+    jobTemplate:
+        spec:
+            # 0, not 1: a failed run gets picked up by the next hourly run - matches
+            # support/infrastructure/atlas's atlas-ip-sync CronJob's own reasoning.
+            backoffLimit: 0
+            activeDeadlineSeconds: 120
+            template:
+                spec:
+                    restartPolicy: Never
+                    containers:
+                        - name: reclaim
+                          image: curlimages/curl:8.11.1
+                          command: ["/bin/sh", "-c"]
+                          args:
+                              - >-
+                                curl -sf -X POST http://web-v1:8081/admin/reclaim-staged-assets
+                                -H "X-Reclaim-Token: $(RECLAIM_JOB_TOKEN)"
+                          envFrom:
+                              - secretRef:
+                                    name: web-misc
+                          resources:
+                              requests:
+                                  cpu: "10m"
+                                  memory: "16Mi"
+                              limits:
+                                  cpu: "100m"
+                                  memory: "64Mi"
