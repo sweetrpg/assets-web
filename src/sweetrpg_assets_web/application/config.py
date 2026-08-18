@@ -77,3 +77,12 @@ class BaseConfig(object):
     APPLICATION_BASE_PATH = os.environ.get(constants.APPLICATION_BASE_PATH) or ""
 
     BUILD_INFO_PATH = os.environ.get(constants.BUILD_INFO_PATH) or "/app/build-info.json"
+
+    # Staged-asset reclaim job (durable-volume-editing task 2.4). Unset EDIT_SESSION_REDIS_HOST
+    # -> the reclaim endpoint 503s rather than guessing at a host, since silently skipping the
+    # session check would mean deleting a still-in-use staged file.
+    EDIT_SESSION_REDIS_HOST = os.environ.get(constants.EDIT_SESSION_REDIS_HOST)
+    EDIT_SESSION_REDIS_PORT = int(os.environ.get(constants.EDIT_SESSION_REDIS_PORT) or 6379)
+    EDIT_SESSION_REDIS_DB = int(os.environ.get(constants.EDIT_SESSION_REDIS_DB) or 2)
+    CATALOG_API_URL = os.environ.get(constants.CATALOG_API_URL)
+    RECLAIM_JOB_TOKEN = os.environ.get(constants.RECLAIM_JOB_TOKEN)
