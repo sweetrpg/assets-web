@@ -68,6 +68,10 @@ class BaseConfig(object):
     # to "/" so a local instance run standalone still links somewhere rather than to a broken URL.
     ROOT_URL = os.environ.get(constants.ROOT_URL) or "/"
 
+    # shared-web base URL for branding assets (logo, favicon, stylesheet) - defaults to
+    # shared-web's own local dev port so a standalone run still links somewhere real.
+    SHARED_URL = os.environ.get(constants.SHARED_URL) or "http://localhost:8081"
+
     # Prefix this app is mounted under behind the reverse proxy (e.g. "/assets") - see
     # PrefixMiddleware in main.py. Empty/unset when run standalone (local dev, tests).
     APPLICATION_BASE_PATH = os.environ.get(constants.APPLICATION_BASE_PATH) or ""
