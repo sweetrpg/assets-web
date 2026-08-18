@@ -138,13 +138,13 @@ requests==2.34.2
     #   analytics-python
     #   opentelemetry-exporter-otlp-proto-http
     #   sweetrpg-admin-api-client
-sentry-sdk==2.66.1
+sentry-sdk[flask]==2.68.0
     # via -r requirements/app.in
 six==1.17.0
     # via
     #   analytics-python
     #   python-dateutil
-sweetrpg-admin-api-client @ git+https://github.com/sweetrpg/admin-api-client.py.git@0dcce858e8635d466ee7aeeb3193067f394fef38
+sweetrpg-admin-api-client @ git+https://github.com/sweetrpg/admin-api-client.py.git@develop
     # via -r requirements/app.in
 sweetrpg-web-core==0.0.697
     # via -r requirements/app.in
