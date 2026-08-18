@@ -7,3 +7,4 @@ resources:
   - configmaps.yaml
   - deployment.yaml
   - service.yaml
+  - reclaim-cronjob.yaml
