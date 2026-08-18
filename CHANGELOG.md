@@ -1,3 +1,32 @@
+## [0.12.0] - 2026-08-16
+
+### 🚀 Features
+
+- Search for matching type for an asset
+- *(assets)* Add logging and fix asset storage paths
+
+### 🐛 Bug Fixes
+
+- Use f-string
+
+### 💼 Other
+
+- *(blueprints)* Remove debug header comments from _populate
+
+### 🚜 Refactor
+
+- *(web)* Rename SWEETRPG_ROOT_URL to ROOT_URL and reorganize static assets
+- *(blueprints)* Replace print statements with proper logging
+
+### 🧪 Testing
+
+- Remove obsolete test files
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.11.1
+- Rename license file
+- Disable some tests temporarily
 ## [0.11.1] - 2026-08-14
 
 ### 🐛 Bug Fixes
