@@ -6,7 +6,7 @@ __author__ = "Paul Schifferer <dm@sweetrpg.com>"
 from functools import wraps
 from sweetrpg_assets_web.application import constants
 from sweetrpg_assets_web import __version__
-from flask import Blueprint, request, session, jsonify, current_app, make_response, send_file, send_from_directory, abort, url_for, render_template
+from flask import Blueprint, request, session, jsonify, current_app, make_response, send_file, send_from_directory, abort, render_template
 from werkzeug.exceptions import HTTPException
 from werkzeug.utils import secure_filename
 from markupsafe import escape
@@ -38,8 +38,8 @@ def _render_maintenance_page(mode):
         label=mode.label if mode.label else "Under Maintenance",
         description=mode.description if mode.description else "",
         window=window,
-        logo_url=url_for("web.static_asset", filename="img/assets/logo.svg"),
-        favicon_url=url_for("web.static_asset", filename="img/assets/favicon.png"),
+        logo_url=f"{current_app.config['SHARED_URL']}/static/img/assets/logo.svg",
+        favicon_url=f"{current_app.config['SHARED_URL']}/static/img/assets/favicon.png",
     )
     return make_response(html, 503, {"Content-Type": "text/html", "Retry-After": "120"})
 
@@ -157,8 +157,8 @@ def main_page():
     return render_template(
         "main.html",
         root_url=current_app.config["ROOT_URL"],
-        logo_url=url_for("web.static_asset", filename="img/assets/logo.png"),
-        favicon_url=url_for("web.static_asset", filename="img/assets/favicon.png"),
+        logo_url=f"{current_app.config['SHARED_URL']}/static/img/assets/logo.png",
+        favicon_url=f"{current_app.config['SHARED_URL']}/static/img/assets/favicon.png",
         version=__version__,
         build_timestamp=build_timestamp,
         build_hash=build_hash,

@@ -7,8 +7,7 @@ working in this repository.
 
 `assets-web` is a Flask service that stores and serves the SweetRPG platform's binary assets
 (avatars, maps, tokens, portraits). `GET /asset/<kind>/<id>` fetches one; `POST
-/asset/<kind>/<id>` (authenticated) uploads one - the `/asset` prefix distinguishes this store
-from the `/static/<path:filename>` shared-branding route below. It's the org's first Python
+/asset/<kind>/<id>` (authenticated) uploads one. It's the org's first Python
 **web frontend** to get the full observability treatment (tracing/JSON logs/metrics/rate
 limiting) - there's no `docs/service-conventions.md`-equivalent for Python yet (that doc is
 explicitly Go-specific and says to write the convention up once a second Python service exists
@@ -34,16 +33,12 @@ standard.
 
 ### Shared static assets
 
-`GET /static/<path:filename>` is a second, distinct route from the kind/id store above - it
-serves shared frontend branding (logo, favicon, stylesheet) checked into this repo at
-`src/sweetrpg_assets_web/static/` and deployed with the app, not the PVC. No authentication: these
-files are meant to be publicly embedded by any frontend (see `docs/frontend-conventions.md` in
-`sweetrpg/platform` for the base-URL convention consuming frontends use to reference them).
-Flask's own implicit static-file handling is disabled (`Flask(app_name, static_folder=None)` in
-`main.py`) because `app_name` isn't a real importable module name, so Flask's default
-`static_folder` would resolve relative to the process's working directory rather than this
-package - this route computes its directory from `__file__` instead, which is correct regardless
-of `cwd`.
+The platform's shared branding (logo, favicon, stylesheet) moved to `shared-web` - this repo no
+longer hosts a `/static/<path:filename>` route or checked-in branding files (see
+`docs/frontend-conventions.md` in `sweetrpg/platform`). This app's own `/` landing page and
+maintenance-mode page link to their logo/favicon via `SHARED_URL` (config default
+`http://localhost:8081`, set to `shared-web`'s address in each `kubernetes/overlays/*`
+configmap) - e.g. `{SHARED_URL}/static/img/assets/logo.png`.
 
 ### Known gaps fixed while building this
 

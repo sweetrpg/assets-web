@@ -65,6 +65,10 @@ APPLICATION_BASE_PATH = "APPLICATION_BASE_PATH"
 # Suite-wide platform root (see docs/frontend-conventions.md in sweetrpg/platform)
 ROOT_URL = "ROOT_URL"
 
+# shared-web base URL, serving the platform's shared branding (logo, favicon, stylesheet) -
+# see docs/frontend-conventions.md in sweetrpg/platform
+SHARED_URL = "SHARED_URL"
+
 # admin-api integration (banners, maintenance mode)
 ADMIN_API_URL = "ADMIN_API_URL"
 MAINTENANCE_MODE_SCOPES = ["platform", "service:assets"]
