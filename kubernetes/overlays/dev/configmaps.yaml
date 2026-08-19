@@ -24,10 +24,10 @@ data:
     ENV: dev
     # Shared suite-wide login session (auth-web's own dedicated Redis instance) - see
     # docs/frontend-conventions.md's "Shared session schema" in sweetrpg/platform.
-    SHARED_SESSION_REDIS_HOST: redis.sweetrpg-auth.svc.cluster.local
+    SHARED_SESSION_REDIS_HOST: cache.sweetrpg-auth.svc.cluster.local
     SHARED_SESSION_REDIS_DB: "0"
     # Cross-namespace edit-session store (durable-volume-editing) - see
     # docs/frontend-conventions.md's "Edit session schema" in sweetrpg/platform.
-    EDIT_SESSION_REDIS_HOST: redis.sweetrpg-catalog.svc.cluster.local
+    EDIT_SESSION_REDIS_HOST: cache.sweetrpg-catalog.svc.cluster.local
     EDIT_SESSION_REDIS_DB: "2"
     CATALOG_API_URL: http://api-v1.sweetrpg-catalog.svc.cluster.local:8000
