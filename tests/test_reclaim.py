@@ -13,6 +13,8 @@ from pathlib import Path
 import pytest
 import redis as redis_lib
 
+from conftest import authenticate
+
 RECLAIM_TOKEN = "test-reclaim-token"
 EDIT_SESSION_DB = 9
 
@@ -55,11 +57,11 @@ def reclaim_app(app, edit_session_redis):
 
 def _stage(app, kind, id, owner_id, data=b"staged-bytes"):
     client = app.test_client()
+    authenticate(client, sub=f"auth0|{owner_id}", email="t@example.com", session_id=f"session-{owner_id}-{kind}-{id}")
     client.post(
         f"/asset/{kind}/{id}",
         data={"file": (io.BytesIO(data), "a.png")},
         content_type="multipart/form-data",
-        headers={"X-Forwarded-User": f"auth0|{owner_id}", "X-Forwarded-Email": "t@example.com"},
     )
 
 
