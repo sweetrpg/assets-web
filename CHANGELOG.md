@@ -1,3 +1,12 @@
+## [0.12.3] - 2026-08-19
+
+### 🐛 Bug Fixes
+
+- *(reclaim)* Match staged asset ids back to their session's raw sub
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.12.2
 ## [0.12.2] - 2026-08-19
 
 ### 🐛 Bug Fixes
