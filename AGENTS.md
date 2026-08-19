@@ -28,8 +28,14 @@ standard.
   than repopulates, so a GET racing a POST reads the new file, not stale cached bytes from before
   the write landed.
 - `POST` requires an authenticated session (`session[user_id]`/`session[email]` both set - see
-  `_populate` in `blueprints/__init__.py`, populated from `X-Forwarded-User`/`X-Forwarded-Email`
-  set by the upstream auth proxy, not validated by this app itself) - 401 otherwise.
+  `_populate` in `blueprints/__init__.py`) - 401 otherwise. Populated by reading the suite-wide
+  `sweetrpg_session` cookie directly (`shared_session.py`), the same pattern every other
+  `*-web` frontend uses (see catalog-web's `SessionUserAccess.swift`) - **not** from
+  `X-Forwarded-User`/`X-Forwarded-Email` headers as originally designed. That design assumed a
+  Traefik ForwardAuth middleware verifying the session and injecting those headers; no such
+  middleware was ever built anywhere in the platform, so every authenticated write 401'd
+  unconditionally until this was caught by the durable-volume-editing cover-upload flow (the
+  first caller to exercise this path from the browser).
 
 ### Shared static assets
 
