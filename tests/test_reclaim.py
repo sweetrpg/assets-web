@@ -114,6 +114,28 @@ def test_reclaim_keeps_cover_referenced_by_live_session(reclaim_app, edit_sessio
     catalog_api.shutdown()
 
 
+def test_reclaim_keeps_cover_referenced_by_live_session_with_piped_sub(reclaim_app, edit_session_redis):
+    # Regression test: catalog-web's sanitizedAssetUserID turns a raw Auth0 sub like
+    # "github|419457" into "github-419457" for the staged asset id, but the edit-session Redis
+    # key is written under the RAW, unsanitized sub. The reclaim job must match a staged asset
+    # id back to its live session despite this - see reclaim.py's _sanitized_user_id.
+    catalog_api = _make_catalog_api([], [])
+    reclaim_app.config["CATALOG_API_URL"] = f"http://127.0.0.1:{catalog_api.server_port}"
+    _stage(reclaim_app, "cover-staged", "github-419457", owner_id="github-419457")
+    edit_session_redis.set(
+        "edit-session:github|419457:volume",
+        json.dumps({"recordId": "vol-1", "fields": {}, "stagedCoverAssetId": "github-419457"}),
+    )
+
+    resp = reclaim_app.test_client().post(
+        "/admin/reclaim-staged-assets", headers={"X-Reclaim-Token": RECLAIM_TOKEN}
+    )
+    assert resp.status_code == 200
+    assert resp.json["deleted"] == []
+    assert _asset_dir_exists(reclaim_app, "cover-staged", "github-419457")
+    catalog_api.shutdown()
+
+
 def test_reclaim_keeps_sample_referenced_by_pending_submission(reclaim_app):
     catalog_api = _make_catalog_api([], ["pending-1-0"])
     reclaim_app.config["CATALOG_API_URL"] = f"http://127.0.0.1:{catalog_api.server_port}"
