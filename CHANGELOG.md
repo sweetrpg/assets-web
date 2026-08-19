@@ -1,3 +1,13 @@
+## [0.12.2] - 2026-08-19
+
+### 🐛 Bug Fixes
+
+- *(auth)* Read shared session cookie directly instead of nonexistent ForwardAuth headers
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.12.1
+- Merge master into develop after shared-session-auth hotfix
 ## [0.12.1] - 2026-08-18
 
 ### 🐛 Bug Fixes
