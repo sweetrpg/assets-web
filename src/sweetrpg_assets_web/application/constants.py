@@ -58,6 +58,13 @@ LOGSTASH_PORT = "LOGSTASH_PORT"
 
 SHELF_API_BASE_URL = "SHELF_API_BASE_URL"
 
+# Shared suite-wide login session (see shared_session.py) - auth-web's own dedicated Redis
+# instance, distinct from this app's cache Redis above.
+SHARED_SESSION_REDIS_HOST = "SHARED_SESSION_REDIS_HOST"
+SHARED_SESSION_REDIS_PORT = "SHARED_SESSION_REDIS_PORT"
+SHARED_SESSION_REDIS_DB = "SHARED_SESSION_REDIS_DB"
+SHARED_SESSION_REDIS_PASS = "SHARED_SESSION_REDIS_PASS"
+
 # Cross-namespace edit-session store (sweetrpg-catalog's Redis, REDIS_DB=2) - see
 # docs/frontend-conventions.md's "Edit session schema" in sweetrpg/platform. Read-only here:
 # this app only checks whether a staged asset is still owned by a live session, never writes.

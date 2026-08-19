@@ -6,23 +6,21 @@ Tests for the asset storage routes.
 
 import io
 
-AUTH_HEADERS = {
-    "X-Forwarded-User": "github|1",
-    "X-Forwarded-Email": "test@example.com",
-}
+from conftest import authenticate as _authenticate
 
 
-def _upload(client, kind, id, filename="a.png", data=b"pixels", headers=AUTH_HEADERS):
+def _upload(client, kind, id, filename="a.png", data=b"pixels", authenticated=True):
+    if authenticated:
+        _authenticate(client)
     return client.post(
         f"/asset/{kind}/{id}",
         data={"file": (io.BytesIO(data), filename)},
         content_type="multipart/form-data",
-        headers=headers,
     )
 
 
 def test_store_requires_authentication(client):
-    resp = _upload(client, "avatar", "1", headers={})
+    resp = _upload(client, "avatar", "1", authenticated=False)
     assert resp.status_code == 401
 
 
@@ -102,17 +100,22 @@ def test_store_overwrite_with_different_type_replaces_stale_file(client):
 
 def test_delete_requires_authentication(client):
     _upload(client, "avatar", "1")
-    resp = client.delete("/asset/avatar/1", headers={})
+    # _upload's _authenticate call set the session cookie on this client - clear it before the
+    # unauthenticated delete attempt.
+    client.delete_cookie("sweetrpg_session")
+    resp = client.delete("/asset/avatar/1")
     assert resp.status_code == 401
 
 
 def test_delete_rejects_unknown_kind(client):
-    resp = client.delete("/asset/not-a-kind/1", headers=AUTH_HEADERS)
+    _authenticate(client)
+    resp = client.delete("/asset/not-a-kind/1")
     assert resp.status_code == 400
 
 
 def test_delete_missing_asset_404s(client):
-    resp = client.delete("/asset/avatar/does-not-exist", headers=AUTH_HEADERS)
+    _authenticate(client)
+    resp = client.delete("/asset/avatar/does-not-exist")
     assert resp.status_code == 404
 
 
@@ -120,7 +123,8 @@ def test_delete_removes_asset_and_invalidates_cache(client):
     _upload(client, "cover-staged", "1", data=b"staged-bytes")
     assert client.get("/asset/cover-staged/1").data == b"staged-bytes"
 
-    delete_resp = client.delete("/asset/cover-staged/1", headers=AUTH_HEADERS)
+    _authenticate(client)
+    delete_resp = client.delete("/asset/cover-staged/1")
     assert delete_resp.status_code == 204
 
     get_resp = client.get("/asset/cover-staged/1")

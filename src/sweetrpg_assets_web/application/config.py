@@ -78,6 +78,15 @@ class BaseConfig(object):
 
     BUILD_INFO_PATH = os.environ.get(constants.BUILD_INFO_PATH) or "/app/build-info.json"
 
+    # Shared suite-wide login session (see shared_session.py) - auth-web's own dedicated Redis
+    # instance, distinct from CACHE_REDIS_* above. Unset SHARED_SESSION_REDIS_HOST ->
+    # shared_session.current_user() fails open (every visitor reads as logged-out), matching
+    # every other frontend's read-only shared-session client.
+    SHARED_SESSION_REDIS_HOST = os.environ.get(constants.SHARED_SESSION_REDIS_HOST)
+    SHARED_SESSION_REDIS_PORT = int(os.environ.get(constants.SHARED_SESSION_REDIS_PORT) or 6379)
+    SHARED_SESSION_REDIS_DB = int(os.environ.get(constants.SHARED_SESSION_REDIS_DB) or 0)
+    SHARED_SESSION_REDIS_PASSWORD = os.environ.get(constants.SHARED_SESSION_REDIS_PASS) or None
+
     # Staged-asset reclaim job (durable-volume-editing task 2.4). Unset EDIT_SESSION_REDIS_HOST
     # -> the reclaim endpoint 503s rather than guessing at a host, since silently skipping the
     # session check would mean deleting a still-in-use staged file.

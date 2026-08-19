@@ -15,6 +15,7 @@ import mimetypes
 from pathlib import Path
 from sweetrpg_assets_web.application.cache import cache
 from sweetrpg_assets_web.application import reclaim
+from sweetrpg_assets_web.application import shared_session
 import analytics
 import datetime
 import hmac
@@ -93,9 +94,15 @@ def _populate():
     elif constants.SWEETRPG_AUTH_KEY in request.cookies:
         userinfo = request.cookies[constants.SWEETRPG_AUTH_KEY]
         session[constants.PROFILE_KEY] = userinfo
-    session[constants.SESSION_ACCESS_TOKEN] = request.headers.get("X-Forwarded-Access-Token")
-    session[constants.SESSION_EMAIL] = request.headers.get("X-Forwarded-Email")
-    session[constants.SESSION_USER_ID] = request.headers.get("X-Forwarded-User")
+
+    # Read the suite-wide login session directly (see shared_session.py) rather than trusting
+    # X-Forwarded-* headers from an upstream auth proxy - no such proxy has ever been wired up
+    # in front of this app, so those headers were always empty and every authenticated write
+    # 401'd unconditionally.
+    user = shared_session.current_user()
+    session[constants.SESSION_ACCESS_TOKEN] = user.get("accessToken") if user else None
+    session[constants.SESSION_EMAIL] = user.get("email") if user else None
+    session[constants.SESSION_USER_ID] = user.get("sub") if user else None
 
     current_app.logger.debug("(updated) session: %s", session)
     current_app.logger.debug("userinfo: %s", userinfo)
