@@ -63,8 +63,20 @@ def _edit_session_client() -> redis.Redis:
     )
 
 
+def _sanitized_user_id(sub: str) -> str:
+    """Mirrors catalog-web's `sanitizedAssetUserID` (EditReviewFunctions.swift): a raw Auth0
+    subject (e.g. `auth0|abc123`) isn't a valid assets-web id, so staged asset ids are filed
+    under this sanitized form. Session keys are stored under the raw, unsanitized sub - so
+    matching a staged asset id back to its owning session requires sanitizing each session
+    key's owner segment the same way, not sanitizing the owner_id backwards."""
+    return sub.replace("|", "-")
+
+
 def _referenced_by_live_session(client: redis.Redis, owner_id: str, asset_id: str, is_cover: bool) -> bool:
-    for key in client.scan_iter(match=f"edit-session:{owner_id}:*"):
+    for key in client.scan_iter(match="edit-session:*:*"):
+        key_owner = key.split(":")[1]
+        if _sanitized_user_id(key_owner) != owner_id:
+            continue
         raw = client.get(key)
         if not raw:
             continue
