@@ -10,5 +10,5 @@ data:
     FLASK_APP: sweetrpg_assets_web.application.main:create_app
     FLASK_ENV: production
     NEW_RELIC_CONFIG_FILE: /config/newrelic.ini
-    REDIS_HOST: redis
+    REDIS_HOST: cache
     REDIS_PORT: "6379"
