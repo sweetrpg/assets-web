@@ -19,10 +19,12 @@ from opentelemetry.instrumentation.flask import FlaskInstrumentor
 from opentelemetry.sdk.resources import SERVICE_NAME, Resource
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
-from sweetrpg_assets_web.application import constants
 
 
-def setup_tracing(app: Flask, service_name: str = constants.APPLICATION_NAME) -> None:
+def setup_tracing(app: Flask, service_name: str = "assets-web") -> None:
+    # Deliberately not constants.APPLICATION_NAME ("sweetrpg-assets-web") - every other
+    # service's trace service.name is its bare name (catalog-api, catalog-web, ...), and the
+    # "sweetrpg-" prefix here just duplicated the org name in every trace list entry.
     provider = TracerProvider(resource=Resource.create({SERVICE_NAME: service_name}))
     # Endpoint comes from OTEL_EXPORTER_OTLP_ENDPOINT via the SDK's own env var handling if
     # unset here; passed explicitly only when the app config overrides it.
