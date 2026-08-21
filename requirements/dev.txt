@@ -286,7 +286,7 @@ sweetrpg-web-core==0.0.697
     # via -r requirements/app.in
 tomli-w==1.2.0
     # via tox
-tox==4.58.0
+tox==4.60.0
     # via
     #   -r requirements/tests.in
     #   tox-uv-bare
