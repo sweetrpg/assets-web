@@ -167,6 +167,7 @@ def main_page():
     build_timestamp, build_hash = _load_build_info()
     return render_template(
         "main.html",
+        shared_url=current_app.config["SHARED_URL"],
         root_url=current_app.config["ROOT_URL"],
         logo_url=f"{current_app.config['SHARED_URL']}/static/img/assets/logo.png",
         favicon_url=f"{current_app.config['SHARED_URL']}/static/img/assets/favicon.png",
