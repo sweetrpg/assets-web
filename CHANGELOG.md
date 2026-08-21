@@ -1,3 +1,15 @@
+## [0.12.4] - 2026-08-21
+
+### 🐛 Bug Fixes
+
+- *(reclaim-job)* Use variable expansion, not command substitution, for token header
+- *(config)* Point REDIS_HOST vars at cache Service, not stale redis name
+- *(kubernetes)* Fix cpu resource limit quantity that never matched ArgoCD's applied manifest
+- *(tracing)* Use bare "assets-web" for the OTel service.name
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.12.3
 ## [0.12.3] - 2026-08-19
 
 ### 🐛 Bug Fixes
