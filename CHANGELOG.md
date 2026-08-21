@@ -1,3 +1,14 @@
+## [0.12.5] - 2026-08-21
+
+### 🐛 Bug Fixes
+
+- *(kubernetes)* Wire up the shared-session Redis auth secret
+- *(templates)* Use shared URL for static CSS assets
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.12.4
+- Merge master into develop after hotfix/shared-session-redis-auth
 ## [0.12.4] - 2026-08-21
 
 ### 🐛 Bug Fixes
