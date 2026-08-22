@@ -87,6 +87,13 @@ class BaseConfig(object):
     SHARED_SESSION_REDIS_DB = int(os.environ.get(constants.SHARED_SESSION_REDIS_DB) or 0)
     SHARED_SESSION_REDIS_PASSWORD = os.environ.get(constants.SHARED_SESSION_REDIS_PASS) or None
 
+    # Auth0 tenant for validating forwarded user bearer tokens (see bearer_token.py) -
+    # server-to-service calls (e.g. catalog-api promoting a staged cover) carry no browser
+    # session cookie, so the token is their only authentication. Unset either value -> the
+    # bearer path fails open as unauthenticated, matching shared_session's fail-open contract.
+    AUTH0_DOMAIN = os.environ.get(constants.AUTH0_DOMAIN)
+    AUTH0_AUDIENCE = os.environ.get(constants.AUTH0_AUDIENCE)
+
     # Staged-asset reclaim job (durable-volume-editing task 2.4). Unset EDIT_SESSION_REDIS_HOST
     # -> the reclaim endpoint 503s rather than guessing at a host, since silently skipping the
     # session check would mean deleting a still-in-use staged file.

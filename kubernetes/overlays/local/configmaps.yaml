@@ -21,3 +21,7 @@ data:
     ASSETS_URL: https://sweetrpg.local/assets
     SHARED_URL: https://sweetrpg.local/shared
     ENV: local
+    # Auth0 tenant for validating forwarded user bearer tokens (bearer_token.py) - same values
+    # as the dev overlay; the local cluster shares the dev Auth0 tenant.
+    AUTH0_DOMAIN: sweetrpg-dev.us.auth0.com
+    AUTH0_AUDIENCE: https://sweetrpg.com/api/
