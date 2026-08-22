@@ -16,6 +16,7 @@ from pathlib import Path
 from sweetrpg_assets_web.application.cache import cache
 from sweetrpg_assets_web.application import reclaim
 from sweetrpg_assets_web.application import shared_session
+from sweetrpg_assets_web.application import bearer_token
 import analytics
 import datetime
 import hmac
@@ -98,8 +99,13 @@ def _populate():
     # Read the suite-wide login session directly (see shared_session.py) rather than trusting
     # X-Forwarded-* headers from an upstream auth proxy - no such proxy has ever been wired up
     # in front of this app, so those headers were always empty and every authenticated write
-    # 401'd unconditionally.
+    # 401'd unconditionally. Browser requests carry the session cookie; service-to-service calls
+    # (e.g. catalog-api promoting a staged cover on finalize) carry no cookie and instead
+    # forward the acting user's Auth0 access token as a bearer token (see bearer_token.py,
+    # platform's api-client-auth change).
     user = shared_session.current_user()
+    if user is None:
+        user = bearer_token.current_user_from_bearer()
     session[constants.SESSION_ACCESS_TOKEN] = user.get("accessToken") if user else None
     session[constants.SESSION_EMAIL] = user.get("email") if user else None
     session[constants.SESSION_USER_ID] = user.get("sub") if user else None
@@ -227,7 +233,9 @@ def _require_known_kind(kind: str) -> None:
 
 
 def _require_authenticated() -> None:
-    if not (session.get(constants.SESSION_USER_ID) and session.get(constants.SESSION_EMAIL)):
+    # user_id is the authenticated identity (sub from the session cookie or a forwarded bearer
+    # token); email is optional because API-audience access tokens don't carry an email claim.
+    if not session.get(constants.SESSION_USER_ID):
         abort(401, description="Authentication required")
 
 
