@@ -1,3 +1,17 @@
+## [0.13.0] - 2026-08-22
+
+### 🚀 Features
+
+- *(assets)* Pass shared_url to main template
+
+### 🐛 Bug Fixes
+
+- *(kubernetes)* Add verbose flag to reclaim cronjob curl command
+- *(auth)* Accept forwarded user bearer tokens on asset writes
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.12.5
 ## [0.12.5] - 2026-08-21
 
 ### 🐛 Bug Fixes
