@@ -27,7 +27,7 @@ spec:
                           command: ["/bin/sh", "-c"]
                           args:
                               - >-
-                                curl -sf -X POST http://web-v1:8081/admin/reclaim-staged-assets
+                                curl -v -f -X POST http://web-v1:8081/admin/reclaim-staged-assets
                                 -H "X-Reclaim-Token: $RECLAIM_JOB_TOKEN"
                           envFrom:
                               - secretRef:

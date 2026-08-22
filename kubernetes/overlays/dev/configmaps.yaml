@@ -31,3 +31,8 @@ data:
     EDIT_SESSION_REDIS_HOST: cache.sweetrpg-catalog.svc.cluster.local
     EDIT_SESSION_REDIS_DB: "2"
     CATALOG_API_URL: http://api-v1.sweetrpg-catalog.svc.cluster.local:8000
+    # Auth0 tenant for validating forwarded user bearer tokens (bearer_token.py) - the
+    # service-to-service asset-store path (catalog-api promoting staged covers/samples) has no
+    # browser session cookie. Same tenant/audience auth-api verifies against (api-misc secret).
+    AUTH0_DOMAIN: sweetrpg-dev.us.auth0.com
+    AUTH0_AUDIENCE: https://sweetrpg.com/api/
