@@ -1,3 +1,12 @@
+## [0.13.1] - 2026-08-22
+
+### 🐛 Bug Fixes
+
+- *(deps)* Regenerate requirement lock files for pyjwt
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.13.0
 ## [0.13.0] - 2026-08-22
 
 ### 🚀 Features
