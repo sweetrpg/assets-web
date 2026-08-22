@@ -8,7 +8,7 @@ blinker==1.9.0
     # via
     #   flask
     #   sentry-sdk
-cachelib==0.15.0
+cachelib==0.16.1
     # via
     #   flask-caching
     #   flask-session
@@ -18,7 +18,7 @@ certifi==2026.7.22
     #   sentry-sdk
 cffi==2.1.1
     # via cryptography
-charset-normalizer==3.4.9
+charset-normalizer==3.5.1
     # via requests
 click==8.4.2
     # via flask
@@ -47,11 +47,11 @@ flask-limiter==4.1.1
     # via -r requirements/app.in
 flask-session==0.8.0
     # via -r requirements/app.in
-googleapis-common-protos==1.75.0
+googleapis-common-protos==1.75.1
     # via opentelemetry-exporter-otlp-proto-http
 hiredis==3.4.1
     # via -r requirements/app.in
-idna==3.18
+idna==3.19
     # via requests
 itsdangerous==2.2.0
     # via flask
@@ -110,7 +110,7 @@ opentelemetry-util-http==0.65b0
     #   opentelemetry-instrumentation-wsgi
 ordered-set==4.1.0
     # via flask-limiter
-packaging==26.2
+packaging==26.3
     # via
     #   limits
     #   opentelemetry-instrumentation
@@ -119,7 +119,7 @@ prometheus-client==0.26.0
     # via prometheus-flask-exporter
 prometheus-flask-exporter==0.23.2
     # via -r requirements/app.in
-protobuf==7.35.1
+protobuf==7.36.0
     # via
     #   googleapis-common-protos
     #   opentelemetry-proto
@@ -131,11 +131,11 @@ python-dateutil==2.9.0.post0
     # via
     #   -r requirements/app.in
     #   analytics-python
-python-dotenv==1.2.2
+python-dotenv==1.2.3
     # via -r requirements/app.in
 python-editor==1.0.4
     # via -r requirements/app.in
-python-json-logger==4.1.0
+python-json-logger==4.2.0
     # via -r requirements/app.in
 pyyaml==6.0.3
     # via -r requirements/app.in
