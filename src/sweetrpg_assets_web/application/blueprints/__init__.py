@@ -4,13 +4,13 @@ __author__ = "Paul Schifferer <dm@sweetrpg.com>"
 """
 
 from functools import wraps
+from urllib.parse import urlencode
 from sweetrpg_assets_web.application import constants
 from sweetrpg_assets_web import __version__
-from flask import Blueprint, request, session, jsonify, current_app, make_response, send_file, send_from_directory, abort, render_template
+from flask import Blueprint, request, session, jsonify, current_app, make_response, redirect, send_file, send_from_directory, abort, render_template
 from flask_babel import gettext as _
 from werkzeug.exceptions import HTTPException
 from werkzeug.utils import secure_filename
-from markupsafe import escape
 from io import BytesIO
 import mimetypes
 from pathlib import Path
@@ -28,27 +28,6 @@ import requests
 
 
 blueprint = Blueprint("web", __name__, template_folder="../templates")
-
-
-def _render_maintenance_page(mode):
-    window = ""
-    if mode.starts_at or mode.ends_at:
-        parts = []
-        if mode.starts_at:
-            parts.append(f"<strong>{_('Starts:')}</strong> {escape(mode.starts_at)}")
-        if mode.ends_at:
-            parts.append(f"<strong>{_('Ends:')}</strong> {escape(mode.ends_at)}")
-        window = f'<p class="window">{" &middot; ".join(parts)}</p>'
-
-    html = render_template(
-        "maintenance.html",
-        label=mode.label if mode.label else _("Under Maintenance"),
-        description=mode.description if mode.description else "",
-        window=window,
-        logo_url=f"{current_app.config['SHARED_URL']}/static/img/assets/logo.svg",
-        favicon_url=f"{current_app.config['SHARED_URL']}/static/img/assets/favicon.png",
-    )
-    return make_response(html, 503, {"Content-Type": "text/html", "Retry-After": "120"})
 
 
 # Health checks must stay reachable during maintenance, or orchestration (k8s liveness/readiness
@@ -80,7 +59,19 @@ def _check_maintenance_mode():
     if not modes:
         return None
 
-    return _render_maintenance_page(modes[0])
+    # Maintenance is a deliberate state, not a 503 error: redirect to the shared
+    # maintenance page on shared-web. The target is a fixed first-party URL built here -
+    # never user input - and the record's content rides along as query parameters so the
+    # shared page renders without re-querying admin-api.
+    mode = modes[0]
+    params = {k: v for k, v in {
+        "service": "assets-web",
+        "label": mode.label,
+        "description": mode.description,
+        "starts_at": mode.starts_at,
+        "ends_at": mode.ends_at,
+    }.items() if v}
+    return redirect(f"{current_app.config['SHARED_URL']}/maintenance?{urlencode(params)}", 302)
 
 
 @blueprint.before_request
