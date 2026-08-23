@@ -19,17 +19,15 @@ ENV PYTHONUNBUFFERED 1
 ARG USERNAME=sweetrpg
 ARG USER_UID=1001
 ARG USER_GID=$USER_UID
-ARG REQUIREMENTS=requirements/deploy.txt
 ARG BUILD_NUMBER=unset
 ARG BUILD_JOB=unset
 ARG BUILD_SHA=unset
 ARG BUILD_DATE=unset
 ARG BUILD_VERSION=unset
 
-# Uncomment the following COPY line and the corresponding lines in the `RUN` command if you wish to
-# include your requirements in the image itself. It is suggested that you only do this if your
-# requirements rarely (if ever) change.
-COPY $REQUIREMENTS /tmp/pip-tmp/requirements.txt
+# Export the frozen lockfile to a plain requirements.txt for the pip-style system install
+# below (the git-pinned dependency resolves to a locked commit hash).
+COPY pyproject.toml uv.lock /tmp/uv-project/
 
 # Configure apt and install packages
 RUN apt-get update \
@@ -44,9 +42,10 @@ RUN apt-get update \
     # Other stuff
     # && apt-get install -y postgresql-client \
     #
-    # Update Python environment based on requirements.txt
-    && uv pip install --system --no-cache -r /tmp/pip-tmp/requirements.txt \
-    && rm -rf /tmp/pip-tmp \
+    # Update Python environment based on uv.lock
+    && uv export --project /tmp/uv-project --frozen --no-hashes --no-emit-project -o /tmp/uv-project/requirements.txt \
+    && uv pip install --system --no-cache -r /tmp/uv-project/requirements.txt \
+    && rm -rf /tmp/uv-project \
     #
     # Create a non-root user to use if preferred - see https://aka.ms/vscode-remote/containers/non-root-user.
     && groupadd --gid $USER_GID $USERNAME \
