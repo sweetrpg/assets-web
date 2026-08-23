@@ -6,10 +6,8 @@ on:
         paths:
             - "src/**"
             - "tests/**"
-            - setup.cfg
-            - setup.py
-            - tox.ini
-            - "requirements/**"
+            - pyproject.toml
+            - uv.lock
             - "docs/**"
             - ".github/workflows/**"
 
@@ -28,7 +26,6 @@ jobs:
                           name: Linux,
                           python: "3.14",
                           os: ubuntu-latest,
-                          tox: py314,
                       }
         services:
             redis:
@@ -46,19 +43,19 @@ jobs:
               with:
                   python-version: ${{ matrix.python }}
                   enable-cache: true
-                  cache-dependency-glob: "requirements/*.txt"
-            - name: install-utils
-              run: uv tool install tox --with tox-uv
+                  cache-dependency-glob: "uv.lock"
+            - name: sync-deps
+              run: uv sync --group test --frozen
             - name: tests
-              run: tox -e ${{ matrix.tox }}
+              run: uv run pytest -v tests
             - name: coverage-summary
               run: |
                   echo "## Python coverage" >> "$GITHUB_STEP_SUMMARY"
                   echo '```' >> "$GITHUB_STEP_SUMMARY"
-                  tox exec -e ${{ matrix.tox }} -- coverage report -m >> "$GITHUB_STEP_SUMMARY"
+                  uv run coverage report -m >> "$GITHUB_STEP_SUMMARY"
                   echo '```' >> "$GITHUB_STEP_SUMMARY"
-                  tox exec -e ${{ matrix.tox }} -- coverage xml
-                  tox exec -e ${{ matrix.tox }} -- coverage html
+                  uv run coverage xml
+                  uv run coverage html
             - name: upload-coverage-artifact
               uses: actions/upload-artifact@v7
               with:
@@ -70,7 +67,7 @@ jobs:
             # as a flagged step. Reuses the .coverage data the tests step already wrote.
             - name: coverage-threshold
               continue-on-error: true
-              run: tox exec -e ${{ matrix.tox }} -- coverage report --fail-under=79
+              run: uv run coverage report --fail-under=79
 
     locale-lint:
         runs-on: ubuntu-latest
