@@ -116,6 +116,13 @@ ALLOWED_KINDS = frozenset(
 )
 MAX_ASSET_UPLOAD_BYTES = 5 * 1024 * 1024
 ALLOWED_CONTENT_TYPES = frozenset({"image/png", "image/jpeg", "image/webp"})
+# Uploads are stored as `image.<ext>` - some clients send parts with no extension in the
+# filename, so the storage extension comes from the (validated) content type.
+CONTENT_TYPE_EXTENSIONS = {
+    "image/png": ".png",
+    "image/jpeg": ".jpg",
+    "image/webp": ".webp",
+}
 
 # Rate limiting
 RATE_LIMIT = "RATE_LIMIT"
