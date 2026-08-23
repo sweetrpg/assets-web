@@ -37,6 +37,19 @@ standard.
   unconditionally until this was caught by the durable-volume-editing cover-upload flow (the
   first caller to exercise this path from the browser).
 
+### Localization
+
+User-facing strings come from `translations/<code>/LC_MESSAGES/messages.po` via Flask-Babel,
+never hardcoded in templates (`{{ _('...') }}` in Jinja, `_('...')` in view code). English is
+the default/fallback locale; add a new locale by creating a new catalog under
+`translations/<code>/` (compile with `pybabel compile`) and adding its code to
+`SUPPORTED_LOCALES` in `src/sweetrpg_assets_web/application/i18n.py`. Locale resolution per
+request: `locale` cookie override, then `Accept-Language`, then English - see the
+`web-frontend-localization` spec in `sweetrpg/platform`'s
+`openspec/changes/full-localization-web-apps`. CI runs
+`scripts/check-template-strings.sh` (`locale-lint` job), which fails on literal text between
+HTML tags that isn't a whitelisted brand string or wrapped in a gettext call.
+
 ### Shared static assets
 
 The platform's shared branding (logo, favicon, stylesheet) moved to `shared-web` - this repo no

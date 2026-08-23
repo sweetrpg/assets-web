@@ -1,0 +1,42 @@
+# Locale resources for assets-web. English is the default/fallback locale; add
+# new locales as `translations/<code>/LC_MESSAGES/messages.po`. Keys are the
+# English source strings (gettext convention).
+msgid ""
+msgstr ""
+"Project-Id-Version: sweetrpg-assets-web\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "Assets Service"
+msgstr "Assets Service"
+
+msgid "Stores and serves binary assets for the SweetRPG platform"
+msgstr "Stores and serves binary assets for the SweetRPG platform"
+
+msgid ""
+"This service manages all binary assets for the SweetRPG platform, including "
+"avatars, portraits, maps, and tokens."
+msgstr ""
+"This service manages all binary assets for the SweetRPG platform, including "
+"avatars, portraits, maps, and tokens."
+
+msgid "There is nothing to browse here."
+msgstr "There is nothing to browse here."
+
+msgid "If you're looking for the SweetRPG platform, visit %(url)s."
+msgstr "If you're looking for the SweetRPG platform, visit %(url)s."
+
+msgid "Under Maintenance"
+msgstr "Under Maintenance"
+
+msgid ""
+"This service is temporarily unavailable for scheduled maintenance. Please "
+"check back shortly."
+msgstr ""
+"This service is temporarily unavailable for scheduled maintenance. Please "
+"check back shortly."
+
+msgid "Starts:"
+msgstr "Starts:"
+
+msgid "Ends:"
+msgstr "Ends:"
