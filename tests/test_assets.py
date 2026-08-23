@@ -9,12 +9,12 @@ import io
 from conftest import authenticate as _authenticate
 
 
-def _upload(client, kind, id, filename="a.png", data=b"pixels", authenticated=True):
+def _upload(client, kind, id, filename="a.png", data=b"pixels", authenticated=True, mimetype="image/png"):
     if authenticated:
         _authenticate(client)
     return client.post(
         f"/asset/{kind}/{id}",
-        data={"file": (io.BytesIO(data), filename)},
+        data={"file": (io.BytesIO(data), filename, mimetype)},
         content_type="multipart/form-data",
     )
 
@@ -70,8 +70,19 @@ def test_store_accepts_upload_at_max_size(client):
 
 
 def test_store_rejects_unsupported_content_type(client):
-    resp = _upload(client, "avatar", "1", filename="a.pdf", data=b"not an image")
+    resp = _upload(client, "avatar", "1", filename="a.pdf", data=b"not an image", mimetype="application/pdf")
     assert resp.status_code == 400
+
+
+def test_store_names_file_after_content_type_when_filename_has_no_extension(app, client):
+    # Some clients (e.g. the catalog CLI) send the part named "image" with no extension.
+    import os
+
+    resp = _upload(client, "avatar", "1", filename="image", data=b"pixels")
+    assert resp.status_code == 201
+
+    asset_dir = os.path.join(app.config["ASSET_DATA_PATH"], "avatar", "1")
+    assert sorted(os.listdir(asset_dir)) == ["image.png"]
 
 
 def test_store_accepts_every_allowed_kind(client):

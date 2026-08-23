@@ -301,7 +301,7 @@ def store_asset(kind: str, id: str):
     for image_type in IMAGE_TYPES:
         (asset_dir / f'image.{image_type}').unlink(missing_ok=True)
 
-    _, filename_ext = os.path.splitext(upload.filename)
+    filename_ext = constants.CONTENT_TYPE_EXTENSIONS.get(upload.mimetype) or os.path.splitext(upload.filename)[1]
     file_path = asset_dir / f'image{filename_ext}'
     upload.save(file_path)
 
