@@ -14,6 +14,7 @@ from sweetrpg_assets_web.application.limiter import limiter
 from sweetrpg_assets_web.application.metrics import setup_metrics
 from sweetrpg_assets_web.application.tracing import setup_tracing
 from sweetrpg_assets_web.application import constants
+from sweetrpg_assets_web.application.i18n import init_app as setup_i18n
 from logging.config import dictConfig
 from redis.client import Redis
 from sentry_sdk.integrations.wsgi import SentryWsgiMiddleware
@@ -94,6 +95,8 @@ def create_app(app_name=constants.APPLICATION_NAME):
     limiter.init_app(app)
 
     app.logger.info("Setting up metrics...")
+    setup_i18n(app)
+
     setup_metrics(app)
 
     app.logger.info("Setting up tracing...")
