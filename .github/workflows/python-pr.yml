@@ -47,7 +47,7 @@ jobs:
             - name: sync-deps
               run: uv sync --group test --frozen
             - name: tests
-              run: uv run pytest -v tests
+              run: uv run coverage run -m pytest -v tests
             - name: coverage-summary
               run: |
                   echo "## Python coverage" >> "$GITHUB_STEP_SUMMARY"
