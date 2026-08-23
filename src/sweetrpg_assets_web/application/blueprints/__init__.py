@@ -7,6 +7,7 @@ from functools import wraps
 from sweetrpg_assets_web.application import constants
 from sweetrpg_assets_web import __version__
 from flask import Blueprint, request, session, jsonify, current_app, make_response, send_file, send_from_directory, abort, render_template
+from flask_babel import gettext as _
 from werkzeug.exceptions import HTTPException
 from werkzeug.utils import secure_filename
 from markupsafe import escape
@@ -34,14 +35,14 @@ def _render_maintenance_page(mode):
     if mode.starts_at or mode.ends_at:
         parts = []
         if mode.starts_at:
-            parts.append(f"<strong>Starts:</strong> {escape(mode.starts_at)}")
+            parts.append(f"<strong>{_('Starts:')}</strong> {escape(mode.starts_at)}")
         if mode.ends_at:
-            parts.append(f"<strong>Ends:</strong> {escape(mode.ends_at)}")
+            parts.append(f"<strong>{_('Ends:')}</strong> {escape(mode.ends_at)}")
         window = f'<p class="window">{" &middot; ".join(parts)}</p>'
 
     html = render_template(
         "maintenance.html",
-        label=mode.label if mode.label else "Under Maintenance",
+        label=mode.label if mode.label else _("Under Maintenance"),
         description=mode.description if mode.description else "",
         window=window,
         logo_url=f"{current_app.config['SHARED_URL']}/static/img/assets/logo.svg",
