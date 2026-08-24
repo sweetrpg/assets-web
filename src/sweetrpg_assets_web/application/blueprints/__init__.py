@@ -284,16 +284,20 @@ def store_asset(kind: str, id: str):
     _require_valid_upload(upload)
 
     asset_dir = _asset_dir(kind, id)
+    current_app.logger.info("store_asset: creating asset dir", extra={"kind": kind, "id": id})
     asset_dir.mkdir(parents=True, exist_ok=True)
 
     # A re-upload replaces whatever image type was there before - otherwise a cover changed
     # from .png to .jpg would leave the stale .png behind, and IMAGE_TYPES' priority order
     # would keep serving it instead of the new upload.
     for image_type in IMAGE_TYPES:
+        current_app.logger.info("store_asset: unlinking image", extra={"kind": kind, "id": id, "image_type": image_type})
         (asset_dir / f'image.{image_type}').unlink(missing_ok=True)
 
     filename_ext = constants.CONTENT_TYPE_EXTENSIONS.get(upload.mimetype) or os.path.splitext(upload.filename)[1]
+    current_app.logger.debug("store_asset: filename_ext", extra={"filename_ext": filename_ext})
     file_path = asset_dir / f'image{filename_ext}'
+    current_app.logger.debug("store_asset: file_path", extra={"file_path": file_path})
     upload.save(file_path)
 
     # Invalidate rather than repopulate - the next GET will read the new file and refill the
