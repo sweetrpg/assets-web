@@ -47,6 +47,7 @@ dependencies = [
     "sweetrpg-admin-api-client @ git+https://github.com/sweetrpg/admin-api-client.py.git@develop",
     "sweetrpg-web-core",
     "urllib3~=2.0",
+    "uwsgi~=2.0",
 ]
 
 [project.urls]
