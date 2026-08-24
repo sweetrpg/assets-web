@@ -1,3 +1,12 @@
+## [0.14.3] - 2026-08-24
+
+### 🐛 Bug Fixes
+
+- *(docker)* Regenerate lockfile with uwsgi and fail builds on stale locks
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.14.1
 ## [0.14.2] - 2026-08-24
 
 ### 🐛 Bug Fixes
