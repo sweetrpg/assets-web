@@ -1,3 +1,13 @@
+## [0.14.2] - 2026-08-24
+
+### 🐛 Bug Fixes
+
+- Add missing dependency
+
+### ⚙️ Miscellaneous Tasks
+
+- *(debug)* Switch to manual workflow trigger
+- *(release)* Merge master into develop after v0.14.1
 ## [0.14.1] - 2026-08-24
 
 ### 🐛 Bug Fixes
