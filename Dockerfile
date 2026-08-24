@@ -42,8 +42,9 @@ RUN apt-get update \
     # Other stuff
     # && apt-get install -y postgresql-client \
     #
-    # Update Python environment based on uv.lock
-    && uv export --project /tmp/uv-project --frozen --no-hashes --no-emit-project -o /tmp/uv-project/requirements.txt \
+    # Update Python environment based on uv.lock (--locked fails the build if the lock
+    # is out of date with pyproject.toml; --frozen would silently ship stale deps)
+    && uv export --project /tmp/uv-project --locked --no-hashes --no-emit-project -o /tmp/uv-project/requirements.txt \
     && uv pip install --system --no-cache -r /tmp/uv-project/requirements.txt \
     && rm -rf /tmp/uv-project \
     #
