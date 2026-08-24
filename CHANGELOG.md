@@ -1,3 +1,8 @@
+## [0.14.1] - 2026-08-24
+
+### 🐛 Bug Fixes
+
+- Release workflow
 ## [0.13.1] - 2026-08-22
 
 ### 🐛 Bug Fixes
