@@ -1,3 +1,33 @@
+## [0.14.1] - 2026-08-24
+
+### 🐛 Bug Fixes
+
+- Release workflow
+
+
+## [0.14.0] - 2026-08-24
+
+### 🚀 Features
+
+- *(dev)* Add SHARED_URL to dev configmap
+- *(i18n)* Extract user-facing strings into Flask-Babel catalogs
+- *(assets)* Derive file extension from content type
+- *(maintenance)* Redirect to shared-web maintenance page instead of rendering 503 in-place
+
+### 🐛 Bug Fixes
+
+- *(ci)* Generate coverage data for the report steps
+- Add logging
+- Proper logging level
+
+### 💼 Other
+
+- *(deps)* Migrate to uv for dependency management and task running
+- Resolve conflicts with develop (i18n); port flask-babel dep to pyproject
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.13.1
 ## [0.13.1] - 2026-08-22
 
 ### 🐛 Bug Fixes
