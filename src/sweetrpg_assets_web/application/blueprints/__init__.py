@@ -295,9 +295,9 @@ def store_asset(kind: str, id: str):
         (asset_dir / f'image.{image_type}').unlink(missing_ok=True)
 
     filename_ext = constants.CONTENT_TYPE_EXTENSIONS.get(upload.mimetype) or os.path.splitext(upload.filename)[1]
-    current_app.logger.debug("store_asset: filename_ext", extra={"filename_ext": filename_ext})
+    current_app.logger.info("store_asset: filename_ext", extra={"filename_ext": filename_ext})
     file_path = asset_dir / f'image{filename_ext}'
-    current_app.logger.debug("store_asset: file_path", extra={"file_path": file_path})
+    current_app.logger.info("store_asset: file_path", extra={"file_path": file_path})
     upload.save(file_path)
 
     # Invalidate rather than repopulate - the next GET will read the new file and refill the
