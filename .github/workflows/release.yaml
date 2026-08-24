@@ -19,4 +19,8 @@ jobs:
     uses: sweetrpg/github-actions/.github/workflows/python-release.yaml@master
     with:
       tag: ${{ inputs.tag }}
+      # This repo manages dependencies with uv (pyproject.toml + uv.lock) - the reusable
+      # workflow's pip-requirements defaults don't apply (there is no requirements/tests.txt).
+      install-command: uv sync --group test
+      test-command: uv run pytest tests
     secrets: inherit
