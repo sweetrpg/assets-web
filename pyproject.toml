@@ -1,0 +1,97 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "sweetrpg-assets-web"
+version = "0.13.1"
+description = "Assets web frontend for SweetRPG"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.14"
+authors = [
+    { name = "Paul Schifferer", email = "dm@sweetrpg.com" },
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Web Environment",
+    "Framework :: Flask",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Topic :: Internet :: WWW/HTTP :: WSGI :: Application",
+]
+dependencies = [
+    "analytics-python~=1.0",
+    "Flask-Caching~=2.0",
+    "Flask-CORS>=5,<7",
+    "Flask-DotEnv~=0.1",
+    "Flask-Limiter~=4.1",
+    "Flask-Session~=0.4",
+    "Flask~=3.0",
+    "hiredis~=3.0",
+    "opentelemetry-exporter-otlp-proto-http~=1.44",
+    "opentelemetry-instrumentation-flask~=0.65b0",
+    "opentelemetry-sdk~=1.44",
+    "prometheus-flask-exporter~=0.23",
+    "python-dateutil~=2.0",
+    "python-dotenv~=1.0",
+    "python-editor~=1.0",
+    "python-json-logger~=4.1",
+    "PyYAML~=6.0",
+    "redis~=6.0",
+    "requests~=2.0",
+    "sentry-sdk[flask]~=2.0",
+    "flask-babel~=4.0",
+    "sweetrpg-admin-api-client @ git+https://github.com/sweetrpg/admin-api-client.py.git@develop",
+    "sweetrpg-web-core",
+    "urllib3~=2.0",
+]
+
+[project.urls]
+Documentation = "https://sweetrpg.github.io/sweetrpg/assets-web"
+
+[project.scripts]
+sweetrpg-assets-web = "sweetrpg_assets_web.cli:main"
+
+[dependency-groups]
+test = [
+    "asgiref",
+    "blinker",
+    "coverage-badge~=1.0",
+    "PyJWT[crypto]~=2.10",
+    "pytest~=9.0",
+    "pytest-cov~=7.0",
+]
+docs = [
+    "Pallets-Sphinx-Themes",
+    "Sphinx",
+    "sphinx-issues",
+    "sphinxcontrib-log-cabinet",
+    "sphinx-tabs",
+    "rstcheck",
+]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/sweetrpg_assets_web"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = ["error"]
+
+[tool.coverage.run]
+branch = true
+source = [
+    "sweetrpg_assets_web",
+    "tests",
+]
+
+[tool.coverage.paths]
+source = [
+    "src",
+    "*/site-packages",
+]

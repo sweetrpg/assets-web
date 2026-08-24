@@ -4,12 +4,13 @@ __author__ = "Paul Schifferer <dm@sweetrpg.com>"
 """
 
 from functools import wraps
+from urllib.parse import urlencode
 from sweetrpg_assets_web.application import constants
 from sweetrpg_assets_web import __version__
-from flask import Blueprint, request, session, jsonify, current_app, make_response, send_file, send_from_directory, abort, render_template
+from flask import Blueprint, request, session, jsonify, current_app, make_response, redirect, send_file, send_from_directory, abort, render_template
+from flask_babel import gettext as _
 from werkzeug.exceptions import HTTPException
 from werkzeug.utils import secure_filename
-from markupsafe import escape
 from io import BytesIO
 import mimetypes
 from pathlib import Path
@@ -27,27 +28,6 @@ import requests
 
 
 blueprint = Blueprint("web", __name__, template_folder="../templates")
-
-
-def _render_maintenance_page(mode):
-    window = ""
-    if mode.starts_at or mode.ends_at:
-        parts = []
-        if mode.starts_at:
-            parts.append(f"<strong>Starts:</strong> {escape(mode.starts_at)}")
-        if mode.ends_at:
-            parts.append(f"<strong>Ends:</strong> {escape(mode.ends_at)}")
-        window = f'<p class="window">{" &middot; ".join(parts)}</p>'
-
-    html = render_template(
-        "maintenance.html",
-        label=mode.label if mode.label else "Under Maintenance",
-        description=mode.description if mode.description else "",
-        window=window,
-        logo_url=f"{current_app.config['SHARED_URL']}/static/img/assets/logo.svg",
-        favicon_url=f"{current_app.config['SHARED_URL']}/static/img/assets/favicon.png",
-    )
-    return make_response(html, 503, {"Content-Type": "text/html", "Retry-After": "120"})
 
 
 # Health checks must stay reachable during maintenance, or orchestration (k8s liveness/readiness
@@ -79,7 +59,19 @@ def _check_maintenance_mode():
     if not modes:
         return None
 
-    return _render_maintenance_page(modes[0])
+    # Maintenance is a deliberate state, not a 503 error: redirect to the shared
+    # maintenance page on shared-web. The target is a fixed first-party URL built here -
+    # never user input - and the record's content rides along as query parameters so the
+    # shared page renders without re-querying admin-api.
+    mode = modes[0]
+    params = {k: v for k, v in {
+        "service": "assets-web",
+        "label": mode.label,
+        "description": mode.description,
+        "starts_at": mode.starts_at,
+        "ends_at": mode.ends_at,
+    }.items() if v}
+    return redirect(f"{current_app.config['SHARED_URL']}/maintenance?{urlencode(params)}", 302)
 
 
 @blueprint.before_request
@@ -292,16 +284,20 @@ def store_asset(kind: str, id: str):
     _require_valid_upload(upload)
 
     asset_dir = _asset_dir(kind, id)
+    current_app.logger.info("store_asset: creating asset dir", extra={"kind": kind, "id": id})
     asset_dir.mkdir(parents=True, exist_ok=True)
 
     # A re-upload replaces whatever image type was there before - otherwise a cover changed
     # from .png to .jpg would leave the stale .png behind, and IMAGE_TYPES' priority order
     # would keep serving it instead of the new upload.
     for image_type in IMAGE_TYPES:
+        current_app.logger.info("store_asset: unlinking image", extra={"kind": kind, "id": id, "image_type": image_type})
         (asset_dir / f'image.{image_type}').unlink(missing_ok=True)
 
-    _, filename_ext = os.path.splitext(upload.filename)
+    filename_ext = constants.CONTENT_TYPE_EXTENSIONS.get(upload.mimetype) or os.path.splitext(upload.filename)[1]
+    current_app.logger.info("store_asset: filename_ext", extra={"filename_ext": filename_ext})
     file_path = asset_dir / f'image{filename_ext}'
+    current_app.logger.info("store_asset: file_path", extra={"file_path": file_path})
     upload.save(file_path)
 
     # Invalidate rather than repopulate - the next GET will read the new file and refill the

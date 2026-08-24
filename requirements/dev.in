@@ -1,4 +1,0 @@
--r app.in
--r tests.in
--r docs.in
-black~=26.3

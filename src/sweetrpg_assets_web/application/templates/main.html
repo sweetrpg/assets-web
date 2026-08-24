@@ -10,13 +10,13 @@
 <body>
   <div class="container">
     <img src="{{ logo_url }}" alt="SweetRPG" class="logo">
-    <h1>Assets Service</h1>
-    <p class="tagline">Stores and serves binary assets for the SweetRPG platform</p>
+    <h1>{{ _('Assets Service') }}</h1>
+    <p class="tagline">{{ _('Stores and serves binary assets for the SweetRPG platform') }}</p>
 
     <div class="info-box">
-      <p>This service manages all binary assets for the SweetRPG platform, including avatars, portraits, maps, and tokens.</p>
-      <p>There is nothing to browse here.</p>
-      <p>If you're looking for the SweetRPG platform, visit <a href="{{ root_url }}">{{ root_url }}</a>.</p>
+      <p>{{ _('This service manages all binary assets for the SweetRPG platform, including avatars, portraits, maps, and tokens.') }}</p>
+      <p>{{ _('There is nothing to browse here.') }}</p>
+      <p>{{ _('If you\'re looking for the SweetRPG platform, visit %(url)s.', url=root_url) }}</p>
     </div>
   </div>
 

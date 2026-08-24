@@ -6,14 +6,12 @@ on:
         paths:
             - "src/**"
             - "tests/**"
-            - setup.cfg
-            - setup.py
-            - tox.ini
-            - "requirements/**"
+            - pyproject.toml
+            - uv.lock
             - "docs/**"
             - ".github/workflows/**"
     workflow_run:
-        workflows: ["Update Requirements"]
+        workflows: ["Update Lockfile"]
         types: [completed]
     workflow_dispatch: {}
 
@@ -35,7 +33,6 @@ jobs:
                           name: Linux,
                           python: "3.14",
                           os: ubuntu-latest,
-                          tox: py314,
                       }
         services:
             redis:
@@ -53,19 +50,19 @@ jobs:
               with:
                   python-version: ${{ matrix.python }}
                   enable-cache: true
-                  cache-dependency-glob: "requirements/*.txt"
-            - name: install-utils
-              run: uv tool install tox --with tox-uv
+                  cache-dependency-glob: "uv.lock"
+            - name: sync-deps
+              run: uv sync --group test --frozen
             - name: tests
-              run: tox -e ${{ matrix.tox }}
+              run: uv run coverage run -m pytest -v tests
             - name: coverage-summary
               run: |
                   echo "## Python coverage" >> "$GITHUB_STEP_SUMMARY"
                   echo '```' >> "$GITHUB_STEP_SUMMARY"
-                  tox exec -e ${{ matrix.tox }} -- coverage report -m >> "$GITHUB_STEP_SUMMARY"
+                  uv run coverage report -m >> "$GITHUB_STEP_SUMMARY"
                   echo '```' >> "$GITHUB_STEP_SUMMARY"
-                  tox exec -e ${{ matrix.tox }} -- coverage xml
-                  tox exec -e ${{ matrix.tox }} -- coverage html
+                  uv run coverage xml
+                  uv run coverage html
             - name: upload-coverage-artifact
               uses: actions/upload-artifact@v7
               with:
@@ -77,7 +74,7 @@ jobs:
             # as a flagged step. Reuses the .coverage data the tests step already wrote.
             - name: coverage-threshold
               continue-on-error: true
-              run: tox exec -e ${{ matrix.tox }} -- coverage report --fail-under=79
+              run: uv run coverage report --fail-under=79
             # Written into a dir published below (docs job) rather than committed to
             # develop - a direct push there is rejected outright by this repo's PR-only
             # ruleset (found the hard way: continue-on-error silently absorbed the
@@ -85,7 +82,7 @@ jobs:
             - name: coverage-badge
               continue-on-error: true
               run: |
-                  PCT=$(tox exec -e ${{ matrix.tox }} -- coverage report --format=total | grep -E '^[0-9]+$' | tail -1)
+                  PCT=$(uv run coverage report --format=total | grep -E '^[0-9]+$' | tail -1)
                   COLOR=$(awk -v p="$PCT" 'BEGIN { if (p>=80) print "brightgreen"; else if (p>=50) print "yellow"; else print "red" }')
                   mkdir -p badge
                   printf '{"schemaVersion":1,"label":"coverage","message":"%s%%","color":"%s"}\n' \
@@ -96,3 +93,10 @@ jobs:
                   name: coverage-badge
                   path: badge/coverage-badge.json
                   if-no-files-found: warn
+
+    locale-lint:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v7
+            - name: Check for hardcoded user-facing template strings
+              run: ./scripts/check-template-strings.sh

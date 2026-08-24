@@ -37,6 +37,19 @@ standard.
   unconditionally until this was caught by the durable-volume-editing cover-upload flow (the
   first caller to exercise this path from the browser).
 
+### Localization
+
+User-facing strings come from `translations/<code>/LC_MESSAGES/messages.po` via Flask-Babel,
+never hardcoded in templates (`{{ _('...') }}` in Jinja, `_('...')` in view code). English is
+the default/fallback locale; add a new locale by creating a new catalog under
+`translations/<code>/` (compile with `pybabel compile`) and adding its code to
+`SUPPORTED_LOCALES` in `src/sweetrpg_assets_web/application/i18n.py`. Locale resolution per
+request: `locale` cookie override, then `Accept-Language`, then English - see the
+`web-frontend-localization` spec in `sweetrpg/platform`'s
+`openspec/changes/full-localization-web-apps`. CI runs
+`scripts/check-template-strings.sh` (`locale-lint` job), which fails on literal text between
+HTML tags that isn't a whitelisted brand string or wrapped in a gettext call.
+
 ### Shared static assets
 
 The platform's shared branding (logo, favicon, stylesheet) moved to `shared-web` - this repo no
@@ -108,18 +121,13 @@ review step and no changelog - removed in favor of the above.
 
 ## Running Checks Locally
 
-Python 3.14, managed via [uv](https://docs.astral.sh/uv/) rather than pip/pip-tools directly -
-`uv` replaces pip-tools' `pip-compile` (see `scripts/update-requirements.sh`) and is the install
-tool for both local dev and CI. `tox` still drives the actual test run, but with `tox.ini`'s
-`runner = uv-venv-runner` (from the `tox-uv` plugin, listed in `requirements/tests.in`) it
-creates environments and installs dependencies through `uv` instead of `virtualenv`/`pip` -
-`tox-uv` doesn't take over just by being installed; the `runner` setting is what opts in.
+Python 3.14, managed via [uv](https://docs.astral.sh/uv/), which is the required Python tool
+on this platform (`pyproject.toml` + committed `uv.lock`; do not use `pip`/`tox` directly).
 
 ```bash
-uv venv --python 3.14
-source .venv/bin/activate
-uv pip install -r requirements/tests.txt -e .
-python -m pytest tests
+uv sync --group test   # create .venv and install deps
+uv run pytest          # run tests
+uv lock --upgrade      # update dependencies
 ```
 
 Requires a local Redis (`redis-server` on `localhost:6379`, no auth needed) - used for caching,
