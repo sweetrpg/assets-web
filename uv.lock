@@ -1410,6 +1410,7 @@ dependencies = [
     { name = "opentelemetry-instrumentation-flask" },
     { name = "opentelemetry-sdk" },
     { name = "prometheus-flask-exporter" },
+    { name = "pyjwt", extra = ["crypto"] },
     { name = "python-dateutil" },
     { name = "python-dotenv" },
     { name = "python-editor" },
@@ -1437,7 +1438,6 @@ test = [
     { name = "asgiref" },
     { name = "blinker" },
     { name = "coverage-badge" },
-    { name = "pyjwt", extra = ["crypto"] },
     { name = "pytest" },
     { name = "pytest-cov" },
 ]
@@ -1457,6 +1457,7 @@ requires-dist = [
     { name = "opentelemetry-instrumentation-flask", specifier = "~=0.65b0" },
     { name = "opentelemetry-sdk", specifier = "~=1.44" },
     { name = "prometheus-flask-exporter", specifier = "~=0.23" },
+    { name = "pyjwt", extras = ["crypto"], specifier = "~=2.10" },
     { name = "python-dateutil", specifier = "~=2.0" },
     { name = "python-dotenv", specifier = "~=1.0" },
     { name = "python-editor", specifier = "~=1.0" },
@@ -1484,7 +1485,6 @@ test = [
     { name = "asgiref" },
     { name = "blinker" },
     { name = "coverage-badge", specifier = "~=1.0" },
-    { name = "pyjwt", extras = ["crypto"], specifier = "~=2.10" },
     { name = "pytest", specifier = "~=9.0" },
     { name = "pytest-cov", specifier = "~=7.0" },
 ]
