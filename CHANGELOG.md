@@ -1,3 +1,16 @@
+## [0.14.4] - 2026-08-25
+
+### 🐛 Bug Fixes
+
+- *(deps)* Move PyJWT to runtime dependencies
+
+### 💼 Other
+
+- Update development status to beta in pyproject.toml
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.14.3
 ## [0.14.3] - 2026-08-24
 
 ### 🐛 Bug Fixes
