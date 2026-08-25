@@ -39,6 +39,7 @@ dependencies = [
     "python-dotenv~=1.0",
     "python-editor~=1.0",
     "python-json-logger~=4.1",
+    "PyJWT[crypto]~=2.10",
     "PyYAML~=6.0",
     "redis~=6.0",
     "requests~=2.0",
@@ -61,7 +62,6 @@ test = [
     "asgiref",
     "blinker",
     "coverage-badge~=1.0",
-    "PyJWT[crypto]~=2.10",
     "pytest~=9.0",
     "pytest-cov~=7.0",
 ]
