@@ -28,6 +28,8 @@ spec:
                 version: v1
             annotations:
                 reloader.stakater.com/auto: "true"
+                openfeature.dev/enabled: "true"
+                openfeature.dev/featureflagsource: "sweetrpg-system/assets-web"
         spec:
             serviceAccountName: web
             # Kubernetes auto-injects <SERVICE_NAME>_PORT-style env vars for every Service in
