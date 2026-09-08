@@ -136,6 +136,14 @@ def create_app(app_name=constants.APPLICATION_NAME):
 
     app.register_blueprint(main_blueprint)
 
+    # Exempt health check endpoints from rate limiting - they must remain reachable
+    # even when Redis (cache) is unavailable, otherwise k8s liveness/readiness probes
+    # fail with 500 and trigger pod restarts.
+    with app.app_context():
+        for endpoint in ("web.health.ping", "web.health.health_check"):
+            if endpoint in app.view_functions:
+                limiter.exempt(app.view_functions[endpoint])
+
     app.wsgi_app = PrefixMiddleware(app.wsgi_app, app.config.get("APPLICATION_BASE_PATH", ""))
 
     print(app.url_map)
