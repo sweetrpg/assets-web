@@ -10,7 +10,7 @@ from flask_cors import CORS
 from flask_session import Session
 from dotenv import load_dotenv, find_dotenv
 from sweetrpg_assets_web.application.cache import cache
-from sweetrpg_assets_web.application.limiter import limiter
+from sweetrpg_assets_web.application.limiter import create_limiter, FailOpenRedisStorage
 from sweetrpg_assets_web.application.metrics import setup_metrics
 from sweetrpg_assets_web.application.tracing import setup_tracing
 from sweetrpg_assets_web.application import constants
@@ -21,6 +21,9 @@ from sentry_sdk.integrations.wsgi import SentryWsgiMiddleware
 from sweetrpg_admin_api_client import AdminClient
 import analytics
 import os
+
+# Module-level limiter instance, initialized in create_app()
+limiter = None
 
 
 ENV_FILE = find_dotenv()
@@ -92,6 +95,9 @@ def create_app(app_name=constants.APPLICATION_NAME):
 
     app.logger.info("Setting up rate limiter...")
     app.config["RATELIMIT_DEFAULT"] = app.config["RATE_LIMIT"]
+    # Create limiter with fail-open Redis storage wrapper
+    global limiter
+    limiter = create_limiter(app.config["RATELIMIT_STORAGE_URI"])
     limiter.init_app(app)
 
     app.logger.info("Setting up metrics...")
@@ -136,13 +142,24 @@ def create_app(app_name=constants.APPLICATION_NAME):
 
     app.register_blueprint(main_blueprint)
 
-    # Exempt health check endpoints from rate limiting - they must remain reachable
-    # even when Redis (cache) is unavailable, otherwise k8s liveness/readiness probes
-    # fail with 500 and trigger pod restarts.
+    # Exempt /health/ping from rate limiting - it's a simple liveness probe that must
+    # remain reachable even when Redis is down. /health/status should NOT be exempt;
+    # it checks dependencies (including Redis) and should be rate-limited.
     with app.app_context():
-        for endpoint in ("web.health.ping", "web.health.health_check"):
-            if endpoint in app.view_functions:
-                limiter.exempt(app.view_functions[endpoint])
+        if "web.health.ping" in app.view_functions:
+            limiter.exempt(app.view_functions["web.health.ping"])
+
+    # Register Redis health check for /health/status
+    from sweetrpg_web_core.blueprints.health import register_health_check_service_hook
+
+    def _redis_health():
+        try:
+            cache.get("__health_check__")
+            return "healthy"
+        except Exception:
+            return "degraded"
+
+    register_health_check_service_hook("redis", _redis_health)
 
     app.wsgi_app = PrefixMiddleware(app.wsgi_app, app.config.get("APPLICATION_BASE_PATH", ""))
 
