@@ -7,11 +7,10 @@ metadata:
 
 spec:
     selector:
-        app: web
-        platform: sweetrpg
-        package: assets
-        component: web
-        version: v1
+        app.kubernetes.io/name: assets-web
+        app.kubernetes.io/version: v1
+        app.kubernetes.io/component: web
+        app.kubernetes.io/part-of: assets
     type: ClusterIP
     ports:
         - name: http
