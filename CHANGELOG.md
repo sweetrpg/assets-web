@@ -1,3 +1,15 @@
+## [0.15.0] - 2026-11-04
+
+### 🚀 Features
+
+- *(kubernetes)* Enable OpenFeature in deployment annotations
+- *(footer)* Use the standard three-line site footer
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.14.4
+- Bump Python version to 3.14.7
+- Update to standard labels
 ## [0.14.4] - 2026-08-25
 
 ### 🐛 Bug Fixes
