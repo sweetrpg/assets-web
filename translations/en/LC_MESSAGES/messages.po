@@ -40,3 +40,18 @@ msgstr "Starts:"
 
 msgid "Ends:"
 msgstr "Ends:"
+
+msgid "Pilgrimage Software"
+msgstr "Pilgrimage Software"
+
+msgid "GitHub"
+msgstr "GitHub"
+
+msgid "Terms of Service"
+msgstr "Terms of Service"
+
+msgid "Privacy Policy"
+msgstr "Privacy Policy"
+
+msgid "Support"
+msgstr "Support"

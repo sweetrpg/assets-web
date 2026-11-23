@@ -167,6 +167,9 @@ def main_page():
         "main.html",
         shared_url=current_app.config["SHARED_URL"],
         root_url=current_app.config["ROOT_URL"],
+        # Legal pages live on main-web at the site root, never under this app's base path.
+        site_root=current_app.config["ROOT_URL"].rstrip("/"),
+        current_year=datetime.datetime.now(datetime.timezone.utc).year,
         logo_url=f"{current_app.config['SHARED_URL']}/static/img/assets/logo.png",
         favicon_url=f"{current_app.config['SHARED_URL']}/static/img/assets/favicon.png",
         version=__version__,

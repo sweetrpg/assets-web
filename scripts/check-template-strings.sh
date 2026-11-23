@@ -8,7 +8,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-ALLOWED='SweetRPG|GitHub|Pilgrimage Software|^Sweet$|^RPG$|^v\s*(&middot;|·)?\s*built'
+ALLOWED='^[[:space:]]*(&(copy|middot);[[:space:]]*)+$|SweetRPG|GitHub|Pilgrimage Software|^Sweet$|^RPG$|^v\s*(&middot;|·)?\s*built'
 status=0
 
 for template in $(find src -name '*.html'); do
