@@ -12,7 +12,7 @@
 
 Flask service that stores and serves the SweetRPG platform's binary assets (avatars, maps,
 tokens, portraits) - `GET /asset/<kind>/<id>` fetches one, `POST /asset/<kind>/<id>`
-(authenticated) uploads one. Files live on a shared `ReadWriteMany` volume; reads are cached in
+(authenticated and role-checked, needs `AUTH_API_URL`) uploads one. Files live on a shared `ReadWriteMany` volume; reads are cached in
 Redis.
 
 ## Documentation
