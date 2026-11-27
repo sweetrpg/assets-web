@@ -94,6 +94,10 @@ class BaseConfig(object):
     AUTH0_DOMAIN = os.environ.get(constants.AUTH0_DOMAIN)
     AUTH0_AUDIENCE = os.environ.get(constants.AUTH0_AUDIENCE)
 
+    # Role lookups for asset writes and deletes (see permissions.py). Unset -> every write and
+    # delete returns 503.
+    AUTH_API_URL = os.environ.get(constants.AUTH_API_URL)
+
     # Staged-asset reclaim job (durable-volume-editing task 2.4). Unset EDIT_SESSION_REDIS_HOST
     # -> the reclaim endpoint 503s rather than guessing at a host, since silently skipping the
     # session check would mean deleting a still-in-use staged file.

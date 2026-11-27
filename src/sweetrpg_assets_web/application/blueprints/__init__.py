@@ -7,7 +7,7 @@ from functools import wraps
 from urllib.parse import urlencode
 from sweetrpg_assets_web.application import constants
 from sweetrpg_assets_web import __version__
-from flask import Blueprint, request, session, jsonify, current_app, make_response, redirect, send_file, send_from_directory, abort, render_template
+from flask import Blueprint, g, request, jsonify, current_app, make_response, redirect, send_file, send_from_directory, abort, render_template
 from flask_babel import gettext as _
 from werkzeug.exceptions import HTTPException
 from werkzeug.utils import secure_filename
@@ -18,6 +18,7 @@ from sweetrpg_assets_web.application.cache import cache
 from sweetrpg_assets_web.application import reclaim
 from sweetrpg_assets_web.application import shared_session
 from sweetrpg_assets_web.application import bearer_token
+from sweetrpg_assets_web.application import permissions
 import analytics
 import datetime
 import hmac
@@ -76,18 +77,6 @@ def _check_maintenance_mode():
 
 @blueprint.before_request
 def _populate():
-    current_app.logger.debug("session: %s", session)
-    current_app.logger.debug("headers: %s", request.headers)
-    current_app.logger.debug("cookies: %s", request.cookies)
-    current_app.logger.debug("args: %s", request.args)
-
-    userinfo = None
-    if constants.PROFILE_KEY in session:
-        userinfo = session[constants.PROFILE_KEY]
-    elif constants.SWEETRPG_AUTH_KEY in request.cookies:
-        userinfo = request.cookies[constants.SWEETRPG_AUTH_KEY]
-        session[constants.PROFILE_KEY] = userinfo
-
     # Read the suite-wide login session directly (see shared_session.py) rather than trusting
     # X-Forwarded-* headers from an upstream auth proxy - no such proxy has ever been wired up
     # in front of this app, so those headers were always empty and every authenticated write
@@ -95,28 +84,8 @@ def _populate():
     # (e.g. catalog-api promoting a staged cover on finalize) carry no cookie and instead
     # forward the acting user's Auth0 access token as a bearer token (see bearer_token.py,
     # platform's api-client-auth change).
-    user = shared_session.current_user()
-    if user is None:
-        user = bearer_token.current_user_from_bearer()
-    session[constants.SESSION_ACCESS_TOKEN] = user.get("accessToken") if user else None
-    session[constants.SESSION_EMAIL] = user.get("email") if user else None
-    session[constants.SESSION_USER_ID] = user.get("sub") if user else None
-
-    current_app.logger.debug("(updated) session: %s", session)
-    current_app.logger.debug("userinfo: %s", userinfo)
-
-
-@blueprint.before_request
-def _store_user():
-    current_app.logger.debug("store_user: session: %s", session)
-
-    email = session.get(constants.SESSION_EMAIL)
-    current_app.logger.debug("email: %s", email)
-    user_id = session.get(constants.SESSION_USER_ID)
-    current_app.logger.debug("user_id: %s", user_id)
-    if user_id and email:
-        # TODO: store user
-        pass
+    # Request-scoped only: the caller's token must never be logged or persisted.
+    g.user = shared_session.current_user() or bearer_token.current_user_from_bearer()
 
 
 @blueprint.before_request
@@ -127,10 +96,9 @@ def _track():
     if not analytics.write_key:
         return
 
-    email = session.get(constants.SESSION_EMAIL)
-    current_app.logger.debug("email: %s", email)
-    user_id = session.get(constants.SESSION_USER_ID)
-    current_app.logger.debug("user_id: %s", user_id)
+    user = g.user or {}
+    email = user.get("email")
+    user_id = user.get("sub")
     if user_id and email:
         analytics.identify(user_id, {"email": email, "created_at": datetime.datetime.now()})
 
@@ -139,9 +107,15 @@ def _track():
 
 @blueprint.errorhandler(Exception)
 def error_handler(ex):
-    current_app.logger.exception("Exception caught: %s", ex)
-    response = jsonify(message=str(ex))
-    response.status_code = ex.code if isinstance(ex, HTTPException) else 500
+    if isinstance(ex, HTTPException):
+        current_app.logger.warning("Request failed: %s", ex)
+        response = jsonify(message=ex.description)
+        response.status_code = ex.code
+        return response
+
+    current_app.logger.exception("Exception caught")
+    response = jsonify(message="Internal server error")
+    response.status_code = 500
     return response
 
 
@@ -200,8 +174,12 @@ def _asset_dir(kind: str, id: str) -> Path:
     `image.<ext>` files. Doesn't require the directory to already exist - callers that need an
     existing asset (GET) should use `_asset_path` instead, which resolves to a specific file."""
     safe_kind, safe_id = _validated_kind_id(kind, id)
-    base = Path(current_app.config["ASSET_DATA_PATH"]).resolve()
-    return (base / safe_kind / safe_id).resolve()
+    base = os.path.realpath(current_app.config["ASSET_DATA_PATH"])
+    directory = os.path.realpath(os.path.join(base, safe_kind, safe_id))
+    # Also catches a symlink under the data path that points outside it.
+    if not directory.startswith(base + os.sep):
+        abort(400, description="Invalid asset id")
+    return Path(directory)
 
 
 def _asset_path(kind: str, id: str) -> Path:
@@ -228,10 +206,18 @@ def _require_known_kind(kind: str) -> None:
 
 
 def _require_authenticated() -> None:
-    # user_id is the authenticated identity (sub from the session cookie or a forwarded bearer
-    # token); email is optional because API-audience access tokens don't carry an email claim.
-    if not session.get(constants.SESSION_USER_ID):
+    # sub is the authenticated identity (from the session cookie or a forwarded bearer token);
+    # email is optional because API-audience access tokens don't carry an email claim.
+    if not (g.user and g.user.get("sub")):
         abort(401, description="Authentication required")
+
+
+def _authorized_asset_dir(kind: str, id: str, *, deleting: bool = False) -> Path:
+    """Validates kind and id, then checks the caller may change that asset."""
+    _require_authenticated()
+    asset_dir = _asset_dir(kind, id)
+    permissions.require_asset_permission(g.user, kind, id, deleting=deleting)
+    return asset_dir
 
 
 def _require_valid_upload(upload) -> None:
@@ -278,15 +264,13 @@ def get_asset(kind: str, id: str):
 def store_asset(kind: str, id: str):
     current_app.logger.info("store_asset", extra={"kind": kind, "id": id})
 
-    _require_authenticated()
-    _require_known_kind(kind)
+    asset_dir = _authorized_asset_dir(kind, id)
 
     upload = request.files.get("file")
     if upload is None or not upload.filename:
         abort(400, description="No file provided")
     _require_valid_upload(upload)
 
-    asset_dir = _asset_dir(kind, id)
     current_app.logger.info("store_asset: creating asset dir", extra={"kind": kind, "id": id})
     asset_dir.mkdir(parents=True, exist_ok=True)
 
@@ -297,7 +281,7 @@ def store_asset(kind: str, id: str):
         current_app.logger.info("store_asset: unlinking image", extra={"kind": kind, "id": id, "image_type": image_type})
         (asset_dir / f'image.{image_type}').unlink(missing_ok=True)
 
-    filename_ext = constants.CONTENT_TYPE_EXTENSIONS.get(upload.mimetype) or os.path.splitext(upload.filename)[1]
+    filename_ext = constants.CONTENT_TYPE_EXTENSIONS[upload.mimetype]
     current_app.logger.info("store_asset: filename_ext", extra={"filename_ext": filename_ext})
     file_path = asset_dir / f'image{filename_ext}'
     current_app.logger.info("store_asset: file_path", extra={"file_path": file_path})
@@ -318,10 +302,7 @@ def store_asset(kind: str, id: str):
 def delete_asset(kind: str, id: str):
     current_app.logger.info("delete_asset", extra={"kind": kind, "id": id})
 
-    _require_authenticated()
-    _require_known_kind(kind)
-
-    path = _asset_dir(kind, id)
+    path = _authorized_asset_dir(kind, id, deleting=True)
     if not path.is_dir():
         abort(404, description="Asset not found")
 
@@ -359,9 +340,9 @@ def reclaim_staged_assets():
 
     try:
         deleted = reclaim.reclaim_staged_assets()
-    except (RuntimeError, requests.exceptions.RequestException, redis.exceptions.RedisError) as ex:
+    except (RuntimeError, requests.exceptions.RequestException, redis.exceptions.RedisError):
         current_app.logger.exception("reclaim_staged_assets: dependency unavailable")
-        abort(503, description=str(ex))
+        abort(503, description="Reclaim dependency unavailable")
 
     current_app.logger.info("reclaim_staged_assets: done", extra={"deleted_count": len(deleted)})
     return jsonify(deleted=deleted)

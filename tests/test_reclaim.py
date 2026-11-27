@@ -4,7 +4,6 @@ __author__ = "Paul Schifferer <dm@sweetrpg.com>"
 Tests for the staged-asset reclaim job (durable-volume-editing task 2.4).
 """
 
-import io
 import json
 import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -12,8 +11,6 @@ from pathlib import Path
 
 import pytest
 import redis as redis_lib
-
-from conftest import authenticate
 
 RECLAIM_TOKEN = "test-reclaim-token"
 EDIT_SESSION_DB = 9
@@ -55,14 +52,10 @@ def reclaim_app(app, edit_session_redis):
     return app
 
 
-def _stage(app, kind, id, owner_id, data=b"staged-bytes"):
-    client = app.test_client()
-    authenticate(client, sub=f"auth0|{owner_id}", email="t@example.com", session_id=f"session-{owner_id}-{kind}-{id}")
-    client.post(
-        f"/asset/{kind}/{id}",
-        data={"file": (io.BytesIO(data), "a.png")},
-        content_type="multipart/form-data",
-    )
+def _stage(app, kind, id, data=b"staged-bytes"):
+    directory = Path(app.config["ASSET_DATA_PATH"]) / kind / id
+    directory.mkdir(parents=True)
+    (directory / "image.png").write_bytes(data)
 
 
 def _asset_dir_exists(app, kind, id) -> bool:
@@ -85,7 +78,7 @@ def test_reclaim_503s_when_dependencies_unconfigured(app):
 def test_reclaim_deletes_orphaned_cover(reclaim_app):
     catalog_api = _make_catalog_api([], [])
     reclaim_app.config["CATALOG_API_URL"] = f"http://127.0.0.1:{catalog_api.server_port}"
-    _stage(reclaim_app, "cover-staged", "orphan-1", owner_id="orphan-1")
+    _stage(reclaim_app, "cover-staged", "orphan-1")
 
     resp = reclaim_app.test_client().post(
         "/admin/reclaim-staged-assets", headers={"X-Reclaim-Token": RECLAIM_TOKEN}
@@ -99,7 +92,7 @@ def test_reclaim_deletes_orphaned_cover(reclaim_app):
 def test_reclaim_keeps_cover_referenced_by_live_session(reclaim_app, edit_session_redis):
     catalog_api = _make_catalog_api([], [])
     reclaim_app.config["CATALOG_API_URL"] = f"http://127.0.0.1:{catalog_api.server_port}"
-    _stage(reclaim_app, "cover-staged", "live-1", owner_id="live-1")
+    _stage(reclaim_app, "cover-staged", "live-1")
     edit_session_redis.set(
         "edit-session:live-1:volume",
         json.dumps({"recordId": "vol-1", "fields": {}, "stagedCoverAssetId": "live-1"}),
@@ -121,7 +114,7 @@ def test_reclaim_keeps_cover_referenced_by_live_session_with_piped_sub(reclaim_a
     # id back to its live session despite this - see reclaim.py's _sanitized_user_id.
     catalog_api = _make_catalog_api([], [])
     reclaim_app.config["CATALOG_API_URL"] = f"http://127.0.0.1:{catalog_api.server_port}"
-    _stage(reclaim_app, "cover-staged", "github-419457", owner_id="github-419457")
+    _stage(reclaim_app, "cover-staged", "github-419457")
     edit_session_redis.set(
         "edit-session:github|419457:volume",
         json.dumps({"recordId": "vol-1", "fields": {}, "stagedCoverAssetId": "github-419457"}),
@@ -139,7 +132,7 @@ def test_reclaim_keeps_cover_referenced_by_live_session_with_piped_sub(reclaim_a
 def test_reclaim_keeps_sample_referenced_by_pending_submission(reclaim_app):
     catalog_api = _make_catalog_api([], ["pending-1-0"])
     reclaim_app.config["CATALOG_API_URL"] = f"http://127.0.0.1:{catalog_api.server_port}"
-    _stage(reclaim_app, "sample-staged", "pending-1-0", owner_id="pending-1")
+    _stage(reclaim_app, "sample-staged", "pending-1-0")
 
     resp = reclaim_app.test_client().post(
         "/admin/reclaim-staged-assets", headers={"X-Reclaim-Token": RECLAIM_TOKEN}

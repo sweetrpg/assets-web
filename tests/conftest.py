@@ -13,6 +13,9 @@ import redis as redis_lib
 
 SHARED_SESSION_DB = 10
 
+# One bucket is shared by every request in the run, and BaseConfig reads this at first import.
+os.environ.setdefault("RATE_LIMIT", "100000/minute")
+
 
 @pytest.fixture
 def app(tmp_path, monkeypatch):
@@ -29,12 +32,48 @@ def app(tmp_path, monkeypatch):
 
     flask_app = create_app()
     flask_app.config["TESTING"] = True
+    flask_app.config["AUTH_API_URL"] = "http://auth-api.test"
     # BaseConfig's class attributes are computed once, at that module's first import - a later
     # test's monkeypatch.setenv("ASSET_DATA_PATH", ...) has no effect on them. Overriding the
     # (mutable) Flask config dict directly guarantees each test gets its own tmp_path, instead
     # of every test in the process sharing whichever tmp_path happened to trigger that import.
     flask_app.config["ASSET_DATA_PATH"] = str(tmp_path)
     return flask_app
+
+
+class FakeAuthAPI:
+    """Stands in for auth-api's POST /authz/check."""
+
+    def __init__(self):
+        self.status = 200
+        self.body = {"allowed": True, "roles": ["editor"]}
+        self.error = None
+        self.calls = []
+
+    def post(self, url, **kwargs):
+        self.calls.append((url, kwargs))
+        if self.error:
+            raise self.error
+        fake = self
+
+        class _Response:
+            status_code = fake.status
+
+            def json(self):
+                if isinstance(fake.body, Exception):
+                    raise fake.body
+                return fake.body
+
+        return _Response()
+
+
+@pytest.fixture(autouse=True)
+def auth_api(monkeypatch):
+    from sweetrpg_assets_web.application import permissions
+
+    fake = FakeAuthAPI()
+    monkeypatch.setattr(permissions.requests, "post", fake.post)
+    return fake
 
 
 @pytest.fixture
@@ -59,6 +98,7 @@ def authenticate(client, sub="github|1", email="test@example.com", session_id="t
             "name": "Test User",
             "email": email,
             "roles": ["editor"],
+            "accessToken": "session-access-token",
             "expiry": (
                 datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=1)
             ).isoformat(),

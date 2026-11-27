@@ -27,8 +27,12 @@ standard.
   `ASSET_CACHE_TTL`), falls through to disk on a miss and repopulates. `POST` invalidates rather
   than repopulates, so a GET racing a POST reads the new file, not stale cached bytes from before
   the write landed.
-- `POST` requires an authenticated session (`session[user_id]`/`session[email]` both set - see
-  `_populate` in `blueprints/__init__.py`) - 401 otherwise. Populated by reading the suite-wide
+- `POST` and `DELETE` require a caller identity (401 otherwise) and permission for the asset
+  (`permissions.py`). Published kinds need `editor` or `admin`. `cover-staged/<owner>` and
+  `sample-staged/<owner>-<n>` are writable by their owner only; `editor`/`admin` may also delete
+  them, which catalog-api's accept flow needs. Roles come from `auth-api`'s `/authz/check` with
+  the caller's own token (`AUTH_API_URL`); if they can't be read the request gets 503. The
+  identity is request-scoped (`flask.g.user`); never log or persist it. The identity is populated by reading the suite-wide
   `sweetrpg_session` cookie directly (`shared_session.py`), the same pattern every other
   `*-web` frontend uses (see catalog-web's `SessionUserAccess.swift`) - **not** from
   `X-Forwarded-User`/`X-Forwarded-Email` headers as originally designed. That design assumed a
