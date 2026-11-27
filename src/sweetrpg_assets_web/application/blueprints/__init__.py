@@ -264,24 +264,6 @@ def get_asset(kind: str, id: str):
     return send_file(BytesIO(data), mimetype=mimetype)
 
 
-def _replace_image(asset_dir: Path, upload, kind: str, id: str) -> None:
-    current_app.logger.info("store_asset: creating asset dir", extra={"kind": kind, "id": id})
-    asset_dir.mkdir(parents=True, exist_ok=True)
-
-    # A re-upload replaces whatever image type was there before - otherwise a cover changed
-    # from .png to .jpg would leave the stale .png behind, and IMAGE_TYPES' priority order
-    # would keep serving it instead of the new upload.
-    for image_type in IMAGE_TYPES:
-        current_app.logger.info("store_asset: unlinking image", extra={"kind": kind, "id": id, "image_type": image_type})
-        (asset_dir / f'image.{image_type}').unlink(missing_ok=True)
-
-    filename_ext = constants.CONTENT_TYPE_EXTENSIONS[upload.mimetype]
-    current_app.logger.info("store_asset: filename_ext", extra={"filename_ext": filename_ext})
-    file_path = asset_dir / f'image{filename_ext}'
-    current_app.logger.info("store_asset: file_path", extra={"file_path": file_path})
-    upload.save(file_path)
-
-
 @blueprint.route("/asset/<kind>/<id>", methods=['POST'])
 def store_asset(kind: str, id: str):
     current_app.logger.info("store_asset", extra={"kind": kind, "id": id})
@@ -298,7 +280,21 @@ def store_asset(kind: str, id: str):
     else:
         slot = nullcontext()
     with slot:
-        _replace_image(asset_dir, upload, kind, id)
+        current_app.logger.info("store_asset: creating asset dir", extra={"kind": kind, "id": id})
+        asset_dir.mkdir(parents=True, exist_ok=True)
+
+        # A re-upload replaces whatever image type was there before - otherwise a cover changed
+        # from .png to .jpg would leave the stale .png behind, and IMAGE_TYPES' priority order
+        # would keep serving it instead of the new upload.
+        for image_type in IMAGE_TYPES:
+            current_app.logger.info("store_asset: unlinking image", extra={"kind": kind, "id": id, "image_type": image_type})
+            (asset_dir / f'image.{image_type}').unlink(missing_ok=True)
+
+        filename_ext = constants.CONTENT_TYPE_EXTENSIONS[upload.mimetype]
+        current_app.logger.info("store_asset: filename_ext", extra={"filename_ext": filename_ext})
+        file_path = asset_dir / f'image{filename_ext}'
+        current_app.logger.info("store_asset: file_path", extra={"file_path": file_path})
+        upload.save(file_path)
 
     # Invalidate rather than repopulate - the next GET will read the new file and refill the
     # cache with the correct content, avoiding a race with a GET that's mid-flight right now.
