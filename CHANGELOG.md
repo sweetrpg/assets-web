@@ -1,3 +1,17 @@
+## [0.15.1] - 2026-11-27
+
+### 🐛 Bug Fixes
+
+- Tighten asset write permissions and request logging
+- Constrain asset storage paths
+
+### 📚 Documentation
+
+- Add the feature work checkpoint pointer
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.15.0
 ## [0.15.0] - 2026-11-04
 
 ### 🚀 Features
