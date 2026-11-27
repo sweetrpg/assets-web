@@ -9,7 +9,7 @@ from sweetrpg_assets_web.application import constants
 from sweetrpg_assets_web import __version__
 from flask import Blueprint, g, request, jsonify, current_app, make_response, redirect, send_file, send_from_directory, abort, render_template
 from flask_babel import gettext as _
-from werkzeug.exceptions import HTTPException
+from werkzeug.exceptions import BadRequest, HTTPException
 from werkzeug.utils import secure_filename
 from io import BytesIO
 from contextlib import nullcontext
@@ -180,7 +180,8 @@ def _asset_dir(kind: str, id: str) -> Path:
     directory = os.path.realpath(os.path.join(base, safe_kind, safe_id))
     # Also catches a symlink under the data path that points outside it.
     if not directory.startswith(base + os.sep):
-        abort(400, description="Invalid asset id")
+        # `raise`, not abort(): CodeQL only honors the check if this visibly ends the function.
+        raise BadRequest(description="Invalid asset id")
     return Path(directory)
 
 
