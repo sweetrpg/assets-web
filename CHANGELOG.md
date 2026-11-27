@@ -1,3 +1,14 @@
+## [0.15.2] - 2026-11-27
+
+### 🐛 Bug Fixes
+
+- Add per-user limits for pending uploads
+- Keep asset file writes in one place
+- Make the storage path check visible to static analysis
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.15.1
 ## [0.15.1] - 2026-11-27
 
 ### 🐛 Bug Fixes
