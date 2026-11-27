@@ -28,9 +28,12 @@ standard.
   than repopulates, so a GET racing a POST reads the new file, not stale cached bytes from before
   the write landed.
 - `POST` and `DELETE` require a caller identity (401 otherwise) and permission for the asset
-  (`permissions.py`). Published kinds need `editor` or `admin`. `cover-staged/<owner>` and
-  `sample-staged/<owner>-<n>` are writable by their owner only; `editor`/`admin` may also delete
-  them, which catalog-api's accept flow needs. Roles come from `auth-api`'s `/authz/check` with
+  (`permissions.py`). Published kinds need `editor` or `admin`. `cover-staged/<owner>`,
+  `cover-staged/<owner>-<n>`, and `sample-staged/<owner>-<n>` are writable by their owner only,
+  with `submitter`, `editor`, or `admin`; the owner may always delete them, and `editor`/`admin`
+  may too, which catalog-api's accept flow needs. Each user's staged files are capped by
+  `STAGED_MAX_FILES` (default 200) and `STAGED_MAX_BYTES` (default 1 GiB) across both kinds
+  (`quota.py`): over the cap is 409, and 503 if it can't be checked. Roles come from `auth-api`'s `/authz/check` with
   the caller's own token (`AUTH_API_URL`); if they can't be read the request gets 503. The
   identity is request-scoped (`flask.g.user`); never log or persist it. The identity is populated by reading the suite-wide
   `sweetrpg_session` cookie directly (`shared_session.py`), the same pattern every other

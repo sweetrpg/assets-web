@@ -12,8 +12,9 @@
 
 Flask service that stores and serves the SweetRPG platform's binary assets (avatars, maps,
 tokens, portraits) - `GET /asset/<kind>/<id>` fetches one, `POST /asset/<kind>/<id>`
-(authenticated and role-checked, needs `AUTH_API_URL`) uploads one. Files live on a shared `ReadWriteMany` volume; reads are cached in
-Redis.
+(authenticated and role-checked, needs `AUTH_API_URL`) uploads one. Each user's staged uploads
+are capped by `STAGED_MAX_FILES` (default 200) and `STAGED_MAX_BYTES` (default 1073741824).
+Files live on a shared `ReadWriteMany` volume; reads are cached in Redis.
 
 ## Documentation
 
