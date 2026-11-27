@@ -66,10 +66,17 @@ def test_session_roles_are_not_trusted(client, auth_api):
 
 
 @pytest.mark.parametrize(
-    "kind,id", [("cover-staged", OWNER_ID), ("sample-staged", f"{OWNER_ID}-0"), ("sample-staged", f"{OWNER_ID}-12")]
+    "kind,id",
+    [
+        ("cover-staged", OWNER_ID),
+        ("cover-staged", f"{OWNER_ID}-1732000000000"),
+        ("sample-staged", f"{OWNER_ID}-0"),
+        ("sample-staged", f"{OWNER_ID}-12"),
+    ],
 )
-def test_owner_writes_and_deletes_own_staged(client, auth_api, kind, id):
-    _login(client, auth_api, ["submitter"])
+@pytest.mark.parametrize("role", ["submitter", "editor", "admin"])
+def test_owner_writes_and_deletes_own_staged(client, auth_api, kind, id, role):
+    _login(client, auth_api, [role])
 
     assert _post(client, kind, id).status_code == 201
     assert client.delete(f"/asset/{kind}/{id}").status_code == 204
@@ -79,7 +86,8 @@ def test_owner_writes_and_deletes_own_staged(client, auth_api, kind, id):
     "kind,id",
     [
         ("cover-staged", "auth0-other"),
-        ("cover-staged", f"{OWNER_ID}-0"),
+        ("cover-staged", f"{OWNER_ID}-x"),
+        ("cover-staged", f"{OWNER_ID}-1-0"),
         ("cover-staged", "auth0-abc12"),
         ("sample-staged", "auth0-other-0"),
         ("sample-staged", OWNER_ID),
@@ -94,6 +102,16 @@ def test_non_owner_cannot_write_or_delete_staged(app, client, auth_api, kind, id
     assert _post(client, kind, id).status_code == 403
     assert client.delete(f"/asset/{kind}/{id}").status_code == 403
     assert stored.read_bytes() == b"original"
+
+
+@pytest.mark.parametrize("roles", [["user"], ["openfga-writer"], []])
+def test_owner_without_write_role_can_remove_but_not_write_staged(app, client, auth_api, roles):
+    stored = _seed(app, "cover-staged", OWNER_ID)
+    _login(client, auth_api, roles)
+
+    assert _post(client, "cover-staged", OWNER_ID).status_code == 403
+    assert stored.read_bytes() == b"original"
+    assert client.delete(f"/asset/cover-staged/{OWNER_ID}").status_code == 204
 
 
 @pytest.mark.parametrize("role", ["editor", "admin"])

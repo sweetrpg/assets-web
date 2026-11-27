@@ -24,6 +24,14 @@ def _env_bool(name: str, default: bool) -> bool:
     return raw.strip().lower() in ("1", "true", "yes", "on")
 
 
+def _env_positive_int(name: str, default: int) -> int:
+    """Parse a positive integer env var; anything else stops startup."""
+    value = int(os.environ.get(name) or default)
+    if value <= 0:
+        raise ValueError(f"{name} must be a positive integer")
+    return value
+
+
 def _redis_url(db: int) -> str:
     host = os.environ[constants.REDIS_HOST]
     port = int(os.environ.get(constants.REDIS_PORT) or 6379)
@@ -53,6 +61,10 @@ class BaseConfig(object):
     # Asset storage
     ASSET_DATA_PATH = os.environ.get(constants.ASSET_DATA_PATH) or "/data"
     ASSET_CACHE_TTL = int(os.environ.get(constants.ASSET_CACHE_TTL) or 300)
+
+    # Per-user bound on staged uploads (see quota.py).
+    STAGED_MAX_FILES = _env_positive_int(constants.STAGED_MAX_FILES, 200)
+    STAGED_MAX_BYTES = _env_positive_int(constants.STAGED_MAX_BYTES, 1024 * 1024 * 1024)
 
     # Rate limiting - requests per minute, one shared process-wide bucket (matches the
     # platform's other services: a blunt backstop, not per-client throttling). Shares the same

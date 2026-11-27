@@ -42,13 +42,15 @@ def _delete_staged_asset(kind: str, id: str) -> None:
     cache.delete(_cache_key(kind, id))
 
 
-def _staged_owner_id(kind: str, asset_id: str) -> str:
-    """The edit-session owner for a staged asset id. `cover-staged` ids are the bare userId
-    (`cover-staged/<userId>`); `sample-staged` ids append an index
-    (`sample-staged/<userId>-<n>`)."""
+def _staged_owner_ids(kind: str, asset_id: str) -> set[str]:
+    """The edit-session owners a staged asset id can belong to: `<userId>-<n>`, or for a cover
+    also the bare `<userId>`. A bare cover id can itself end in digits, so both readings of a
+    cover id are checked; the extra one only ever keeps a file."""
+    prefix, separator, index = asset_id.rpartition("-")
+    owners = {prefix} if separator and index.isdecimal() else set()
     if kind == "cover-staged":
-        return asset_id
-    return asset_id.rsplit("-", 1)[0]
+        owners.add(asset_id)
+    return owners
 
 
 def _edit_session_client() -> redis.Redis:
@@ -72,10 +74,10 @@ def _sanitized_user_id(sub: str) -> str:
     return sub.replace("|", "-")
 
 
-def _referenced_by_live_session(client: redis.Redis, owner_id: str, asset_id: str, is_cover: bool) -> bool:
+def _referenced_by_live_session(client: redis.Redis, owner_ids: set[str], asset_id: str, is_cover: bool) -> bool:
     for key in client.scan_iter(match="edit-session:*:*"):
         key_owner = key.split(":")[1]
-        if _sanitized_user_id(key_owner) != owner_id:
+        if _sanitized_user_id(key_owner) not in owner_ids:
             continue
         raw = client.get(key)
         if not raw:
@@ -116,8 +118,8 @@ def reclaim_staged_assets() -> list[str]:
         for asset_id in _list_staged_ids(kind):
             if asset_id in pending_ids:
                 continue
-            owner_id = _staged_owner_id(kind, asset_id)
-            if _referenced_by_live_session(session_client, owner_id, asset_id, is_cover):
+            owner_ids = _staged_owner_ids(kind, asset_id)
+            if _referenced_by_live_session(session_client, owner_ids, asset_id, is_cover):
                 continue
             _delete_staged_asset(kind, asset_id)
             deleted.append(f"{kind}/{asset_id}")

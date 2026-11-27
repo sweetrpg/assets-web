@@ -141,3 +141,19 @@ def test_reclaim_keeps_sample_referenced_by_pending_submission(reclaim_app):
     assert resp.json["deleted"] == []
     assert _asset_dir_exists(reclaim_app, "sample-staged", "pending-1-0")
     catalog_api.shutdown()
+
+
+@pytest.mark.parametrize("cover_id", ["auth0-abc123", "auth0-abc123-1732000000000"])
+def test_reclaim_keeps_cover_referenced_by_live_session(reclaim_app, edit_session_redis, cover_id):
+    catalog_api = _make_catalog_api([], [])
+    reclaim_app.config["CATALOG_API_URL"] = f"http://127.0.0.1:{catalog_api.server_port}"
+    _stage(reclaim_app, "cover-staged", cover_id)
+    edit_session_redis.set("edit-session:auth0|abc123:volume", json.dumps({"stagedCoverAssetId": cover_id}))
+
+    resp = reclaim_app.test_client().post(
+        "/admin/reclaim-staged-assets", headers={"X-Reclaim-Token": RECLAIM_TOKEN}
+    )
+
+    assert resp.json["deleted"] == []
+    assert _asset_dir_exists(reclaim_app, "cover-staged", cover_id)
+    catalog_api.shutdown()

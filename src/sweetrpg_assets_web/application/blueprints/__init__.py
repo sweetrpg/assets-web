@@ -12,6 +12,7 @@ from flask_babel import gettext as _
 from werkzeug.exceptions import HTTPException
 from werkzeug.utils import secure_filename
 from io import BytesIO
+from contextlib import nullcontext
 import mimetypes
 from pathlib import Path
 from sweetrpg_assets_web.application.cache import cache
@@ -19,6 +20,7 @@ from sweetrpg_assets_web.application import reclaim
 from sweetrpg_assets_web.application import shared_session
 from sweetrpg_assets_web.application import bearer_token
 from sweetrpg_assets_web.application import permissions
+from sweetrpg_assets_web.application import quota
 import analytics
 import datetime
 import hmac
@@ -220,7 +222,8 @@ def _authorized_asset_dir(kind: str, id: str, *, deleting: bool = False) -> Path
     return asset_dir
 
 
-def _require_valid_upload(upload) -> None:
+def _require_valid_upload(upload) -> int:
+    """Checks type and size, returning the size in bytes."""
     if upload.mimetype not in constants.ALLOWED_CONTENT_TYPES:
         abort(400, description=f"Unsupported content type: {upload.mimetype}")
 
@@ -229,6 +232,7 @@ def _require_valid_upload(upload) -> None:
     upload.stream.seek(0)
     if size > constants.MAX_ASSET_UPLOAD_BYTES:
         abort(400, description="File exceeds maximum upload size")
+    return size
 
 
 def _cache_key(kind: str, id: str) -> str:
@@ -260,17 +264,7 @@ def get_asset(kind: str, id: str):
     return send_file(BytesIO(data), mimetype=mimetype)
 
 
-@blueprint.route("/asset/<kind>/<id>", methods=['POST'])
-def store_asset(kind: str, id: str):
-    current_app.logger.info("store_asset", extra={"kind": kind, "id": id})
-
-    asset_dir = _authorized_asset_dir(kind, id)
-
-    upload = request.files.get("file")
-    if upload is None or not upload.filename:
-        abort(400, description="No file provided")
-    _require_valid_upload(upload)
-
+def _replace_image(asset_dir: Path, upload, kind: str, id: str) -> None:
     current_app.logger.info("store_asset: creating asset dir", extra={"kind": kind, "id": id})
     asset_dir.mkdir(parents=True, exist_ok=True)
 
@@ -286,6 +280,25 @@ def store_asset(kind: str, id: str):
     file_path = asset_dir / f'image{filename_ext}'
     current_app.logger.info("store_asset: file_path", extra={"file_path": file_path})
     upload.save(file_path)
+
+
+@blueprint.route("/asset/<kind>/<id>", methods=['POST'])
+def store_asset(kind: str, id: str):
+    current_app.logger.info("store_asset", extra={"kind": kind, "id": id})
+
+    asset_dir = _authorized_asset_dir(kind, id)
+
+    upload = request.files.get("file")
+    if upload is None or not upload.filename:
+        abort(400, description="No file provided")
+    size = _require_valid_upload(upload)
+
+    if kind in reclaim.STAGED_KINDS:
+        slot = quota.staged_upload_slot(reclaim._sanitized_user_id(g.user["sub"]), asset_dir, size)
+    else:
+        slot = nullcontext()
+    with slot:
+        _replace_image(asset_dir, upload, kind, id)
 
     # Invalidate rather than repopulate - the next GET will read the new file and refill the
     # cache with the correct content, avoiding a race with a GET that's mid-flight right now.

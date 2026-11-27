@@ -17,6 +17,7 @@ from sweetrpg_assets_web.application.reclaim import STAGED_KINDS, _sanitized_use
 
 
 REVIEWER_ROLES = frozenset({"editor", "admin"})
+STAGED_WRITE_ROLES = REVIEWER_ROLES | {"submitter"}
 
 
 def _caller_roles(token: str) -> set[str]:
@@ -52,20 +53,20 @@ def _caller_roles(token: str) -> set[str]:
 
 
 def _owns_staged_asset(sub: str, kind: str, asset_id: str) -> bool:
-    """Staged ids are `cover-staged/<owner>` and `sample-staged/<owner>-<n>`, where owner is the
-    sanitized subject (catalog-web's `sanitizedAssetUserID`)."""
-    owner = asset_id
-    if kind == "sample-staged":
-        owner, separator, index = asset_id.rpartition("-")
-        if not separator or not index.isdecimal():
-            return False
-    return owner == _sanitized_user_id(sub)
+    """Staged ids are `<owner>-<n>`, where owner is the sanitized subject (catalog-web's
+    `sanitizedAssetUserID`). A cover may also be the bare `<owner>`."""
+    owner = _sanitized_user_id(sub)
+    if kind == "cover-staged" and asset_id == owner:
+        return True
+    prefix, separator, index = asset_id.rpartition("-")
+    return bool(separator) and index.isdecimal() and prefix == owner
 
 
 def require_asset_permission(user: dict, kind: str, asset_id: str, *, deleting: bool) -> None:
-    """Published kinds need editor/admin. Staged kinds are writable only by their owner;
-    editor/admin may also delete them, because accepting a submission promotes the submitter's
-    staged asset with the reviewer's token."""
+    """Published kinds need editor/admin. Staged kinds are writable only by their owner, who
+    needs a catalog write role; the owner may always delete them. Editor/admin may also delete
+    them, because accepting a submission promotes the submitter's staged asset with the
+    reviewer's token."""
     token = user.get("accessToken")
     if not token:
         abort(401, description="Authentication required")
@@ -73,7 +74,7 @@ def require_asset_permission(user: dict, kind: str, asset_id: str, *, deleting: 
     roles = _caller_roles(token)
 
     if kind in STAGED_KINDS:
-        if _owns_staged_asset(user["sub"], kind, asset_id):
+        if _owns_staged_asset(user["sub"], kind, asset_id) and (deleting or roles & STAGED_WRITE_ROLES):
             return
         if deleting and roles & REVIEWER_ROLES:
             return
