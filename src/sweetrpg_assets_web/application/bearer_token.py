@@ -26,7 +26,7 @@ from jwt import PyJWKClient
 
 
 def current_user_from_bearer() -> dict[str, Any] | None:
-    """Returns {sub, email?} decoded from a valid forwarded bearer token, or None.
+    """Returns {sub, email?, accessToken} decoded from a valid forwarded bearer token, or None.
 
     Requires both AUTH0_DOMAIN and AUTH0_AUDIENCE configured; iss must match the tenant and aud
     must contain the platform API audience, matching auth-api's own verification contract.
@@ -57,7 +57,7 @@ def current_user_from_bearer() -> dict[str, Any] | None:
         logging.exception("bearer_token: rejected forwarded token")
         return None
 
-    return {"sub": claims.get("sub"), "email": claims.get("email")}
+    return {"sub": claims.get("sub"), "email": claims.get("email"), "accessToken": token}
 
 
 _jwks_clients: dict[str, PyJWKClient] = {}

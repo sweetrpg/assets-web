@@ -37,3 +37,5 @@ data:
     # browser session cookie. Same tenant/audience auth-api verifies against (api-misc secret).
     AUTH0_DOMAIN: sweetrpg-dev.us.auth0.com
     AUTH0_AUDIENCE: https://sweetrpg.com/api/
+    # Role lookups for asset writes and deletes; writes return 503 without it.
+    AUTH_API_URL: http://api-v1.sweetrpg-auth.svc.cluster.local:8000

@@ -23,18 +23,11 @@ SENTRY_ENV = "SENTRY_ENV"
 APPLICATION_NAME = "sweetrpg-assets-web"
 
 # session keys
-PROFILE_KEY = "profile"
 JWT_PAYLOAD = "jwt_payload"
 CURRENT_USER_ID = "current_user_id"
-SESSION_ACCESS_TOKEN = "access_token"
-SESSION_EMAIL = "email"
-SESSION_USER_ID = "user_id"
 
 # global keys
 SWEETRPG_API_CLIENT_KEY = "sweetrpg-api-client"
-
-# cookies
-SWEETRPG_AUTH_KEY = "sweetrpg-auth"
 
 # Configuration
 SEGMENT_WRITE_KEY = "SEGMENT_WRITE_KEY"
@@ -90,6 +83,10 @@ ROOT_URL = "ROOT_URL"
 # shared-web base URL, serving the platform's shared branding (logo, favicon, stylesheet) -
 # see docs/frontend-conventions.md in sweetrpg/platform
 SHARED_URL = "SHARED_URL"
+
+# auth-api answers which roles a caller holds (see permissions.py).
+AUTH_API_URL = "AUTH_API_URL"
+AUTHZ_SERVICE_NAME = "assets-web"
 
 # admin-api integration (banners, maintenance mode)
 ADMIN_API_URL = "ADMIN_API_URL"

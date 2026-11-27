@@ -27,8 +27,12 @@ standard.
   `ASSET_CACHE_TTL`), falls through to disk on a miss and repopulates. `POST` invalidates rather
   than repopulates, so a GET racing a POST reads the new file, not stale cached bytes from before
   the write landed.
-- `POST` requires an authenticated session (`session[user_id]`/`session[email]` both set - see
-  `_populate` in `blueprints/__init__.py`) - 401 otherwise. Populated by reading the suite-wide
+- `POST` and `DELETE` require a caller identity (401 otherwise) and permission for the asset
+  (`permissions.py`). Published kinds need `editor` or `admin`. `cover-staged/<owner>` and
+  `sample-staged/<owner>-<n>` are writable by their owner only; `editor`/`admin` may also delete
+  them, which catalog-api's accept flow needs. Roles come from `auth-api`'s `/authz/check` with
+  the caller's own token (`AUTH_API_URL`); if they can't be read the request gets 503. The
+  identity is request-scoped (`flask.g.user`); never log or persist it. The identity is populated by reading the suite-wide
   `sweetrpg_session` cookie directly (`shared_session.py`), the same pattern every other
   `*-web` frontend uses (see catalog-web's `SessionUserAccess.swift`) - **not** from
   `X-Forwarded-User`/`X-Forwarded-Email` headers as originally designed. That design assumed a
@@ -133,3 +137,23 @@ uv lock --upgrade      # update dependencies
 Requires a local Redis (`redis-server` on `localhost:6379`, no auth needed) - used for caching,
 sessions, and rate limiting. Set `ASSET_DATA_PATH` to a scratch directory for local runs; it
 defaults to `/data`, which won't exist outside the container.
+
+## Platform Conventions and Decisions
+
+This repo is a submodule of `sweetrpg/platform`. Platform-wide conventions and Architecture
+Decision Records live there:
+
+- checked out inside the platform tree: `../../docs/README.md` (convention index) and
+  `../../docs/adr/README.md` (platform ADRs, `PADR-*`)
+- standalone or module-only checkout:
+  <https://github.com/sweetrpg/platform/tree/master/docs> and
+  <https://github.com/sweetrpg/platform/tree/master/docs/adr>
+
+Accepted `PADR-*` records are binding constraints. Read the ADR index before proposing a
+structural change; if a task needs to contradict an accepted record, stop and say so -
+propose a superseding ADR rather than working around it. This repo's own service-local
+decisions are `ADR-*` and belong in `docs/adr/` here.
+
+Before implementing any feature, complete the
+[feature work checkpoint](https://github.com/sweetrpg/platform/blob/master/docs/openspec.md#feature-work-checkpoint)
+and record the answers in the issue or PR.

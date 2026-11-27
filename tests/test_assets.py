@@ -96,7 +96,9 @@ def test_store_accepts_every_allowed_kind(client):
         "sample",
         "sample-staged",
     ):
-        resp = _upload(client, kind, "1", data=b"pixels")
+        # Staged ids must name the uploading user (github|1).
+        asset_id = {"cover-staged": "github-1", "sample-staged": "github-1-0"}.get(kind, "1")
+        resp = _upload(client, kind, asset_id, data=b"pixels")
         assert resp.status_code == 201, kind
 
 
@@ -131,14 +133,14 @@ def test_delete_missing_asset_404s(client):
 
 
 def test_delete_removes_asset_and_invalidates_cache(client):
-    _upload(client, "cover-staged", "1", data=b"staged-bytes")
-    assert client.get("/asset/cover-staged/1").data == b"staged-bytes"
+    _upload(client, "cover-staged", "github-1", data=b"staged-bytes")
+    assert client.get("/asset/cover-staged/github-1").data == b"staged-bytes"
 
     _authenticate(client)
-    delete_resp = client.delete("/asset/cover-staged/1")
+    delete_resp = client.delete("/asset/cover-staged/github-1")
     assert delete_resp.status_code == 204
 
-    get_resp = client.get("/asset/cover-staged/1")
+    get_resp = client.get("/asset/cover-staged/github-1")
     assert get_resp.status_code == 404
 
 
