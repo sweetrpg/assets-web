@@ -238,3 +238,15 @@ def test_bearer_caller_is_checked_with_the_forwarded_token(app, client, auth_api
 
     assert response.status_code == 403
     assert auth_api.calls[0][1]["headers"] == {"Authorization": f"Bearer {token}"}
+
+
+def test_asset_dir_that_resolves_outside_the_data_path_is_rejected(app, client, auth_api, tmp_path_factory):
+    outside = tmp_path_factory.mktemp("outside")
+    (outside / "image.png").write_bytes(b"original")
+    (Path(app.config["ASSET_DATA_PATH"]) / "cover").mkdir()
+    (Path(app.config["ASSET_DATA_PATH"]) / "cover" / "linked").symlink_to(outside)
+    _login(client, auth_api, ["admin"])
+
+    assert _post(client, "cover", "linked").status_code == 400
+    assert client.delete("/asset/cover/linked").status_code == 400
+    assert (outside / "image.png").read_bytes() == b"original"

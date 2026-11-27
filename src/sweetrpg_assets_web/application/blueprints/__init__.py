@@ -174,8 +174,12 @@ def _asset_dir(kind: str, id: str) -> Path:
     `image.<ext>` files. Doesn't require the directory to already exist - callers that need an
     existing asset (GET) should use `_asset_path` instead, which resolves to a specific file."""
     safe_kind, safe_id = _validated_kind_id(kind, id)
-    base = Path(current_app.config["ASSET_DATA_PATH"]).resolve()
-    return (base / safe_kind / safe_id).resolve()
+    base = os.path.realpath(current_app.config["ASSET_DATA_PATH"])
+    directory = os.path.realpath(os.path.join(base, safe_kind, safe_id))
+    # Also catches a symlink under the data path that points outside it.
+    if not directory.startswith(base + os.sep):
+        abort(400, description="Invalid asset id")
+    return Path(directory)
 
 
 def _asset_path(kind: str, id: str) -> Path:
@@ -277,7 +281,7 @@ def store_asset(kind: str, id: str):
         current_app.logger.info("store_asset: unlinking image", extra={"kind": kind, "id": id, "image_type": image_type})
         (asset_dir / f'image.{image_type}').unlink(missing_ok=True)
 
-    filename_ext = constants.CONTENT_TYPE_EXTENSIONS.get(upload.mimetype) or os.path.splitext(upload.filename)[1]
+    filename_ext = constants.CONTENT_TYPE_EXTENSIONS[upload.mimetype]
     current_app.logger.info("store_asset: filename_ext", extra={"filename_ext": filename_ext})
     file_path = asset_dir / f'image{filename_ext}'
     current_app.logger.info("store_asset: file_path", extra={"file_path": file_path})
