@@ -1,3 +1,12 @@
+## [0.15.3] - 2026-11-28
+
+### 🐛 Bug Fixes
+
+- Validate the pending-list response before reclaiming staged files
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Merge master into develop after v0.15.2
 ## [0.15.2] - 2026-11-27
 
 ### 🐛 Bug Fixes

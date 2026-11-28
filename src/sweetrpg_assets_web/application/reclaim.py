@@ -95,10 +95,21 @@ def _fetch_pending_staged_ids() -> tuple[set[str], set[str]]:
     base_url = current_app.config.get("CATALOG_API_URL")
     if not base_url:
         raise RuntimeError("CATALOG_API_URL is not configured")
-    resp = requests.get(f"{base_url}/staged-assets/pending", timeout=10)
-    resp.raise_for_status()
+    resp = requests.get(f"{base_url}/staged-assets/pending", timeout=10, allow_redirects=False)
+    if resp.status_code != 200:
+        raise RuntimeError(f"pending staged assets request returned status {resp.status_code}")
     body = resp.json()
-    return set(body.get("coverAssetIds") or []), set(body.get("sampleAssetIds") or [])
+    if not isinstance(body, dict):
+        raise RuntimeError("pending staged assets response is not an object")
+    return _id_set(body, "coverAssetIds"), _id_set(body, "sampleAssetIds")
+
+
+def _id_set(body: dict, key: str) -> set[str]:
+    # Anything but a list of strings must abort: read as "nothing pending", it would delete files.
+    ids = body.get(key)
+    if not isinstance(ids, list) or not all(isinstance(item, str) for item in ids):
+        raise RuntimeError(f"pending staged assets response: {key} is not an array of strings")
+    return set(ids)
 
 
 def reclaim_staged_assets() -> list[str]:
