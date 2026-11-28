@@ -17,12 +17,16 @@ EDIT_SESSION_DB = 9
 
 
 def _make_catalog_api(cover_ids, sample_ids):
-    body = json.dumps({"coverAssetIds": cover_ids, "sampleAssetIds": sample_ids}).encode()
+    return _serve(json.dumps({"coverAssetIds": cover_ids, "sampleAssetIds": sample_ids}).encode())
 
+
+def _serve(body: bytes, status: int = 200, headers: dict | None = None):
     class Handler(BaseHTTPRequestHandler):
         def do_GET(self):
-            self.send_response(200)
+            self.send_response(status)
             self.send_header("Content-Type", "application/json")
+            for name, value in (headers or {}).items():
+                self.send_header(name, value)
             self.end_headers()
             self.wfile.write(body)
 
@@ -157,3 +161,61 @@ def test_reclaim_keeps_cover_referenced_by_live_session(reclaim_app, edit_sessio
     assert resp.json["deleted"] == []
     assert _asset_dir_exists(reclaim_app, "cover-staged", cover_id)
     catalog_api.shutdown()
+
+
+_VALID = b'{"coverAssetIds": [], "sampleAssetIds": []}'
+
+
+@pytest.mark.parametrize(
+    "body,status",
+    [
+        pytest.param(b"{}", 200, id="both-keys-missing"),
+        pytest.param(b'{"sampleAssetIds": []}', 200, id="covers-missing"),
+        pytest.param(b'{"coverAssetIds": []}', 200, id="samples-missing"),
+        pytest.param(b'{"coverAssetIds": null, "sampleAssetIds": []}', 200, id="covers-null"),
+        pytest.param(b'{"coverAssetIds": [], "sampleAssetIds": null}', 200, id="samples-null"),
+        pytest.param(b'{"coverAssetIds": "", "sampleAssetIds": []}', 200, id="covers-string"),
+        pytest.param(b'{"coverAssetIds": [], "sampleAssetIds": {}}', 200, id="samples-object"),
+        pytest.param(b'{"coverAssetIds": 0, "sampleAssetIds": []}', 200, id="covers-number"),
+        pytest.param(b'{"coverAssetIds": [], "sampleAssetIds": false}', 200, id="samples-bool"),
+        pytest.param(b'{"coverAssetIds": [1], "sampleAssetIds": []}', 200, id="element-number"),
+        pytest.param(b'{"coverAssetIds": [], "sampleAssetIds": [null]}', 200, id="element-null"),
+        pytest.param(b"[]", 200, id="top-level-array"),
+        pytest.param(b"null", 200, id="top-level-null"),
+        pytest.param(b'"ok"', 200, id="top-level-string"),
+        pytest.param(b"not json", 200, id="parse-failure"),
+        pytest.param(b"", 200, id="empty-body"),
+        pytest.param(_VALID, 201, id="status-201"),
+        pytest.param(_VALID, 203, id="status-203"),
+        pytest.param(_VALID, 404, id="status-404"),
+        pytest.param(_VALID, 500, id="status-500"),
+    ],
+)
+def test_reclaim_deletes_nothing_on_bad_pending_response(reclaim_app, caplog, body, status):
+    _assert_aborts_without_deleting(reclaim_app, caplog, _serve(body, status))
+
+
+def test_reclaim_does_not_follow_pending_redirect(reclaim_app, caplog):
+    target = _serve(_VALID)
+    location = f"http://127.0.0.1:{target.server_port}/elsewhere"
+    _assert_aborts_without_deleting(reclaim_app, caplog, _serve(_VALID, 302, {"Location": location}))
+    target.shutdown()
+
+
+def _assert_aborts_without_deleting(app, caplog, catalog_api):
+    app.config["CATALOG_API_URL"] = f"http://127.0.0.1:{catalog_api.server_port}"
+    _stage(app, "cover-staged", "orphan-1")
+    _stage(app, "sample-staged", "orphan-1-0")
+    # create_app's dictConfig disables loggers left over from earlier tests' apps.
+    app.logger.disabled = False
+    caplog.clear()
+
+    resp = app.test_client().post("/admin/reclaim-staged-assets", headers={"X-Reclaim-Token": RECLAIM_TOKEN})
+    catalog_api.shutdown()
+
+    assert resp.status_code == 503
+    assert _asset_dir_exists(app, "cover-staged", "orphan-1")
+    assert _asset_dir_exists(app, "sample-staged", "orphan-1-0")
+    assert any(r.levelname == "ERROR" for r in caplog.records)
+    assert RECLAIM_TOKEN not in caplog.text
+    assert "orphan-1" not in caplog.text
